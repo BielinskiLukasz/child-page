@@ -1,0 +1,38 @@
+:root {
+  --bg: #f3eefb;
+  --ink: #5b5675;
+  --tile: #ffffff;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
+  font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif; }
+body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
+[hidden] { display: none !important; }
+.view { min-height: 100vh; min-height: 100dvh; }
+.title { text-align: center; font-size: clamp(1.6rem, 6vw, 2.6rem); margin: 1.2rem 1rem; font-weight: 700; }
+.tiles { list-style: none; margin: 0 auto; padding: 0 1rem 1.5rem; max-width: 1000px;
+  display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 480px) and (orientation: portrait) { .tiles { grid-template-columns: 1fr; } }
+@media (min-width: 700px) { .tiles { grid-template-columns: repeat(3, 1fr); } }
+.tile { width: 100%; min-height: 150px; border: 0; border-radius: 28px; background: var(--tile);
+  color: var(--ink); font: inherit; font-size: 1.15rem; font-weight: 700; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem;
+  padding: 1rem; box-shadow: 0 4px 14px rgba(120, 110, 160, .18); touch-action: manipulation;
+  user-select: none; -webkit-user-select: none; }
+.tile:focus-visible, .back:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; }
+.tile svg { width: 72px; height: 72px; }
+.back { position: fixed; z-index: 10; top: calc(var(--safe-t) + 8px); left: calc(var(--safe-l) + 8px);
+  width: 56px; height: 56px; min-width: 48px; min-height: 48px; border: 0; border-radius: 50%;
+  background: #fff; color: var(--ink); display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(120, 110, 160, .25); touch-action: manipulation; }
+.back svg { width: 28px; height: 28px; }
+.stage { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; text-align: center;
+  padding: 80px 1rem 1rem; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.stage h2 { font-size: clamp(1.4rem, 5vw, 2.2rem); margin: .5rem 0; }
+.stage svg { width: 120px; height: 120px; }
+.stage img { -webkit-user-drag: none; user-drag: none; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

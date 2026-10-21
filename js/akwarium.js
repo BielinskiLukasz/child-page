@@ -84,7 +84,7 @@
           desired = Math.atan2(f.target.y - f.y, f.target.x - f.x);
           maxPitch = 1.0;
         } else {
-          var dir = Math.cos(f.a) >= 0 ? 0 : Math.PI, m = 70, k = 1;
+          var dir = Math.cos(f.a) >= 0 ? 0 : Math.PI, m = Math.max(70, 1.6 * sp / turn), k = 1; // start turning one turn-radius early so fish never reach the wall still facing it
           if (f.x < m) { dir = 0; } else if (f.x > W - m) { dir = Math.PI; }
           k = dir === 0 ? 1 : -1;
           desired = dir + k * (f.wander + (f.nudgeT > 0 ? f.nudge * 0.5 : 0));

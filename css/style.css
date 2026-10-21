@@ -37,4 +37,26 @@ body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
 .stage img { -webkit-user-drag: none; user-drag: none; }
 .aquarium { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none;
   user-select: none; -webkit-user-select: none; }
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+.garden { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: #cfe8f8; }
+.g-sky { position: absolute; inset: 0 0 45% 0; background: linear-gradient(#bfe0f6, #dff1fb); }
+.g-lawn { position: absolute; inset: 55% 0 0 0; background: linear-gradient(#bfe6b4, #a8d9a0); border-radius: 50% 50% 0 0 / 18px 18px 0 0; }
+.g-plants { position: absolute; inset: 0; pointer-events: none; }
+.g-plant { position: absolute; width: calc(60px * var(--s) * 1.4); height: calc(100px * var(--s) * 1.4);
+  transform: translate(-50%, -100%); max-height: 30vh; transition: opacity .9s ease; pointer-events: none; }
+.g-plant svg { width: 100%; height: 100%; overflow: visible; }
+.g-plant.fading { opacity: 0; }
+.g-plant .g-stem, .g-plant .g-leaves, .g-plant .g-bloom { transform-box: fill-box; transform-origin: 50% 100%; }
+.g-plant .g-seed { animation: g-seed 3.6s ease-out both; transform-box: fill-box; transform-origin: 50% 100%; }
+.g-plant .g-stem { animation: g-grow 2s ease-out .5s both; }
+.g-plant .g-leaves { transform-origin: 50% 50%; animation: g-pop 1.2s ease-out 1.8s both; }
+.g-plant .g-bloom { transform-origin: 50% 75%; animation: g-pop 1.6s ease-out 2.6s both; }
+@keyframes g-seed { 0% { opacity: 0; transform: scale(.4); } 15% { opacity: 1; transform: scale(1); } 70% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes g-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes g-pop { from { opacity: 0; transform: scale(.2); } to { opacity: 1; transform: scale(1); } }
+.g-cloud { position: absolute; top: 12%; left: 0; width: clamp(120px, 26vw, 240px); padding: 12px; margin: -12px;
+  animation: g-drift 80s linear infinite; cursor: pointer; z-index: 99999; }
+.g-cloud svg { width: 100%; display: block; opacity: .95; }
+@keyframes g-drift { from { transform: translateX(-120%); } to { transform: translateX(calc(100vw + 20px)); } }
+.garden.paused *, .garden.paused { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) { .g-seed { display: none; } * { animation: none !important; transition: none !important; } }

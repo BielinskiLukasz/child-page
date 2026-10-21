@@ -74,4 +74,11 @@
   });
   window.addEventListener('hashchange', render);
   render();
+
+  // Offline support; failure to register must never affect the app.
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
 })();

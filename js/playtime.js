@@ -14,6 +14,8 @@
   var last = 0;
   var onExpire = null;
   var running = false;
+  var storageOk = true; // false once a write fails: keep state in memory so the limit still applies
+  var mem = null;
 
   function today() {
     var d = new Date();
@@ -22,6 +24,11 @@
 
   function load() {
     var s = { limit: DEFAULT_LIMIT, used: 0, day: today() };
+    if (!storageOk && mem) {
+      s.limit = mem.limit;
+      if (mem.day === s.day) { s.used = mem.used; }
+      return s;
+    }
     try {
       var raw = JSON.parse(localStorage.getItem(KEY));
       if (raw && typeof raw === 'object') {
@@ -33,7 +40,8 @@
   }
 
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+    mem = { limit: state.limit, used: state.used, day: state.day };
+    try { localStorage.setItem(KEY, JSON.stringify(state)); storageOk = true; } catch (e) { storageOk = false; }
   }
 
   function limitMs() { return state.limit === null ? Infinity : state.limit * 60000; }

@@ -29,6 +29,7 @@
   });
 
   function unmount() {
+    window.Playtime.stop();
     if (typeof cleanup === 'function') { cleanup(); }
     cleanup = null;
     currentId = null;
@@ -50,7 +51,18 @@
     menu.hidden = true;
     view.hidden = false;
     currentId = a.id;
-    cleanup = a.mount(stage) || null;
+    if (window.Playtime.isExpired()) {
+      window.Playtime.renderLater(stage);
+    } else {
+      cleanup = a.mount(stage) || null;
+    }
+    window.Playtime.start(function () {
+      // Time is up: stop the activity and show the gentle "later" screen; Back/menu stay usable.
+      if (typeof cleanup === 'function') { cleanup(); }
+      cleanup = null;
+      stage.textContent = '';
+      window.Playtime.renderLater(stage);
+    });
     backBtn.focus();
   }
 

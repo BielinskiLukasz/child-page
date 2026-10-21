@@ -35,4 +35,23 @@ body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
 .stage h2 { font-size: clamp(1.4rem, 5vw, 2.2rem); margin: .5rem 0; }
 .stage svg { width: 120px; height: 120px; }
 .stage img { -webkit-user-drag: none; user-drag: none; }
+.gear { position: fixed; z-index: 5; top: calc(var(--safe-t) + 8px); right: calc(var(--safe-r) + 8px);
+  width: 48px; height: 48px; border: 0; border-radius: 50%; background: transparent; color: var(--ink);
+  opacity: .45; display: grid; place-items: center; cursor: pointer; touch-action: manipulation; }
+.gear svg { width: 26px; height: 26px; }
+.gear:focus-visible, .overlay button:focus-visible, .overlay input:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; opacity: 1; }
+.hourglass { position: fixed; z-index: 10; top: calc(var(--safe-t) + 8px); right: calc(var(--safe-r) + 8px);
+  width: 56px; height: 56px; border-radius: 50%; background: #fff; display: grid; place-items: center;
+  box-shadow: 0 2px 8px rgba(120, 110, 160, .25); }
+.hourglass svg { width: 32px; height: 40px; }
+.overlay { position: fixed; z-index: 20; inset: 0; background: var(--bg); overflow: auto; display: grid; place-items: center; padding: 1rem; }
+.panel { max-width: 420px; width: 100%; font-size: 1.1rem; }
+.panel form { display: flex; flex-direction: column; gap: .8rem; }
+.panel input[type=text] { font: inherit; font-size: 1.4rem; padding: .6rem; border: 2px solid #c9c1e6; border-radius: 14px; min-height: 48px; }
+.panel .check { display: flex; align-items: center; gap: .6rem; min-height: 48px; }
+.panel .check input { width: 28px; height: 28px; }
+.panel button { font: inherit; min-height: 52px; border: 0; border-radius: 16px; background: #fff; color: var(--ink); font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(120, 110, 160, .2); }
+.sum { font-size: 2rem; font-weight: 700; margin: 0; }
+.msg { min-height: 1.4em; margin: 0; }
+.later p { font-size: 1.3rem; margin: 0; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

@@ -6,6 +6,8 @@
   var backBtn = document.getElementById('back');
   var cleanup = null;
   var currentId = null;
+  var pushedByApp = false;
+  var lastTile = null;
 
   function byId(id) {
     return window.ACTIVITIES.filter(function (a) { return a.id === id; })[0];
@@ -19,7 +21,8 @@
     btn.innerHTML = a.icon + '<span></span>';
     btn.lastChild.textContent = a.name;
     btn.addEventListener('click', function () {
-      if (location.hash !== '#' + a.id) { location.hash = a.id; }
+      lastTile = btn;
+      if (location.hash !== '#' + a.id) { pushedByApp = true; location.hash = a.id; }
     });
     li.appendChild(btn);
     tiles.appendChild(li);
@@ -40,6 +43,8 @@
     if (!a) {
       view.hidden = true;
       menu.hidden = false;
+      pushedByApp = false;
+      if (lastTile) { lastTile.focus(); }
       return;
     }
     menu.hidden = true;
@@ -50,7 +55,10 @@
   }
 
   backBtn.addEventListener('click', function () {
-    if (history.length > 1 && currentId) { history.back(); } else { location.hash = ''; }
+    // Only go back in history if the app itself pushed this entry; otherwise Back could leave the app.
+    if (pushedByApp) { history.back(); return; }
+    history.replaceState(null, '', location.pathname + location.search);
+    render();
   });
   window.addEventListener('hashchange', render);
   render();

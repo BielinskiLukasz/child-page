@@ -8,6 +8,9 @@
   function mount(container) {
     var canvas = document.createElement('canvas');
     canvas.className = 'paint-canvas';
+    canvas.tabIndex = 0;
+    canvas.setAttribute('role', 'img');
+    canvas.setAttribute('aria-label', 'Malowanie światłem: strzałki przesuwają światło, Enter lub spacja maluje');
     canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;background:#2b2748;';
     container.style.position = 'relative';
     container.style.display = 'block';
@@ -78,11 +81,25 @@
     }
     function up(e) { delete pointers[e.pointerId]; }
 
+    // Keyboard: arrows move a light spot (painting as it goes), Enter/Space paints in place.
+    var kx = null, ky = 0, STEP = 30;
+    function key(e) {
+      var dx = 0, dy = 0;
+      if (e.key === 'ArrowLeft') { dx = -STEP; } else if (e.key === 'ArrowRight') { dx = STEP; }
+      else if (e.key === 'ArrowUp') { dy = -STEP; } else if (e.key === 'ArrowDown') { dy = STEP; }
+      else if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') { return; }
+      e.preventDefault();
+      if (kx === null) { kx = w / 2; ky = h / 2; }
+      kx = Math.max(0, Math.min(w, kx + dx)); ky = Math.max(0, Math.min(h, ky + dy));
+      addMark(kx, ky);
+    }
+
     canvas.addEventListener('pointerdown', down);
     canvas.addEventListener('pointermove', move);
     canvas.addEventListener('pointerup', up);
     canvas.addEventListener('pointercancel', up);
     canvas.addEventListener('lostpointercapture', up);
+    canvas.addEventListener('keydown', key);
     window.addEventListener('resize', resize);
     window.addEventListener('orientationchange', resize);
     document.addEventListener('visibilitychange', onVis);

@@ -5,17 +5,35 @@
   var MAX_CLOUDS = 7, AMBIENT = 3, TRANSITION_MS = 3500, REDUCED_MS = 1200;
   var CLOUD_SVG = '<svg viewBox="0 0 120 60" aria-hidden="true" focusable="false"><g fill="#fff"><circle cx="35" cy="38" r="20"/>' +
     '<circle cx="60" cy="28" r="26"/><circle cx="88" cy="38" r="20"/><rect x="35" y="38" width="53" height="20" rx="10"/></g></svg>';
-  var STARS = [[8, 12, 3], [20, 28, 2], [34, 8, 2.5], [46, 22, 2], [58, 10, 3], [70, 30, 2], [82, 14, 2.5], [92, 26, 2],
-    [14, 44, 2], [28, 38, 2.5], [64, 42, 2], [88, 46, 3], [40, 46, 2]];
+  var BIRD_MIN = 45, BIRD_MAX = 75, BIRD_SECONDS = 20, LOOP_SECONDS = 2.6;
+  var BIRD_SVG = '<svg viewBox="-30 -20 60 40" aria-hidden="true" focusable="false"><g fill="#7a7396">' +
+    '<g class="dn-wing"><path d="M0 0Q-14 -16 -28 -6Q-14 -6 0 4z"/><path d="M0 0Q14 -16 28 -6Q14 -6 0 4z"/></g>' +
+    '<ellipse cx="0" cy="3" rx="9" ry="5"/><circle cx="8" cy="0" r="4"/><path d="M11 -1l6 2-6 1z" fill="#ffd98a"/></g></svg>';
+  // Big Dipper (Wielki Wóz): the first 7 stars, joined by thin lines; [x %, y % of the star sky, size px].
+  var DIPPER = [[14, 20, 3.6], [24, 26, 3], [34, 30, 3], [43, 36, 3.4], [47, 50, 3.6], [62, 52, 3.4], [64, 38, 3.6]];
+  var DIPPER_EDGES = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 3]];
+  // ~100 stars, laid out once with a fixed seed so the sky looks the same every visit.
+  function makeStars() {
+    var out = DIPPER.map(function (d) { return [d[0], d[1], d[2], 0.95]; }), seed = 7;
+    function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+    while (out.length < 100) {
+      var bright = rnd() < 0.1;
+      out.push([2 + rnd() * 96, 2 + rnd() * 94, bright ? 3 + rnd() : 1.4 + rnd() * 1.3, bright ? 0.9 : 0.4 + rnd() * 0.4]);
+    }
+    return out;
+  }
 
   function mount(container) {
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var scene = document.createElement('div');
     scene.className = 'dn';
-    var stars = STARS.map(function (s) {
-      return '<i style="left:' + s[0] + '%;top:' + s[1] + '%;width:' + s[2] + 'px;height:' + s[2] + 'px"></i>';
+    var stars = makeStars().map(function (s) {
+      return '<i style="left:' + s[0].toFixed(1) + '%;top:' + s[1].toFixed(1) + '%;width:' + s[2].toFixed(1) + 'px;height:' + s[2].toFixed(1) + 'px;opacity:' + s[3].toFixed(2) + '"></i>';
     }).join('');
-    scene.innerHTML = '<div class="dn-night"></div><div class="dn-stars" aria-hidden="true">' + stars + '</div>' +
+    var dipper = '<svg viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">' + DIPPER_EDGES.map(function (e) {
+      return '<line vector-effect="non-scaling-stroke" x1="' + DIPPER[e[0]][0] + '" y1="' + DIPPER[e[0]][1] + '" x2="' + DIPPER[e[1]][0] + '" y2="' + DIPPER[e[1]][1] + '"/>';
+    }).join('') + '</svg>';
+    scene.innerHTML = '<div class="dn-night"></div><div class="dn-stars" aria-hidden="true">' + dipper + stars + '</div>' +
       '<div class="dn-clouds" aria-hidden="true"></div>' +
       '<button class="dn-body" type="button" aria-label="Słońce"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' +
       '<g class="dn-sun"><g stroke="#ffd96a" stroke-width="5" stroke-linecap="round">' +
@@ -82,11 +100,54 @@
         n++;
       }
     }
+    // Bird: at most one, only by day, roughly once a minute; flies slowly across and is removed when it leaves the screen.
+    var bird = null, birdWait = BIRD_MIN + Math.random() * (BIRD_MAX - BIRD_MIN);
+    function removeBird() {
+      if (bird && bird.node.parentNode) { bird.node.parentNode.removeChild(bird.node); }
+      bird = null;
+    }
+    function spawnBird() {
+      var node = document.createElement('button');
+      node.type = 'button';
+      node.className = 'dn-bird';
+      node.setAttribute('aria-label', 'Ptaszek');
+      node.innerHTML = BIRD_SVG;
+      scene.appendChild(node);
+      var ltr = Math.random() < 0.5;
+      bird = { node: node, wing: node.querySelector('.dn-wing'), u: 0, ltr: ltr, y: 0.08 + Math.random() * 0.25, ph: 0, loop: -1 };
+    }
+    function placeBird(dt) {
+      var w = scene.clientWidth, h = scene.clientHeight, bw = bird.node.offsetWidth || 50;
+      bird.u += dt / BIRD_SECONDS;
+      bird.ph += dt * 2.4 * Math.PI; // slow, gentle flapping
+      var x = -bw + bird.u * (w + 2 * bw), y = bird.y * h + Math.sin(bird.u * 5) * h * 0.02, R = Math.min(w, h) * 0.07;
+      if (!bird.ltr) { x = w - x; }
+      if (bird.loop >= 0) { // gentle slow loop after a touch: smooth circle added to the flight path
+        bird.loop += dt / LOOP_SECONDS;
+        if (bird.loop >= 1) { bird.loop = -1; } else {
+          var a = bird.loop * 2 * Math.PI, e = Math.sin(bird.loop * Math.PI);
+          x += (bird.ltr ? 1 : -1) * R * Math.sin(a) * e; y -= R * (1 - Math.cos(a)) * 0.5 * e;
+        }
+      }
+      var f = 0.55 + 0.45 * Math.cos(bird.ph);
+      bird.wing.setAttribute('transform', 'scale(1 ' + f.toFixed(3) + ')');
+      bird.node.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + (bird.ltr ? 1 : -1) + ',1)';
+    }
+    function birdTick(dt) {
+      if (bird) {
+        if (progress >= 0.5 || bird.u >= 1) { removeBird(); } else { placeBird(dt); }
+      } else if (progress < 0.05 && target === 0) {
+        birdWait -= dt;
+        if (birdWait <= 0) { birdWait = BIRD_MIN + Math.random() * (BIRD_MAX - BIRD_MIN); spawnBird(); placeBird(0); }
+      }
+    }
+    function touchBird() { if (bird && bird.loop < 0) { bird.loop = 0; } }
     var cloudLast = performance.now(), cloudRaf = 0;
     function cloudTick(now) {
       cloudRaf = 0;
       var dt = Math.min(now - cloudLast, 100) / 1000;
       cloudLast = now;
+      birdTick(dt);
       if (!reduced) {
         clouds.slice().forEach(function (c) {
           c.x += c.speed * dt;
@@ -101,6 +162,7 @@
 
     function onDown(e) {
       e.preventDefault();
+      if (e.target.closest('.dn-bird')) { touchBird(); return; }
       if (busy) { return; }
       if (e.target.closest('.dn-body')) { toggle(); return; }
       var h = Math.max(scene.clientHeight, 1);
@@ -116,7 +178,9 @@
     }
     function onClick(e) {
       // keyboard activation (Enter/Space) fires click with detail 0; pointer input is handled in onDown
-      if (e.detail !== 0 || busy || !e.target.closest('.dn-body')) { return; }
+      if (e.detail !== 0) { return; }
+      if (e.target.closest('.dn-bird')) { touchBird(); return; }
+      if (busy || !e.target.closest('.dn-body')) { return; }
       toggle();
     }
     function onVis() {

@@ -42,6 +42,7 @@ body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
   background: #cfe8f8; }
 .g-sky { position: absolute; inset: 0 0 45% 0; background: linear-gradient(#bfe0f6, #dff1fb); }
 .g-lawn { position: absolute; inset: 55% 0 0 0; background: linear-gradient(#bfe6b4, #a8d9a0); border-radius: 50% 50% 0 0 / 18px 18px 0 0; }
+.g-lawn:focus-visible, .g-cloud:focus-visible { outline: 4px solid #8f7fd1; outline-offset: -4px; }
 .g-plants { position: absolute; inset: 0; pointer-events: none; }
 .g-plant { position: absolute; width: calc(60px * var(--s) * 1.4); height: calc(100px * var(--s) * 1.4);
   transform: translate(-50%, -100%); max-height: 30vh; transition: opacity .9s ease; pointer-events: none; }

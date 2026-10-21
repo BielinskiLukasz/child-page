@@ -49,7 +49,9 @@
       edges = pairs.map(function (p) {
         var a = shape.pts[p[0]], b = shape.pts[p[1]], d = 'M' + a.join(' ') + 'L' + b.join(' ');
         svgEl('path', { 'class': 'n-ghost', d: d }, lines);
-        return { a: p[0], b: p[1], node: svgEl('path', { 'class': 'n-line', d: d, pathLength: 1 }, lines) };
+        var node = svgEl('path', { 'class': 'n-line', d: d }, lines);
+        node.style.setProperty('--len', Math.hypot(b[0] - a[0], b[1] - a[1]).toFixed(2));
+        return { a: p[0], b: p[1], node: node };
       });
       stars = shape.pts.map(function (p, k) {
         var b = document.createElement('button');

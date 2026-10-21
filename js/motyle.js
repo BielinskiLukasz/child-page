@@ -90,8 +90,9 @@
       }
       flapPhase += dt * (flying ? 4.5 : 1.8) * Math.PI; // slow, calm flapping
       var k = 0.6 + 0.4 * Math.cos(flapPhase);
-      wl.style.transform = 'scaleX(' + k.toFixed(3) + ')';
-      wr.style.transform = 'scaleX(' + k.toFixed(3) + ')';
+      // SVG transform attribute scales around the user-space origin (x=0 = body axis), so both wings fold toward the centre
+      wl.setAttribute('transform', 'scale(' + k.toFixed(3) + ' 1)');
+      wr.setAttribute('transform', 'scale(' + k.toFixed(3) + ' 1)');
       var tilt = Math.max(-15, Math.min(15, vx * 120));
       fly.style.left = (px * 100).toFixed(3) + '%';
       fly.style.top = (py * 100).toFixed(3) + '%';

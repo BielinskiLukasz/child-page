@@ -83,6 +83,7 @@
     // Dimming is set from JS (not CSS animation) so it also works under prefers-reduced-motion.
     var o = 1;
     if (!off && p > DIM_FROM && p < 1) { o = 1 - (1 - MIN_OPACITY) * ((p - DIM_FROM) / (1 - DIM_FROM)); }
+    if (fading) { return; } // the fade owns the opacity until it finishes
     stage.style.opacity = p >= 1 ? '1' : String(o);
   }
 
@@ -110,26 +111,87 @@
   }
 
   function stop() {
+    cancelFade();
     if (timer) { clearInterval(timer); timer = null; }
     running = false;
     onExpire = null;
     glass.hidden = true;
     stage.style.opacity = '';
+    stage.style.pointerEvents = '';
   }
 
-  document.addEventListener('visibilitychange', function () { last = Date.now(); });
+  document.addEventListener('visibilitychange', function () {
+    last = Date.now();
+    if (fading && document.hidden) { finishFade(); } // hidden tab: land in the final state, no replay
+  });
   window.addEventListener('storage', function (e) { if (e.key === KEY && running) { refresh(); paint(); } });
 
   // ---- "later" screen ----
-  function renderLater(container) {
-    stage.style.opacity = '1';
+  var OUT_MS = 1600; // dimmed activity fades out
+  var IN_MS = 2200;  // moon screen fades in (about 3.8 s in total on expiry)
+  var fading = false;
+  var raf = 0;
+  var fadeDone = null;
+
+  // Opacity is animated from JS (not CSS) so the fade also works under prefers-reduced-motion.
+  function fadeTo(from, to, ms, done) {
+    var t0 = Date.now();
+    function step() {
+      var k = Math.min(1, (Date.now() - t0) / ms);
+      var e = k * k * (3 - 2 * k); // smoothstep: no sudden start or stop
+      stage.style.opacity = String(from + (to - from) * e);
+      if (k < 1) { raf = requestAnimationFrame(step); } else { raf = 0; done(); }
+    }
+    step();
+  }
+  function cancelFade() {
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    fading = false;
+    fadeDone = null;
+  }
+  function finishFade() {
+    var f = fadeDone;
+    cancelFade();
+    if (f) { f(); }
+  }
+
+  function showMoon(container) {
     container.innerHTML = '<div class="later"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">' +
       '<circle cx="32" cy="32" r="30" fill="#b9b3e0"/><path d="M36 12a20 20 0 1 0 16 32A17 17 0 0 1 36 12z" fill="#ffe9a8"/>' +
       '<path d="M22 34q3 3 6 0" fill="none" stroke="#5b5675" stroke-width="2" stroke-linecap="round"/>' +
       '<text x="44" y="22" font-size="8" fill="#fff">z</text></svg>' +
       '<h2>Na dziś już wystarczy.</h2><p>Do zobaczenia!</p></div>';
-    glass.hidden = state.limit === null;
-    drawGlass(1);
+  }
+
+  // fromActivity: time just ran out, so fade the dimmed activity out first, then the moon in.
+  function renderLater(container, fromActivity) {
+    cancelFade();
+    var cur = parseFloat(stage.style.opacity);
+    if (!isFinite(cur)) { cur = 1; }
+    var finish = function () {
+      cancelFade();
+      stage.style.opacity = '1';
+      glass.hidden = state.limit === null;
+      drawGlass(1);
+    };
+    if (document.hidden) { showMoon(container); finish(); return; }
+    fading = true;
+    var swapIn = function () {
+      showMoon(container);
+      glass.hidden = state.limit === null;
+      drawGlass(1);
+      fadeDone = finish;
+      fadeTo(0, 1, IN_MS, finish);
+    };
+    if (fromActivity) {
+      container.style.pointerEvents = 'none';
+      fadeDone = function () { container.style.pointerEvents = ''; swapIn(); finishFade(); };
+      fadeTo(cur, 0, OUT_MS, function () { container.style.pointerEvents = ''; swapIn(); });
+    } else {
+      container.textContent = '';
+      stage.style.opacity = '0';
+      swapIn();
+    }
   }
 
   // ---- parent area (gate + settings) ----

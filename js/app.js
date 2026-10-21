@@ -64,8 +64,7 @@
       shownLater = true;
       if (typeof cleanup === 'function') { cleanup(); }
       cleanup = null;
-      stage.textContent = '';
-      window.Playtime.renderLater(stage);
+      window.Playtime.renderLater(stage, true);
     });
     backBtn.focus();
   }

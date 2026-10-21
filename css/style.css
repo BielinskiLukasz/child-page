@@ -66,7 +66,7 @@ body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
 .n-sky { position: relative; width: min(94vw, calc(100vh - 200px)); width: min(94vw, calc(100dvh - 200px));
   aspect-ratio: 1; flex: none; transition: opacity .8s ease; }
 .n-sky.fade { opacity: 0; pointer-events: none; }
-.n-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.stage .n-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .n-lines path { fill: none; stroke-linecap: round; }
 .n-ghost { stroke: rgba(200, 210, 255, .22); stroke-width: .5; stroke-dasharray: 1.2 2.6; }
 .n-line { stroke: #ffe9a8; stroke-width: .9; stroke-dasharray: var(--len, 100); stroke-dashoffset: var(--len, 100); opacity: .85; }

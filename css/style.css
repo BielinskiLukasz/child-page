@@ -67,14 +67,13 @@ body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
   aspect-ratio: 1; flex: none; transition: opacity .8s ease; }
 .n-sky.fade { opacity: 0; pointer-events: none; }
 .n-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.n-lines path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.n-ghost { stroke: rgba(200, 210, 255, .22); stroke-width: 2; stroke-dasharray: 3 7; }
-.n-line { stroke: #ffe9a8; stroke-width: 3; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .85; }
-.n-line.on { animation: n-draw .9s ease-out forwards; }
+.n-lines path { fill: none; stroke-linecap: round; }
+.n-ghost { stroke: rgba(200, 210, 255, .22); stroke-width: .5; stroke-dasharray: 1.2 2.6; }
+.n-line { stroke: #ffe9a8; stroke-width: .9; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .85; }
+.n-line.on { stroke-dashoffset: 0; transition: stroke-dashoffset .9s ease-out; }
 .n-fill { fill: rgba(255, 233, 168, 0); transition: fill 1.6s ease; }
 .done .n-fill { fill: rgba(255, 233, 168, .18); }
 .done .n-line { filter: drop-shadow(0 0 4px rgba(255, 233, 168, .8)); }
-@keyframes n-draw { to { stroke-dashoffset: 0; } }
 .n-star { position: absolute; width: 56px; height: 56px; min-width: 48px; min-height: 48px; margin: -28px 0 0 -28px;
   padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; touch-action: manipulation; }
 .n-star::before { content: ""; position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px;

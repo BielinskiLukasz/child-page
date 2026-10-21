@@ -91,3 +91,17 @@ body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
   color: #3a3566; font: inherit; font-size: 1.4rem; font-weight: 700; cursor: pointer; touch-action: manipulation; }
 .n-next:focus-visible { outline: 4px solid #cbbcff; outline-offset: 3px; }
 .night.paused *, .night.paused { animation-play-state: paused !important; }
+.dn { position: fixed; inset: 0; overflow: hidden; --p: 0; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#bfe0f6, #e2f3fc); }
+.dn-night { position: absolute; inset: 0; background: linear-gradient(#1c2658, #2f3a78); opacity: var(--p); }
+.dn-stars { position: absolute; inset: 0 0 40% 0; opacity: var(--p); pointer-events: none; }
+.dn-stars i { position: absolute; border-radius: 50%; background: #f4f1ff; opacity: .8; }
+.dn-clouds { position: absolute; inset: 0; pointer-events: none; }
+.dn-cloud { position: absolute; left: 0; width: var(--w, 24vmin); will-change: transform; opacity: calc(.95 - var(--p) * .55); }
+.dn-cloud svg { width: 100%; display: block; }
+.dn-body { position: absolute; left: 50%; top: 42%; width: clamp(150px, 38vmin, 320px); aspect-ratio: 1; transform: translate(-50%, -50%);
+  border: 0; padding: 0; background: none; cursor: pointer; touch-action: none; }
+.dn-body svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.dn-sun { opacity: calc(1 - var(--p)); }
+.dn-moon { opacity: var(--p); }
+.dn-body:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 6px; border-radius: 50%; }

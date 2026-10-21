@@ -114,6 +114,11 @@
         addCloud(-30, y, 3.2, 0).tapped = true;
       }
     }
+    function onClick(e) {
+      // keyboard activation (Enter/Space) fires click with detail 0; pointer input is handled in onDown
+      if (e.detail !== 0 || busy || !e.target.closest('.dn-body')) { return; }
+      toggle();
+    }
     function onVis() {
       hidden = document.hidden;
       scene.classList.toggle('paused', hidden);
@@ -125,6 +130,7 @@
     }
 
     scene.addEventListener('pointerdown', onDown);
+    scene.addEventListener('click', onClick);
     document.addEventListener('visibilitychange', onVis);
     render();
     cloudRaf = requestAnimationFrame(cloudTick);
@@ -134,6 +140,7 @@
       if (cloudRaf) { cancelAnimationFrame(cloudRaf); }
       timers.forEach(clearTimeout);
       scene.removeEventListener('pointerdown', onDown);
+      scene.removeEventListener('click', onClick);
       document.removeEventListener('visibilitychange', onVis);
       if (scene.parentNode) { scene.parentNode.removeChild(scene); }
     };

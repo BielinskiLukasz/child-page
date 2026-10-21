@@ -24,6 +24,7 @@ body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
   padding: 1rem; box-shadow: 0 4px 14px rgba(120, 110, 160, .18); touch-action: manipulation;
   user-select: none; -webkit-user-select: none; }
 .tile:focus-visible, .back:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; }
+.paint-canvas:focus-visible { outline: 4px solid #8f7fd1; outline-offset: -4px; }
 .tile svg { width: 72px; height: 72px; }
 .back { position: fixed; z-index: 10; top: calc(var(--safe-t) + 8px); left: calc(var(--safe-l) + 8px);
   width: 56px; height: 56px; min-width: 48px; min-height: 48px; border: 0; border-radius: 50%;

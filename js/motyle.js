@@ -116,15 +116,17 @@
 
     var handlers = flowers.map(function (fl, i) {
       var h = function (e) { onFlower(i, e); };
+      var k = function (e) { if (e.detail === 0) { onFlower(i, e); } };
       fl.node.addEventListener('pointerdown', h);
-      return h;
+      fl.node.addEventListener('click', k);
+      return { h: h, k: k };
     });
     document.addEventListener('visibilitychange', onVis);
     start();
 
     return function () {
       if (raf) { cancelAnimationFrame(raf); raf = 0; }
-      flowers.forEach(function (fl, i) { fl.node.removeEventListener('pointerdown', handlers[i]); });
+      flowers.forEach(function (fl, i) { fl.node.removeEventListener('pointerdown', handlers[i].h); fl.node.removeEventListener('click', handlers[i].k); });
       document.removeEventListener('visibilitychange', onVis);
       if (scene.parentNode) { scene.parentNode.removeChild(scene); }
     };

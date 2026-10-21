@@ -18,6 +18,9 @@
   <main id="menu-view" class="view">
     <h1 class="title">Spokojny Świat Artura</h1>
     <ul id="tiles" class="tiles"></ul>
+    <button id="gear" class="gear" type="button" aria-label="Ustawienia dla rodzica">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM10.5 2h3l.5 2.6 1.6.7 2.2-1.5 2.1 2.1-1.5 2.2.7 1.6L22 10.5v3l-2.6.5-.7 1.6 1.5 2.2-2.1 2.1-2.2-1.5-1.6.7-.5 2.6h-3l-.5-2.6-1.6-.7-2.2 1.5-2.1-2.1 1.5-2.2-.7-1.6L2 13.5v-3l2.6-.5.7-1.6-1.5-2.2 2.1-2.1 2.2 1.5 1.6-.7z" fill="currentColor"/></svg>
+    </button>
   </main>
   <section id="activity-view" class="view" hidden>
     <button id="back" class="back" type="button" aria-label="Powrót do menu">
@@ -25,7 +28,34 @@
     </button>
     <div id="stage" class="stage"></div>
   </section>
+  <section id="parent-overlay" class="overlay" hidden>
+    <div id="gate-pane" class="panel">
+      <h2>Tylko dla rodzica</h2>
+      <form id="gate-form">
+        <p id="gate-sum" class="sum"></p>
+        <label for="gate-answer">Wynik</label>
+        <input id="gate-answer" type="text" inputmode="numeric" autocomplete="off" maxlength="2">
+        <p id="gate-msg" class="msg" role="status"></p>
+        <button type="submit">Dalej</button>
+        <button id="gate-close" type="button">Zamknij</button>
+      </form>
+    </div>
+    <div id="settings-pane" class="panel" hidden>
+      <h2>Ustawienia</h2>
+      <form id="settings-form">
+        <label for="limit-minutes">Dzienny limit zabawy (minuty)</label>
+        <input id="limit-minutes" type="text" inputmode="decimal" autocomplete="off">
+        <label class="check"><input id="no-limit" type="checkbox"> Bez limitu</label>
+        <button type="submit">Zapisz</button>
+        <p id="used-info"></p>
+        <button id="reset-timer" type="button">Zeruj czas</button>
+        <p id="settings-msg" class="msg" role="status"></p>
+        <button id="settings-close" type="button">Zamknij</button>
+      </form>
+    </div>
+  </section>
   <script src="js/activities.js"></script>
+  <script src="js/playtime.js"></script>
   <script src="js/motyle.js"></script>
   <script src="js/malowanie.js"></script>
   <script src="js/akwarium.js"></script>

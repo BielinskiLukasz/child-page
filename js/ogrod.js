@@ -34,10 +34,10 @@
   function mount(container) {
     var garden = document.createElement('div');
     garden.className = 'garden';
-    garden.setAttribute('role', 'img');
+    garden.setAttribute('role', 'group');
     garden.setAttribute('aria-label', 'Ogród z kwiatami');
-    garden.innerHTML = '<div class="g-sky"></div><div class="g-lawn"></div><div class="g-plants"></div>' +
-      '<div class="g-cloud" role="button" aria-label="Chmurka">' + cloudSvg() + '</div>';
+    garden.innerHTML = '<div class="g-sky"></div><div class="g-lawn" role="button" tabindex="0" aria-label="Trawnik – posadź roślinę"></div><div class="g-plants"></div>' +
+      '<div class="g-cloud" role="button" tabindex="0" aria-label="Chmurka">' + cloudSvg() + '</div>';
     container.appendChild(garden);
     var lawn = garden.querySelector('.g-lawn');
     var layer = garden.querySelector('.g-plants');
@@ -74,8 +74,8 @@
       var kind = Math.random() < 0.6 ? 'flower' : 'mushroom';
       var node = document.createElement('div');
       node.className = 'g-plant';
-      node.style.left = x + 'px';
-      node.style.top = y + 'px';
+      node.style.left = x.toFixed(2) + '%';   // percentages keep plants on the lawn after resize/rotation
+      node.style.top = y.toFixed(2) + '%';
       node.style.setProperty('--s', (0.8 + Math.random() * 0.4).toFixed(2));
       node.innerHTML = plantSvg(kind, pick(kind === 'flower' ? FLOWERS : MUSHROOMS));
       layer.appendChild(node);
@@ -86,7 +86,21 @@
       e.preventDefault();
       if (locked) { return; }
       var r = garden.getBoundingClientRect();
-      plant(e.clientX - r.left, e.clientY - r.top);
+      plant((e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100);
+    }
+
+    function isActivateKey(e) { return e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar'; }
+
+    // Keyboard: Enter/Space plants at a random spot on the lawn (lawn spans the bottom 45% of the garden).
+    function onLawnKey(e) {
+      if (!isActivateKey(e)) { return; }
+      e.preventDefault();
+      if (locked) { return; }
+      plant(10 + Math.random() * 80, 60 + Math.random() * 36);
+    }
+
+    function onCloudKey(e) {
+      if (isActivateKey(e)) { onCloud(e); }
     }
 
     function onCloud(e) {
@@ -104,12 +118,16 @@
 
     lawn.addEventListener('pointerdown', onLawn);
     cloud.addEventListener('pointerdown', onCloud);
+    lawn.addEventListener('keydown', onLawnKey);
+    cloud.addEventListener('keydown', onCloudKey);
     document.addEventListener('visibilitychange', onVisibility);
     onVisibility();
 
     return function cleanup() {
       lawn.removeEventListener('pointerdown', onLawn);
       cloud.removeEventListener('pointerdown', onCloud);
+      lawn.removeEventListener('keydown', onLawnKey);
+      cloud.removeEventListener('keydown', onCloudKey);
       document.removeEventListener('visibilitychange', onVisibility);
       timers.forEach(clearTimeout);
       timers = [];

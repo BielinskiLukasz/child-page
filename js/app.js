@@ -8,6 +8,7 @@
   var currentId = null;
   var pushedByApp = false;
   var lastTile = null;
+  var menuScroll = 0;
 
   function byId(id) {
     return window.ACTIVITIES.filter(function (a) { return a.id === id; })[0];
@@ -22,6 +23,7 @@
     btn.lastChild.textContent = a.name;
     btn.addEventListener('click', function () {
       lastTile = btn;
+      menuScroll = window.pageYOffset || 0;
       if (location.hash !== '#' + a.id) { pushedByApp = true; location.hash = a.id; }
     });
     li.appendChild(btn);
@@ -45,11 +47,15 @@
       view.hidden = true;
       menu.hidden = false;
       pushedByApp = false;
-      if (lastTile) { lastTile.focus(); }
+      // Restore the menu's scroll position (it collapses while hidden) before focusing without scrolling.
+      if (lastTile) { lastTile.focus({ preventScroll: true }); }
+      window.scrollTo(0, menuScroll);
       return;
     }
+    if (!menu.hidden) { menuScroll = window.pageYOffset || 0; }
     menu.hidden = true;
     view.hidden = false;
+    window.scrollTo(0, 0);
     currentId = a.id;
     var expired = window.Playtime.isExpired();
     var shownLater = expired;

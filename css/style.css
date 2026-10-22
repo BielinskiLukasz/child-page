@@ -8,20 +8,23 @@
   --safe-l: env(safe-area-inset-left, 0px);
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
+html, body { overflow-x: hidden; margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
   font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif; }
 body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
 [hidden] { display: none !important; }
 .view { min-height: 100vh; min-height: 100dvh; }
 .title { text-align: center; font-size: clamp(1.6rem, 6vw, 2.6rem); margin: 1.2rem 1rem; font-weight: 700; }
-.tiles { list-style: none; margin: 0 auto; padding: 0 1rem 1.5rem; max-width: 1000px;
-  display: grid; gap: 1rem; grid-template-columns: repeat(2, 1fr); }
-@media (max-width: 480px) and (orientation: portrait) { .tiles { grid-template-columns: 1fr; } }
-@media (min-width: 700px) { .tiles { grid-template-columns: repeat(3, 1fr); } }
+/* Flex-wrap + centred rows keep any 1-12 tiles balanced (a lone last tile sits in the middle). */
+.tiles { --cols: 2; --gap: 1rem; list-style: none; margin: 0 auto; padding: 0 1rem calc(1.5rem + var(--safe-b));
+  max-width: 1000px; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap);
+  scroll-padding-top: 5rem; }
+@media (max-width: 480px) and (orientation: portrait) { .tiles { --cols: 1; max-width: 460px; } }
+@media (min-width: 700px) { .tiles { --cols: 3; } }
+.tiles li { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); min-width: 0; scroll-margin-top: 5rem; }
 .tile { width: 100%; min-height: 150px; border: 0; border-radius: 28px; background: var(--tile);
   color: var(--ink); font: inherit; font-size: 1.15rem; font-weight: 700; cursor: pointer;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem;
-  padding: 1rem; box-shadow: 0 4px 14px rgba(120, 110, 160, .18); touch-action: manipulation;
+  padding: 1rem; overflow-wrap: anywhere; box-shadow: 0 4px 14px rgba(120, 110, 160, .18); touch-action: manipulation;
   user-select: none; -webkit-user-select: none; }
 .tile:focus-visible, .back:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; }
 .paint-canvas:focus-visible { outline: 4px solid #8f7fd1; outline-offset: -4px; }
@@ -37,8 +40,9 @@ body { padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); }
 .stage svg { width: 120px; height: 120px; }
 .stage img { -webkit-user-drag: none; user-drag: none; }
 .gear { position: fixed; z-index: 5; top: calc(var(--safe-t) + 8px); right: calc(var(--safe-r) + 8px);
-  width: 48px; height: 48px; border: 0; border-radius: 50%; background: transparent; color: var(--ink);
-  opacity: .45; display: grid; place-items: center; cursor: pointer; touch-action: manipulation; }
+  width: 48px; height: 48px; border: 0; border-radius: 50%; color: var(--ink);
+  opacity: .45; display: grid; place-items: center; cursor: pointer; touch-action: manipulation;
+  background: rgba(243, 238, 251, .85); }
 .gear svg { width: 26px; height: 26px; }
 .gear:focus-visible, .overlay button:focus-visible, .overlay input:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; opacity: 1; }
 .hourglass { position: fixed; z-index: 10; top: calc(var(--safe-t) + 8px); right: calc(var(--safe-r) + 8px);

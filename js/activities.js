@@ -23,7 +23,9 @@
     { id: 'motyle', name: 'Ogród Motyli',
       icon: svg('<ellipse cx="22" cy="28" rx="10" ry="12" fill="#f7a8c9"/><ellipse cx="42" cy="28" rx="10" ry="12" fill="#c9b8f2"/><rect x="30" y="20" width="4" height="26" rx="2" fill="#5b5675"/>', '#fdf0d5') },
     { id: 'malowanie', name: 'Malowanie Światłem',
-      icon: svg('<path d="M14 40q10-24 20-4t16-14" fill="none" stroke="#ffb7a5" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="22" r="4" fill="#ffe9a8"/>', '#e6e0f7') }
+      icon: svg('<path d="M14 40q10-24 20-4t16-14" fill="none" stroke="#ffb7a5" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="22" r="4" fill="#ffe9a8"/>', '#e6e0f7') },
+    { id: 'banki', name: 'Bańki Mydlane',
+      icon: svg('<circle cx="26" cy="34" r="13" fill="#fff" fill-opacity=".55" stroke="#b7deff" stroke-width="2.5"/><circle cx="46" cy="22" r="8" fill="#fff" fill-opacity=".55" stroke="#f7a8c9" stroke-width="2.5"/><circle cx="44" cy="46" r="5" fill="#fff" fill-opacity=".55" stroke="#c8ffe2" stroke-width="2"/><path d="M20 29a8 8 0 0 1 6-4" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>', '#d8ecfb') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

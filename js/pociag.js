@@ -4,7 +4,7 @@
 // Train position is a fraction f of the loop (0 = just off the left edge, 1 = just off the right edge), so the speed
 // and the station position stay valid when the screen size or orientation changes.
 (function () {
-  var CROSS_S = 16;            // seconds to cross the screen at cruise speed (criterion: >= ~12 s)
+  var CROSS_S = 22;            // seconds for a full loop at cruise speed (the front crosses the visible width in >= ~12 s even on narrow screens)
   var V = 1 / CROSS_S;         // cruise speed, loop fractions per second
   var RAMP_S = 2;              // gentle start / stop
   var MAX_DT = 0.05;
@@ -94,7 +94,7 @@
     var nods = animals.map(function () { return -1; });
 
     var W = 0, H = 0, tw = 0, th = 0, trackY = 0, L = 1, fs = 0.5;
-    var f = 0, v = 0, odo = 0;
+    var f = 0, v = 0, odo = 0, f_unwrapped = 0, df = 0;
     var ramp = { v0: 0, vt: 0, t: RAMP_S, dur: RAMP_S };
     var plan = null;
     var parked = true;
@@ -113,6 +113,7 @@
       scene.style.setProperty('--th', th.toFixed(1) + 'px');
       scene.style.setProperty('--ty', trackY.toFixed(1) + 'px');
       if (parked) { f = fs; }
+      else if (plan) { goStation(); }   // station moved: re-plan from the current speed so there is no snap at the end
       place();
     }
 
@@ -130,8 +131,10 @@
       var D = wrap(fs - f);
       if (D < 0.002 && v < V * 0.05) { f = fs; v = 0; parked = true; plan = null; ramp = { v0: 0, vt: 0, t: RAMP_S, dur: RAMP_S }; place(); return; }
       // cubic Hermite from the current speed to a stop at the station: smooth, never backwards
-      var T = Math.max(2.5, 1.5 * D / V);
-      if (v * T > 2 * D) { D += 1; T = Math.max(2.5, 1.5 * D / V); }
+      // T is capped at 2.85*D/v (Hermite with end speed 0 stays monotone while v*T <= 3D); a lap is added only when that would mean braking in < 2.5 s
+      var T = Math.max(2.5, 1.2 * D / V);
+      if (v > 0 && v * T > 2.85 * D) { T = 2.85 * D / v; }
+      if (T < 2.5) { D += 1; T = Math.max(2.5, 1.2 * D / V); if (v * T > 2.85 * D) { T = 2.85 * D / v; } }
       plan = { D: D, T: T, v0: v, t: 0 };
       f_unwrapped = f;
       plan.f0 = f;

@@ -5,7 +5,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
 ## Activities
-Akwarium Artura, Magiczny Ogród, Nocne Niebo, Dzień i Noc, Ogród Motyli, Malowanie Światłem, Mały Pociąg.
+Akwarium Artura, Magiczny Ogród, Nocne Niebo, Dzień i Noc, Ogród Motyli, Malowanie Światłem, Bańki Mydlane, Mały Pociąg.
 
 ## Run locally
 Plain HTML/CSS/JS, no build step:

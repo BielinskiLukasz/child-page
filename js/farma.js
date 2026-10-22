@@ -60,10 +60,9 @@
       b.style.left = POS[n][0] + '%'; b.style.top = POS[n][1] + '%'; b.style.width = POS[n][2] + '%';
       b.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + SVG[n] + '</svg>';
       board.appendChild(b);
-      var q = function (c) { var e = b.querySelector(c); return e; };
       var a = { n: n, el: b, t: -1, ph: Math.random() * 6, blinkAt: 2 + Math.random() * 3, blink: 0,
-        all: q('.fm-all'), body: q('.fm-body'), eyes: q('.fm-eyes'), head: q('.fm-head'), tail: q('.fm-tail'),
-        wl: q('.fm-wl'), wr: q('.fm-wr'), door: q('.fm-door'), peek: q('.fm-peek') };
+        all: b.querySelector('.fm-all'), body: b.querySelector('.fm-body'), eyes: b.querySelector('.fm-eyes'), head: b.querySelector('.fm-head'), tail: b.querySelector('.fm-tail'),
+        wl: b.querySelector('.fm-wl'), wr: b.querySelector('.fm-wr'), door: b.querySelector('.fm-door'), peek: b.querySelector('.fm-peek') };
       function origin(el, o) { if (el) { el.style.transformOrigin = o; } }
       origin(a.all, '50px 95px'); origin(a.body, '50px 95px'); origin(a.eyes, '50px 45px');
       origin(a.head, '70px 40px'); origin(a.tail, '72px 78px'); origin(a.wl, '34px 46px'); origin(a.wr, '66px 46px');

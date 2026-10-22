@@ -3,7 +3,7 @@
 // Flight is a critically damped spring with a rotated pull (curved path): redirecting keeps position and velocity continuous.
 (function () {
   var NS = 'http://www.w3.org/2000/svg';
-  var OMEGA = 2.2, TURN = 0.55, SWAY_MS = 2200, SWAY_AMP = 7;
+  var OMEGA = 2.2, TURN = 0.55, SWAY_MS = 2200, SWAY_AMP = 7, IDLE_MIN = 10, IDLE_MAX = 15; // seconds resting before it flies by itself
   var FLOWERS = [
     { x: 0.22, y: 0.24, petal: '#f7a8c9', core: '#ffe9a8', n: 6 },
     { x: 0.74, y: 0.22, petal: '#ffd98a', core: '#f2b7a0', n: 8 },
@@ -29,9 +29,9 @@
     return svg;
   }
   var BUTTERFLY = '<svg viewBox="-50 -40 100 80" aria-hidden="true" focusable="false">' +
-    '<g class="m-wl"><ellipse cx="-20" cy="-12" rx="20" ry="22" fill="#f7a8c9"/><ellipse cx="-16" cy="14" rx="13" ry="14" fill="#c9b8f2"/></g>' +
-    '<g class="m-wr"><ellipse cx="20" cy="-12" rx="20" ry="22" fill="#f7a8c9"/><ellipse cx="16" cy="14" rx="13" ry="14" fill="#c9b8f2"/></g>' +
-    '<rect x="-3" y="-24" width="6" height="48" rx="3" fill="#5b5675"/></svg>';
+    '<g class="m-wl"><ellipse cx="-20" cy="-12" rx="20" ry="22" fill="#f7a8c9" stroke="#fff" stroke-width="3"/><ellipse cx="-16" cy="14" rx="13" ry="14" fill="#c9b8f2" stroke="#fff" stroke-width="3"/></g>' +
+    '<g class="m-wr"><ellipse cx="20" cy="-12" rx="20" ry="22" fill="#f7a8c9" stroke="#fff" stroke-width="3"/><ellipse cx="16" cy="14" rx="13" ry="14" fill="#c9b8f2" stroke="#fff" stroke-width="3"/></g>' +
+    '<rect x="-3" y="-24" width="6" height="48" rx="3" fill="#5b5675" stroke="#fff" stroke-width="2"/></svg>';
 
   function mount(container) {
     var scene = document.createElement('div');
@@ -63,14 +63,21 @@
     var px = FLOWERS[rest].x, py = FLOWERS[rest].y, vx = 0, vy = 0;
     var flying = false, dir = 1, flapPhase = 0, raf = 0, last = 0;
 
+    var idle = 0, idleLimit = 0;
+    function newIdleLimit() { idle = 0; idleLimit = IDLE_MIN + Math.random() * (IDLE_MAX - IDLE_MIN); }
+    newIdleLimit();
     function sway(fl) { fl.swayT = 0; }
-    function onFlower(i, e) {
-      e.preventDefault();
-      sway(flowers[i]);
-      if (i === rest) { return; }
+    function flyTo(i) {
+      if (i === rest) { return; } // never "land" on the flower it is already on / heading to
       rest = i;
       flying = true;
       dir = -dir;
+    }
+    function onFlower(i, e) {
+      e.preventDefault();
+      sway(flowers[i]);
+      newIdleLimit();
+      flyTo(i);
     }
 
     function frame(now) {
@@ -86,6 +93,15 @@
         px += vx * dt; py += vy * dt;
         if (Math.sqrt(dx * dx + dy * dy) < 0.006 && Math.sqrt(vx * vx + vy * vy) < 0.03) {
           px = t.x; py = t.y; vx = vy = 0; flying = false;
+          newIdleLimit();
+        }
+      } else {
+        idle += dt; // dt is clamped and the loop stops while the tab is hidden, so hidden time never counts
+        if (idle >= idleLimit) {
+          var others = [];
+          flowers.forEach(function (fl, i) { if (i !== rest) { others.push(i); } });
+          flyTo(others[Math.floor(Math.random() * others.length)]);
+          newIdleLimit();
         }
       }
       flapPhase += dt * (flying ? 4.5 : 1.8) * Math.PI; // slow, calm flapping

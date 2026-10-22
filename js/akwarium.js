@@ -64,16 +64,15 @@
 
     function update(dt) {
       var sp = speed();
-      // Assign each food (oldest first) to the nearest still-free fish.
-      fish.forEach(function (f) { f.target = null; });
-      food.forEach(function (fd) {
+      // Each fish heads for the food closest to it; several fish may share a target (first to arrive eats it).
+      fish.forEach(function (f) {
         var best = null, bd = Infinity;
-        fish.forEach(function (f) {
-          if (f.target) { return; }
+        food.forEach(function (fd) {
+          if (fd.eaten) { return; }
           var d = Math.hypot(f.x - fd.x, f.y - fd.y);
-          if (d < bd) { bd = d; best = f; }
+          if (d < bd) { bd = d; best = fd; }
         });
-        if (best) { best.target = fd; }
+        f.target = best;
       });
       fish.forEach(function (f) {
         var desired, maxPitch = 0.45, turn = 0.7 * slow;

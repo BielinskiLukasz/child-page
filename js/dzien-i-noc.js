@@ -9,12 +9,11 @@
   var BIRD_SVG = '<svg viewBox="-30 -20 60 40" aria-hidden="true" focusable="false"><g fill="#7a7396">' +
     '<g class="dn-wing"><path d="M0 0Q-14 -16 -28 -6Q-14 -6 0 4z"/><path d="M0 0Q14 -16 28 -6Q14 -6 0 4z"/></g>' +
     '<ellipse cx="0" cy="3" rx="9" ry="5"/><circle cx="8" cy="0" r="4"/><path d="M11 -1l6 2-6 1z" fill="#ffd98a"/></g></svg>';
-  // Big Dipper (Wielki Wóz): the first 7 stars, joined by thin lines; [x %, y % of the star sky, size px].
-  var DIPPER = [[14, 20, 3.6], [24, 26, 3], [34, 30, 3], [43, 36, 3.4], [47, 50, 3.6], [62, 52, 3.4], [64, 38, 3.6]];
-  var DIPPER_EDGES = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 3]];
+  // Night flyers: now and then a white satellite or a blinking red/green airplane drifts across the stars.
+  var FLY_MIN = 20, FLY_MAX = 45, SAT_SECONDS = 18, PLANE_SECONDS = 12, BLINK_SECONDS = 0.7;
   // ~100 stars, laid out once with a fixed seed so the sky looks the same every visit.
   function makeStars() {
-    var out = DIPPER.map(function (d) { return [d[0], d[1], d[2], 0.95]; }), seed = 7;
+    var out = [], seed = 7;
     function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
     while (out.length < 100) {
       var bright = rnd() < 0.1;
@@ -30,10 +29,7 @@
     var stars = makeStars().map(function (s) {
       return '<i style="left:' + s[0].toFixed(1) + '%;top:' + s[1].toFixed(1) + '%;width:' + s[2].toFixed(1) + 'px;height:' + s[2].toFixed(1) + 'px;opacity:' + s[3].toFixed(2) + '"></i>';
     }).join('');
-    var dipper = '<svg viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">' + DIPPER_EDGES.map(function (e) {
-      return '<line vector-effect="non-scaling-stroke" x1="' + DIPPER[e[0]][0] + '" y1="' + DIPPER[e[0]][1] + '" x2="' + DIPPER[e[1]][0] + '" y2="' + DIPPER[e[1]][1] + '"/>';
-    }).join('') + '</svg>';
-    scene.innerHTML = '<div class="dn-night"></div><div class="dn-stars" aria-hidden="true">' + dipper + stars + '</div>' +
+    scene.innerHTML = '<div class="dn-night"></div><div class="dn-stars" aria-hidden="true">' + stars + '</div>' +
       '<div class="dn-clouds" aria-hidden="true"></div>' +
       '<button class="dn-body" type="button" aria-label="Słońce"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' +
       '<g class="dn-sun"><g stroke="#ffd96a" stroke-width="5" stroke-linecap="round">' +
@@ -43,7 +39,7 @@
       '<circle cx="62" cy="38" r="4" fill="#e3ddb8"/><path d="M36 48q5 5 10 0M54 48q5 5 10 0" fill="none" stroke="#8a84a8" stroke-width="2.5" stroke-linecap="round"/>' +
       '<path d="M44 60q6 4 12 0" fill="none" stroke="#8a84a8" stroke-width="2.5" stroke-linecap="round"/></g></svg></button>';
     container.appendChild(scene);
-    var cloudBox = scene.querySelector('.dn-clouds'), body = scene.querySelector('.dn-body');
+    var cloudBox = scene.querySelector('.dn-clouds'), starBox = scene.querySelector('.dn-stars'), body = scene.querySelector('.dn-body');
 
     var progress = 0, target = 0, busy = false, raf = 0, last = 0, hidden = document.hidden;
     var clouds = [], timers = [];
@@ -142,12 +138,47 @@
       }
     }
     function touchBird() { if (bird && bird.loop < 0) { bird.loop = 0; } }
+    // Flyer: at most one, only at night, every 20-45 s; removed when it leaves the sky or day returns. Not touchable.
+    var flyer = null, flyWait = FLY_MIN + Math.random() * (FLY_MAX - FLY_MIN);
+    function removeFlyer() {
+      if (flyer && flyer.node.parentNode) { flyer.node.parentNode.removeChild(flyer.node); }
+      flyer = null;
+    }
+    function placeFlyer(dt) {
+      var f = flyer, x, on;
+      f.u += dt / (f.plane ? PLANE_SECONDS : SAT_SECONDS);
+      f.t += dt;
+      x = f.ltr ? -2 + f.u * 104 : 102 - f.u * 104;
+      f.node.style.left = x.toFixed(2) + '%';
+      f.node.style.top = (f.y + f.u * f.slope).toFixed(2) + '%';
+      if (f.plane) {
+        on = Math.floor(f.t / BLINK_SECONDS) % 2;
+        f.node.style.background = on ? '#ff5a5a' : '#5dff8a';
+        f.node.style.opacity = (f.t % BLINK_SECONDS) < BLINK_SECONDS * 0.5 ? 1 : 0.25;
+      }
+    }
+    function flyerTick(dt) {
+      if (flyer) {
+        if (progress < 0.5 || flyer.u >= 1) { removeFlyer(); } else { placeFlyer(dt); }
+      } else if (progress >= 0.95 && target === 1) {
+        flyWait -= dt;
+        if (flyWait <= 0) {
+          flyWait = FLY_MIN + Math.random() * (FLY_MAX - FLY_MIN);
+          var node = document.createElement('div'), plane = Math.random() < 0.5;
+          node.className = 'dn-fly' + (plane ? ' plane' : '');
+          starBox.appendChild(node);
+          flyer = { node: node, plane: plane, u: 0, t: 0, ltr: Math.random() < 0.5, y: 4 + Math.random() * 40, slope: (Math.random() - 0.5) * 12 };
+          placeFlyer(0);
+        }
+      }
+    }
     var cloudLast = performance.now(), cloudRaf = 0;
     function cloudTick(now) {
       cloudRaf = 0;
       var dt = Math.min(now - cloudLast, 100) / 1000;
       cloudLast = now;
       birdTick(dt);
+      flyerTick(dt);
       if (!reduced) {
         clouds.slice().forEach(function (c) {
           c.x += c.speed * dt;

@@ -33,7 +33,9 @@
     { id: 'deszczyk', name: 'Deszczyk i Tęcza',
       icon: svg('<g fill="#fff"><circle cx="24" cy="26" r="9"/><circle cx="35" cy="22" r="11"/><circle cx="45" cy="27" r="8"/><rect x="18" y="26" width="34" height="8" rx="4"/></g><path d="M25 40v6M35 41v7M45 40v6" stroke="#8ec5ea" stroke-width="3" stroke-linecap="round"/><path d="M14 56a18 18 0 0 1 36 0" fill="none" stroke="#f7b6c2" stroke-width="3" opacity=".8"/>', '#cfeaf7') },
     { id: 'ksztalty', name: 'Kolorowe Kształty',
-      icon: svg('<circle cx="20" cy="22" r="8" fill="#f7a8c9"/><rect x="36" y="14" width="16" height="16" rx="4" fill="#a8d8f0"/><path d="M32 52l-10-17h20z" fill="#ffd98a" stroke="#ffd98a" stroke-width="3" stroke-linejoin="round"/>', '#fdf0d5') }
+      icon: svg('<circle cx="20" cy="22" r="8" fill="#f7a8c9"/><rect x="36" y="14" width="16" height="16" rx="4" fill="#a8d8f0"/><path d="M32 52l-10-17h20z" fill="#ffd98a" stroke="#ffd98a" stroke-width="3" stroke-linejoin="round"/>', '#fdf0d5') },
+    { id: 'farma', name: 'Zwierzątka na Farmie',
+      icon: svg('<rect x="10" y="30" width="44" height="28" rx="4" fill="#f6c9b0"/><path d="M6 32L32 12l26 20z" fill="#d9b99b"/><rect x="26" y="40" width="12" height="18" rx="3" fill="#fbe7c8"/><circle cx="52" cy="50" r="7" fill="#fbf7ff" stroke="#c9b8f2" stroke-width="2"/>', '#e3f1d9') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

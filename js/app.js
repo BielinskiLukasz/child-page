@@ -14,12 +14,11 @@
     return window.ACTIVITIES.filter(function (a) { return a.id === id; })[0];
   }
 
+  // Tiles are the enabled activities in the parent-configured order (see menu-config.js).
   function buildTiles() {
-    var list = window.MenuConfig && window.MenuConfig.enabledActivities
-      ? window.MenuConfig.enabledActivities() : window.ACTIVITIES;
     tiles.textContent = '';
     lastTile = null;
-    list.forEach(function (a) {
+    window.MenuConfig.enabledActivities().forEach(function (a) {
       var li = document.createElement('li');
       var btn = document.createElement('button');
       btn.type = 'button';
@@ -35,10 +34,9 @@
       tiles.appendChild(li);
     });
   }
-
   buildTiles();
-  // Rebuild the tile list when the menu configuration (enabled activities / order) changes.
   document.addEventListener('menuconfig', buildTiles);
+  window.addEventListener('storage', function (e) { if (e.key === 'swa.menu') { buildTiles(); } });
 
   function unmount() {
     window.Playtime.stop();
@@ -51,6 +49,8 @@
   // Renders whatever the URL hash says; hash changes give browser Back for free, no reload.
   function render() {
     var a = byId(location.hash.replace(/^#\/?/, ''));
+    // A disabled activity cannot be opened by any route: fall back to the menu.
+    if (a && !window.MenuConfig.isEnabled(a.id)) { a = null; }
     if (a && a.id === currentId) { return; }
     unmount();
     if (!a) {

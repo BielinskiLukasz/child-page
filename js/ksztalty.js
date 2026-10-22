@@ -16,7 +16,7 @@
 
   function shapeSvg(def, outline) {
     var p = def.path.replace('FILL', outline ? 'rgba(255,255,255,.55)' : def.color)
-      .replace('STROKE', outline ? def.color : def.color).replace('SW', outline ? '4' : '12');
+      .replace('STROKE', def.color).replace('SW', outline ? '4' : '12');
     if (outline) { p = p.replace('<', '<g stroke-dasharray="3 8" stroke-linecap="round" opacity=".9"><').replace('/>', '/></g>'); }
     return '<svg ' + SVGNS + '>' + p + '</svg>';
   }

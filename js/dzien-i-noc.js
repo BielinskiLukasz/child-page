@@ -9,7 +9,9 @@
   var BIRD_SVG = '<svg viewBox="-30 -20 60 40" aria-hidden="true" focusable="false"><g fill="#7a7396">' +
     '<g class="dn-wing"><path d="M0 0Q-14 -16 -28 -6Q-14 -6 0 4z"/><path d="M0 0Q14 -16 28 -6Q14 -6 0 4z"/></g>' +
     '<ellipse cx="0" cy="3" rx="9" ry="5"/><circle cx="8" cy="0" r="4"/><path d="M11 -1l6 2-6 1z" fill="#ffd98a"/></g></svg>';
-  // Night flyers: now and then a white satellite or a blinking red/green airplane drifts across the stars.
+  // Night flyers: now and then a white satellite or a blinking red airplane drifts across the stars.
+  // New stars slowly appear while the activity stays open: one every 15-30 s, from 1 px up to their target size, capped at STAR_CAP in total.
+  var STAR_ADD_MIN = 15, STAR_ADD_MAX = 30, STAR_GROW_SECONDS = 8, STAR_CAP = 160;
   var FLY_MIN = 20, FLY_MAX = 45, SAT_SECONDS = 18, PLANE_SECONDS = 12, BLINK_SECONDS = 0.7;
   // ~100 stars, laid out once with a fixed seed so the sky looks the same every visit.
   function makeStars() {
@@ -138,6 +140,29 @@
       }
     }
     function touchBird() { if (bird && bird.loop < 0) { bird.loop = 0; } }
+    // Slowly revealed stars: each starts at 1 px and eases to its target size (JS-driven, so it works under prefers-reduced-motion).
+    var starCount = 100, starWait = STAR_ADD_MIN + Math.random() * (STAR_ADD_MAX - STAR_ADD_MIN), growing = [];
+    function addStar() {
+      var r = Math.random(), bright = r < 0.1, target = bright ? 3 + Math.random() : (r < 0.35 ? 1 : 1.4 + Math.random() * 1.3);
+      var node = document.createElement('i');
+      node.style.cssText = 'left:' + (2 + Math.random() * 96).toFixed(1) + '%;top:' + (2 + Math.random() * 94).toFixed(1) + '%;width:1px;height:1px;transform:translate(-50%,-50%);opacity:' + (bright ? 0.9 : 0.4 + Math.random() * 0.4).toFixed(2);
+      starBox.appendChild(node);
+      starCount++;
+      if (target > 1) { growing.push({ node: node, t: 0, target: target }); }
+    }
+    function starTick(dt) {
+      if (starCount < STAR_CAP) {
+        starWait -= dt;
+        if (starWait <= 0) { starWait = STAR_ADD_MIN + Math.random() * (STAR_ADD_MAX - STAR_ADD_MIN); addStar(); }
+      }
+      growing = growing.filter(function (g) {
+        g.t = Math.min(g.t + dt / STAR_GROW_SECONDS, 1);
+        var px = (1 + (g.target - 1) * ease(g.t)).toFixed(2) + 'px';
+        g.node.style.width = px;
+        g.node.style.height = px;
+        return g.t < 1;
+      });
+    }
     // Flyer: at most one, only at night, every 20-45 s; removed when it leaves the sky or day returns. Not touchable.
     var flyer = null, flyWait = FLY_MIN + Math.random() * (FLY_MAX - FLY_MIN);
     function removeFlyer() {
@@ -145,15 +170,13 @@
       flyer = null;
     }
     function placeFlyer(dt) {
-      var f = flyer, x, on;
+      var f = flyer, x;
       f.u += dt / (f.plane ? PLANE_SECONDS : SAT_SECONDS);
       f.t += dt;
       x = f.ltr ? -2 + f.u * 104 : 102 - f.u * 104;
       f.node.style.left = x.toFixed(2) + '%';
       f.node.style.top = (f.y + f.u * f.slope).toFixed(2) + '%';
       if (f.plane) {
-        on = Math.floor(f.t / BLINK_SECONDS) % 2;
-        f.node.style.background = on ? '#ff5a5a' : '#5dff8a';
         f.node.style.opacity = (f.t % BLINK_SECONDS) < BLINK_SECONDS * 0.5 ? 1 : 0.25;
       }
     }
@@ -179,6 +202,7 @@
       cloudLast = now;
       birdTick(dt);
       flyerTick(dt);
+      starTick(dt);
       if (!reduced) {
         clouds.slice().forEach(function (c) {
           c.x += c.speed * dt;

@@ -8,25 +8,35 @@
   var currentId = null;
   var pushedByApp = false;
   var lastTile = null;
+  var menuScroll = 0;
 
   function byId(id) {
     return window.ACTIVITIES.filter(function (a) { return a.id === id; })[0];
   }
 
-  window.ACTIVITIES.forEach(function (a) {
-    var li = document.createElement('li');
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'tile';
-    btn.innerHTML = a.icon + '<span></span>';
-    btn.lastChild.textContent = a.name;
-    btn.addEventListener('click', function () {
-      lastTile = btn;
-      if (location.hash !== '#' + a.id) { pushedByApp = true; location.hash = a.id; }
+  // Tiles are the enabled activities in the parent-configured order (see menu-config.js).
+  function buildTiles() {
+    tiles.textContent = '';
+    lastTile = null;
+    window.MenuConfig.enabledActivities().forEach(function (a) {
+      var li = document.createElement('li');
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'tile';
+      btn.innerHTML = a.icon + '<span></span>';
+      btn.lastChild.textContent = a.name;
+      btn.addEventListener('click', function () {
+        lastTile = btn;
+        menuScroll = window.pageYOffset || 0;
+        if (location.hash !== '#' + a.id) { pushedByApp = true; location.hash = a.id; }
+      });
+      li.appendChild(btn);
+      tiles.appendChild(li);
     });
-    li.appendChild(btn);
-    tiles.appendChild(li);
-  });
+  }
+  buildTiles();
+  document.addEventListener('menuconfig', buildTiles);
+  window.addEventListener('storage', function (e) { if (e.key === 'swa.menu') { buildTiles(); } });
 
   function unmount() {
     window.Playtime.stop();
@@ -39,17 +49,23 @@
   // Renders whatever the URL hash says; hash changes give browser Back for free, no reload.
   function render() {
     var a = byId(location.hash.replace(/^#\/?/, ''));
+    // A disabled activity cannot be opened by any route: fall back to the menu.
+    if (a && !window.MenuConfig.isEnabled(a.id)) { a = null; }
     if (a && a.id === currentId) { return; }
     unmount();
     if (!a) {
       view.hidden = true;
       menu.hidden = false;
       pushedByApp = false;
-      if (lastTile) { lastTile.focus(); }
+      // Restore the menu's scroll position (it collapses while hidden) before focusing without scrolling.
+      if (lastTile) { lastTile.focus({ preventScroll: true }); }
+      window.scrollTo(0, menuScroll);
       return;
     }
+    if (!menu.hidden) { menuScroll = window.pageYOffset || 0; }
     menu.hidden = true;
     view.hidden = false;
+    window.scrollTo(0, 0);
     currentId = a.id;
     var expired = window.Playtime.isExpired();
     var shownLater = expired;

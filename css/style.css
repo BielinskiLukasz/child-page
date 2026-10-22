@@ -149,6 +149,23 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .dn-sun { opacity: calc(1 - var(--p)); }
 .dn-moon { opacity: var(--p); }
 .dn-body:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 6px; border-radius: 50%; }
+.tp { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #eaf6fb 60%); }
+.tp-sun { position: absolute; top: 9%; right: 12%; width: clamp(48px, 10vw, 90px); aspect-ratio: 1; border-radius: 50%; background: #fff1bd; box-shadow: 0 0 40px 16px rgba(255, 241, 189, .6); }
+.stage .tp-hills { position: absolute; left: 0; bottom: 0; width: 100%; height: 55%; display: block; }
+.tp-ground { position: absolute; left: 0; right: 0; top: calc(var(--ty) - 6px); bottom: 0; background: linear-gradient(#a8d9a0, #bfe6b4); }
+.tp-track { position: absolute; left: 0; right: 0; top: calc(var(--ty) - 4px); height: 14px; border-top: 4px solid #8a84a8;
+  background: repeating-linear-gradient(90deg, #b59d86 0 10px, transparent 10px 28px) 0 100% / 100% 6px no-repeat; }
+.tp-station { position: absolute; left: 50%; top: calc(var(--ty) - var(--th) * 1.9); width: calc(var(--tw) * .6); height: calc(var(--th) * 1.9);
+  transform: translateX(-50%); padding: 0; border: 0; background: none; cursor: pointer; }
+.stage .tp-station svg { width: 100%; height: 100%; display: block; }
+.tp-station:focus-visible, .tp-train:focus-visible, .tp-ab:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }
+.tp-train { position: absolute; left: 0; top: 0; width: var(--tw); height: var(--th); cursor: pointer; z-index: 2; will-change: transform; }
+.stage .tp-train svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.tp-ab { position: absolute; top: 4%; width: 22%; height: 66%; min-width: 48px; min-height: 48px; padding: 0; border: 0; background: none; cursor: pointer; }
+.tp-ab[data-i="0"] { left: 2.5%; } .tp-ab[data-i="1"] { left: 27.5%; } .tp-ab[data-i="2"] { left: 52.5%; }
+.tp-puffs { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.tp-puff { position: absolute; left: 0; top: 0; border-radius: 50%; background: #fff; opacity: 0; will-change: transform, opacity; }
 .bm { position: fixed; inset: 0; z-index: 1; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
   background: linear-gradient(#d6ecfb, #eef7fd 70%, #f4eefb); }
 .bm-b { position: absolute; left: 0; top: 0; border-radius: 50%; pointer-events: none; will-change: transform, opacity; opacity: 0;

@@ -14,21 +14,31 @@
     return window.ACTIVITIES.filter(function (a) { return a.id === id; })[0];
   }
 
-  window.ACTIVITIES.forEach(function (a) {
-    var li = document.createElement('li');
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'tile';
-    btn.innerHTML = a.icon + '<span></span>';
-    btn.lastChild.textContent = a.name;
-    btn.addEventListener('click', function () {
-      lastTile = btn;
-      menuScroll = window.pageYOffset || 0;
-      if (location.hash !== '#' + a.id) { pushedByApp = true; location.hash = a.id; }
+  function buildTiles() {
+    var list = window.MenuConfig && window.MenuConfig.enabledActivities
+      ? window.MenuConfig.enabledActivities() : window.ACTIVITIES;
+    tiles.textContent = '';
+    lastTile = null;
+    list.forEach(function (a) {
+      var li = document.createElement('li');
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'tile';
+      btn.innerHTML = a.icon + '<span></span>';
+      btn.lastChild.textContent = a.name;
+      btn.addEventListener('click', function () {
+        lastTile = btn;
+        menuScroll = window.pageYOffset || 0;
+        if (location.hash !== '#' + a.id) { pushedByApp = true; location.hash = a.id; }
+      });
+      li.appendChild(btn);
+      tiles.appendChild(li);
     });
-    li.appendChild(btn);
-    tiles.appendChild(li);
-  });
+  }
+
+  buildTiles();
+  // Rebuild the tile list when the menu configuration (enabled activities / order) changes.
+  document.addEventListener('menuconfig', buildTiles);
 
   function unmount() {
     window.Playtime.stop();

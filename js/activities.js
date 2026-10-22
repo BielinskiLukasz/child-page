@@ -23,7 +23,9 @@
     { id: 'motyle', name: 'Ogród Motyli',
       icon: svg('<ellipse cx="22" cy="28" rx="10" ry="12" fill="#f7a8c9"/><ellipse cx="42" cy="28" rx="10" ry="12" fill="#c9b8f2"/><rect x="30" y="20" width="4" height="26" rx="2" fill="#5b5675"/>', '#fdf0d5') },
     { id: 'malowanie', name: 'Malowanie Światłem',
-      icon: svg('<path d="M14 40q10-24 20-4t16-14" fill="none" stroke="#ffb7a5" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="22" r="4" fill="#ffe9a8"/>', '#e6e0f7') }
+      icon: svg('<path d="M14 40q10-24 20-4t16-14" fill="none" stroke="#ffb7a5" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="22" r="4" fill="#ffe9a8"/>', '#e6e0f7') },
+    { id: 'deszczyk', name: 'Deszczyk i Tęcza',
+      icon: svg('<g fill="#fff"><circle cx="24" cy="26" r="9"/><circle cx="35" cy="22" r="11"/><circle cx="45" cy="27" r="8"/><rect x="18" y="26" width="34" height="8" rx="4"/></g><path d="M25 40v6M35 41v7M45 40v6" stroke="#8ec5ea" stroke-width="3" stroke-linecap="round"/><path d="M14 56a18 18 0 0 1 36 0" fill="none" stroke="#f7b6c2" stroke-width="3" opacity=".8"/>', '#cfeaf7') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

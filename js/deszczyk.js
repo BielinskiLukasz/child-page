@@ -126,7 +126,7 @@
         cl.acc += dt * DROPS_PER_S;
         while (cl.acc >= 1) { cl.acc -= 1; spawn(cl); }
       });
-      if (raining) { rainTotal += dt; }
+      if (raining && bowState === 0) { rainTotal += dt; } // rain while the rainbow shows doesn't count towards the next one
       drops.forEach(function (d) {
         if (!d.live) { return; }
         d.y += FALL * dt;

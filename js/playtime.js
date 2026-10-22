@@ -84,7 +84,9 @@
     var o = 1;
     if (!off && p > DIM_FROM && p < 1) { o = 1 - (1 - MIN_OPACITY) * ((p - DIM_FROM) / (1 - DIM_FROM)); }
     if (fading) { return; } // the fade owns the opacity until it finishes
-    stage.style.opacity = p >= 1 ? '1' : String(o);
+    // At expiry keep the current dimmed opacity: renderLater() fades from it (setting 1 here made it jump back to full).
+    if (p >= 1) { return; }
+    stage.style.opacity = String(o);
   }
 
   // ---- timer ----

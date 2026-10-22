@@ -1,7 +1,7 @@
 // Activity "Bańki Mydlane": touch blows a big soft bubble that floats up; touching a bubble splits it gently.
 // Bubbles are pooled DOM divs driven by one rAF loop (JS motion, so it survives prefers-reduced-motion).
 (function () {
-  var MAX = 25, MIN_R = 14, BIG_R = [46, 62], FADE_IN = 0.8, FADE_OUT = 1.6, SPLIT_MS = 700;
+  var MAX = 25, MIN_R = 14, BIG_R = [46, 62], FADE_IN = 0.8, FADE_OUT = 1.6, SPLIT_MS = 700, GUARD_PAD = 12;
   var TINTS = [[255, 183, 213], [183, 222, 255], [200, 255, 226], [226, 205, 255], [255, 236, 186]];
 
   function mount(container) {
@@ -92,7 +92,9 @@
       var r = scene.getBoundingClientRect();
       var x = e.clientX - r.left, y = e.clientY - r.top;
       var b = hit(x, y);
-      if (b && b.r > MIN_R * 1.2) { splitBubble(b); } else if (!b) { blow(x, y, false); }
+      if (b && b.r > MIN_R * 1.2) { splitBubble(b); }
+      else if (b) { b.fading = true; b.fade = 0; } // a very small bubble answers the touch by fading away gently
+      else { blow(x, y, false); }
       if (scene.setPointerCapture) { try { scene.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ } }
     }
     function onMove(e) {
@@ -119,6 +121,7 @@
       if (dead) { return; }
       var dt = Math.min((now - (last || now)) / 1000, 0.1);
       last = now;
+      var zones = guards();
       bubbles.slice().forEach(function (b) {
         b.age += dt;
         b.ph += b.sw * dt;
@@ -128,12 +131,23 @@
         if (b.vy > 26) { b.vy = 26; }
         if (b.x < b.r) { b.vx += 10 * dt; } else if (b.x > W - b.r) { b.vx -= 10 * dt; }
         if (b.life !== undefined) { b.life -= dt; if (b.life <= 0) { b.fading = true; } }
-        // Near the top (and the Back button corner) the bubble fades out gently.
-        if (!b.fading && (b.y < b.r + 4 || (b.x < 84 && b.y < 84))) { b.fading = true; }
+        // Near the top, or over the Back button / hourglass, the bubble fades out gently.
+        if (!b.fading && (b.y < b.r + 4 || zones.some(function (z) { return b.x > z.l && b.x < z.r && b.y > z.t && b.y < z.b; }))) { b.fading = true; }
         if (b.fading) { b.fade += dt; if (b.split > 0) { b.split = Math.max(0, b.split - dt / (SPLIT_MS / 1000)); } }
         if (b.fading && b.fade >= FADE_OUT) { remove(b); } else { draw(b); }
       });
       raf = requestAnimationFrame(tick);
+    }
+    // Keep-out zones: the Back button and the playtime hourglass (measured, so safe-area insets and sizes are honoured).
+    function guards() {
+      var sr = scene.getBoundingClientRect(), out = [];
+      ['.back', '.hourglass'].forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (!el) { return; }
+        var r = el.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0) { out.push({ l: r.left - sr.left - GUARD_PAD, t: r.top - sr.top - GUARD_PAD, r: r.right - sr.left + GUARD_PAD, b: r.bottom - sr.top + GUARD_PAD }); }
+      });
+      return out;
     }
     function start() { if (!raf && !dead) { last = 0; raf = requestAnimationFrame(tick); } }
     function stop() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }

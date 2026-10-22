@@ -51,22 +51,22 @@
     menu.hidden = true;
     view.hidden = false;
     currentId = a.id;
-    var shownLater = false;
-    if (window.Playtime.isExpired()) {
-      window.Playtime.renderLater(stage);
-      shownLater = true;
-    } else {
-      cleanup = a.mount(stage) || null;
-    }
+    var expired = window.Playtime.isExpired();
+    var shownLater = expired;
     window.Playtime.start(function () {
       // Time is up: stop the activity and show the gentle "later" screen; Back/menu stay usable.
       if (shownLater) { return; } // already shown; don't re-render on every tick
       shownLater = true;
       if (typeof cleanup === 'function') { cleanup(); }
       cleanup = null;
-      stage.textContent = '';
-      window.Playtime.renderLater(stage);
+      window.Playtime.renderLater(stage, true);
     });
+    // start() calls stop(), which cancels any fade; run renderLater after it so the fade-in survives.
+    if (expired) {
+      window.Playtime.renderLater(stage);
+    } else {
+      cleanup = a.mount(stage) || null;
+    }
     backBtn.focus();
   }
 

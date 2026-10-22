@@ -166,3 +166,27 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .tp-ab[data-i="0"] { left: 2.5%; } .tp-ab[data-i="1"] { left: 27.5%; } .tp-ab[data-i="2"] { left: 52.5%; }
 .tp-puffs { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 .tp-puff { position: absolute; left: 0; top: 0; border-radius: 50%; background: #fff; opacity: 0; will-change: transform, opacity; }
+
+/* Dobranoc */
+.db { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden;
+  padding: calc(var(--safe-t) + 56px) calc(var(--safe-r) + 8px) calc(var(--safe-b) + 8px) calc(var(--safe-l) + 8px);
+  background: #6f6aa8; box-sizing: border-box; }
+.db-board { position: relative; aspect-ratio: 4 / 3; width: min(100%, calc((100dvh - var(--safe-t) - var(--safe-b) - 64px) * 4 / 3));
+  border-radius: 24px; overflow: hidden; }
+.stage .db-scene, .stage .db-glow { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.db-glow-wrap { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.stage .db-btn { position: absolute; transform: translate(-50%, -50%); aspect-ratio: 1; min-width: 48px; min-height: 48px; padding: 0;
+  border: 0; background: none; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.stage .db-btn svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.db-btn:focus-visible { outline: 4px solid #fff; outline-offset: 2px; border-radius: 16px; box-shadow: 0 0 0 7px #8f7fd1; }
+.r-scene { position: fixed; inset: 0; display: grid; place-items: center; background: linear-gradient(#cfeaf7, #eaf5fb 60%); overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+.r-box { position: relative; width: min(94vw, calc(100dvh - 110px)); aspect-ratio: 1; margin-top: 60px; }
+.r-meadow { position: absolute; left: -100vw; right: -100vw; top: 72%; height: 100vh; background: linear-gradient(#bfe6b4, #a8d9a0); border-radius: 50% 50% 0 0 / 24px 24px 0 0; }
+.r-puddle { position: absolute; aspect-ratio: 3 / 1; transform: translate(-50%, -50%); border-radius: 50%; background: #b5dcf5; box-shadow: inset 0 0 0 3px #d6ecfa; }
+.r-ripple { position: absolute; width: 14%; aspect-ratio: 3 / 1; border: 2px solid #ffffff; border-radius: 50%; transform: translate(-50%, -50%) scale(.2); pointer-events: none; }
+.r-drop { position: absolute; width: 7px; height: 12px; margin: -6px 0 0 -3px; border-radius: 50%; background: #8ec5ea; opacity: .85; pointer-events: none; }
+.r-rainbow { position: absolute; left: 4%; right: 4%; top: 30%; aspect-ratio: 200 / 110; opacity: 0; pointer-events: none; }
+.stage .r-rainbow svg { width: 100%; height: 100%; display: block; }
+.r-cloud { position: absolute; min-width: 96px; transform: translate(-50%, -50%); padding: 0; border: 0; background: none; cursor: pointer; touch-action: none; -webkit-tap-highlight-color: transparent; z-index: 2; }
+.stage .r-cloud svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 3px 4px rgba(120, 150, 190, .25)); }
+.r-cloud:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 4px; border-radius: 30px; }

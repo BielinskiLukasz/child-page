@@ -25,7 +25,11 @@
     { id: 'malowanie', name: 'Malowanie Światłem',
       icon: svg('<path d="M14 40q10-24 20-4t16-14" fill="none" stroke="#ffb7a5" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="22" r="4" fill="#ffe9a8"/>', '#e6e0f7') },
     { id: 'pociag', name: 'Mały Pociąg',
-      icon: svg('<rect x="10" y="28" width="14" height="14" rx="3" fill="#f7a8c9"/><rect x="26" y="28" width="14" height="14" rx="3" fill="#a9d6f2"/><rect x="42" y="22" width="12" height="20" rx="3" fill="#9ed8c6"/><circle cx="17" cy="46" r="3" fill="#5b5675"/><circle cx="33" cy="46" r="3" fill="#5b5675"/><circle cx="48" cy="46" r="3" fill="#5b5675"/><path d="M8 50h48" stroke="#8a84a8" stroke-width="2"/><circle cx="46" cy="14" r="4" fill="#fff"/>', '#dff1fb') }
+      icon: svg('<rect x="10" y="28" width="14" height="14" rx="3" fill="#f7a8c9"/><rect x="26" y="28" width="14" height="14" rx="3" fill="#a9d6f2"/><rect x="42" y="22" width="12" height="20" rx="3" fill="#9ed8c6"/><circle cx="17" cy="46" r="3" fill="#5b5675"/><circle cx="33" cy="46" r="3" fill="#5b5675"/><circle cx="48" cy="46" r="3" fill="#5b5675"/><path d="M8 50h48" stroke="#8a84a8" stroke-width="2"/><circle cx="46" cy="14" r="4" fill="#fff"/>', '#dff1fb') },
+    { id: 'dobranoc', name: 'Dobranoc',
+      icon: svg('<rect x="14" y="30" width="36" height="26" rx="4" fill="#f6dcc8"/><path d="M10 32L32 14l22 18z" fill="#c9a0c0"/><rect x="20" y="36" width="10" height="10" rx="2" fill="#ffe9a8"/><rect x="36" y="36" width="10" height="10" rx="2" fill="#7d86b8"/><circle cx="50" cy="14" r="5" fill="#ffe9a8"/>', '#b9b3e0') },
+    { id: 'deszczyk', name: 'Deszczyk i Tęcza',
+      icon: svg('<g fill="#fff"><circle cx="24" cy="26" r="9"/><circle cx="35" cy="22" r="11"/><circle cx="45" cy="27" r="8"/><rect x="18" y="26" width="34" height="8" rx="4"/></g><path d="M25 40v6M35 41v7M45 40v6" stroke="#8ec5ea" stroke-width="3" stroke-linecap="round"/><path d="M14 56a18 18 0 0 1 36 0" fill="none" stroke="#f7b6c2" stroke-width="3" opacity=".8"/>', '#cfeaf7') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

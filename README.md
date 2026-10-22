@@ -30,10 +30,13 @@ Pushing to `main` runs `.github/workflows/pages.yml`, which publishes to GitHub 
 Mandatory manual tests: Chrome desktop, Chrome Android, Safari iPhone/iPad. Edge and Firefox should work. Zoom is intentionally disabled to avoid accidental pinch-zoom.
 
 ## Privacy
-No backend, analytics, cookies, ads or tracking; no third-party requests, no data collected or transmitted. The only thing stored, locally on the device (localStorage), is the parent-configured daily playtime limit and the playtime used today (with its date); it never leaves the device. No audio.
+No backend, analytics, cookies, ads or tracking; no third-party requests, no data collected or transmitted. The only things stored, locally on the device (localStorage), are the parent-configured daily playtime limit, the playtime used today (with its date), and which activities are shown in the menu and in what order; it never leaves the device. No audio.
 
 ## Playtime limit
 A gear icon on the main menu opens a parent gate (a simple sum) and then Settings: daily limit in minutes (default 20, or no limit) and a timer reset. The timer counts only visible activity time and resets each new day. An hourglass (no numbers) shows time left, content dims gently over the last 20%, and when time is up a sleeping-moon screen is shown.
+
+## Menu activities
+In Settings (behind the same gate) a parent can enable or disable each activity and reorder them with up/down buttons; "Przywróć domyślne" restores all of them in the original order. At least one activity always stays enabled, and disabled activities cannot be opened by any route (a stored or typed `#hash` shows the menu).
 
 ## License
 See `LICENSE`.

@@ -52,9 +52,21 @@
         <p id="settings-msg" class="msg" role="status"></p>
         <button id="settings-close" type="button">Zamknij</button>
       </form>
+      <section class="acts" aria-labelledby="acts-title">
+        <h3 id="acts-title">Zabawy w menu</h3>
+        <ul id="act-list" class="act-list"></ul>
+        <p id="act-msg" class="msg" role="status"></p>
+        <button id="act-reset" type="button">Przywróć domyślne</button>
+        <div id="act-confirm" class="act-confirm" role="group" aria-label="Potwierdzenie" hidden>
+          <p>Przywrócić wszystkie zabawy w pierwotnej kolejności?</p>
+          <button id="act-confirm-yes" type="button">Tak</button>
+          <button id="act-confirm-no" type="button">Nie</button>
+        </div>
+      </section>
     </div>
   </section>
   <script src="js/activities.js"></script>
+  <script src="js/menu-config.js"></script>
   <script src="js/playtime.js"></script>
   <script src="js/motyle.js"></script>
   <script src="js/malowanie.js"></script>

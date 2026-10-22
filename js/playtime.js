@@ -237,6 +237,7 @@
     limitIn.disabled = noLimit.checked;
     setMsg.textContent = '';
     showUsed();
+    if (window.MenuConfig) { window.MenuConfig.showSettings(); }
     (noLimit.checked ? noLimit : limitIn).focus();
   }
   function showUsed() {

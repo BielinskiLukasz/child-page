@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens fourteen gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens twenty-three gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -18,7 +18,16 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 11. **Kolorowe Kształty** – nine soft shapes to drag onto their matching outlines (two 3×3 grids: stacked in portrait, side by side in landscape). There are no wrong answers: a shape dropped elsewhere simply drifts back.
 12. **Zwierzątka na Farmie** – a pastel farm. Touching an animal makes it react slowly; touching the barn opens its door so an animal can peek out.
 13. **Policz Razem** – a few friendly objects (apples, ducks, flowers, fish) to touch one by one: each touch adds a dot to a counting row and shows the numeral 1–5; the group glows softly when all are counted and a new scene fades in.
-14. **Kolorowe Kubeczki** – three pastel cups and six soft balls (two per colour) to drag into the cup of the same colour; colours also differ by a subtle pattern. A ball dropped elsewhere simply floats back, and when all are sorted the cups glow softly and the balls drift out in a new order.
+14. **Ubierz Misia** – a teddy bear in a room with a window. Touching the window slowly changes the weather (sun, rain, snow); six clothes (sun hat, umbrella, scarf, rain boots, warm hat, sunglasses) can be dragged onto the bear, which does a small happy hop with a soft glow for fitting clothes and a gentle head tilt for others; touching worn clothes takes them off.
+15. **Przeciwieństwa** – four big objects (a door, a cup, a balloon, a lamp) that slowly change to their opposite when touched – open, full, high, on – and back again; the scene glows softly when all four are in their second state.
+16. **Co nie Pasuje?** – three large pictures, two of one kind and one different (e.g. two fruits and a car). Touching the odd one makes it glow and bounce softly before the next set fades in; touching the others only makes them wobble, so there are no wrong answers.
+17. **Literki** – one big letter (Aa) on a soft card with a friendly picture of something starting with it. Touching the picture makes it wiggle and shows its word for a few seconds, touching the letter makes it glow, and the arrows (or a swipe) move through twelve letters.
+18. **Ścieżka** – drag a finger along a wide, curvy path and a little figure (snail, car, ladybird or bee) slowly follows it to a flower or house; if the finger slips off, it simply waits. Arrow keys, Enter or Space also move it step by step.
+19. **Wzorki** – a string of four beads in a simple repeating pattern with an empty slot; touching the matching one of two big beads glides it into place, the other one only wobbles gently, and after three beads the whole string glows and a new pattern appears.
+20. **Zabawa w chowanego** – a garden with a bush, a box, a tree and a barrel. Touching a hiding place slowly lifts it to show the animal peeking behind it (or a flower if it is empty); when every place has been opened they glow softly, close and the animals move to new places.
+21. **Koraliki** – a bowl of eight big colourful beads to drag onto a string; a bead released away from the string drifts back, and when all eight are threaded the necklace glows softly and the beads return to the bowl in a new order.
+22. **Duże i Małe** – a big house and a small house, with big and small animals waiting at the bottom. Drag (or select) a big animal to the big house and a small one to the small house; anywhere else it floats gently back, and when all are home both houses glow and a new round with other animals begins.
+23. **Kolorowe Kubeczki** – three pastel cups and six soft balls (two per colour) to drag into the cup of the same colour; colours also differ by a subtle pattern. A ball dropped elsewhere simply floats back, and when all are sorted the cups glow softly and the balls drift out in a new order.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

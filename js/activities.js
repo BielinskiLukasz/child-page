@@ -37,7 +37,9 @@
     { id: 'farma', name: 'Zwierzątka na Farmie',
       icon: svg('<rect x="10" y="30" width="44" height="28" rx="4" fill="#f6c9b0"/><path d="M6 32L32 12l26 20z" fill="#d9b99b"/><rect x="26" y="40" width="12" height="18" rx="3" fill="#fbe7c8"/><circle cx="52" cy="50" r="7" fill="#fbf7ff" stroke="#c9b8f2" stroke-width="2"/>', '#e3f1d9') },
     { id: 'policz-razem', name: 'Policz Razem',
-      icon: svg('<circle cx="20" cy="26" r="9" fill="#c4e8a0"/><circle cx="44" cy="26" r="9" fill="#c4e8a0"/><circle cx="32" cy="44" r="9" fill="#c4e8a0"/><g fill="#f7a8c9"><circle cx="16" cy="56" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="36" cy="56" r="3"/></g>', '#fdf0d5') }
+      icon: svg('<circle cx="20" cy="26" r="9" fill="#c4e8a0"/><circle cx="44" cy="26" r="9" fill="#c4e8a0"/><circle cx="32" cy="44" r="9" fill="#c4e8a0"/><g fill="#f7a8c9"><circle cx="16" cy="56" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="36" cy="56" r="3"/></g>', '#fdf0d5') },
+    { id: 'buzki', name: 'Buźki',
+      icon: svg('<circle cx="32" cy="32" r="22" fill="#ffe9a8"/><circle cx="24" cy="28" r="3" fill="#5b5675"/><circle cx="40" cy="28" r="3" fill="#5b5675"/><path d="M22 38q10 10 20 0" fill="none" stroke="#8a6a8f" stroke-width="3" stroke-linecap="round"/><circle cx="17" cy="37" r="4" fill="#f7a8c9" opacity=".6"/><circle cx="47" cy="37" r="4" fill="#f7a8c9" opacity=".6"/>', '#e6e0f7') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

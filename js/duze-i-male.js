@@ -1,0 +1,270 @@
+// Activity "Duże i Małe": drag big animals to the big house and small animals to the small house. No wrong answers:
+// an animal released anywhere else floats back. One rAF loop (works under prefers-reduced-motion, pauses when the
+// tab is hidden, stops when idle); fixed DOM of 2 houses + 4 animals (a big and a small version of 2 animal types).
+// Rounds cycle through 4 animal types, two per round. Layout is computed in px from the field size.
+(function () {
+  var ATTR = 'viewBox="0 0 100 100" aria-hidden="true" focusable="false"';
+  var TYPES = [
+    { id: 'bear', label: 'miś', glow: '#e0b890',
+      art: '<circle cx="24" cy="28" r="13" fill="#d9b99b"/><circle cx="76" cy="28" r="13" fill="#d9b99b"/><circle cx="24" cy="28" r="6" fill="#f1d9c4"/><circle cx="76" cy="28" r="6" fill="#f1d9c4"/>' +
+        '<circle cx="50" cy="55" r="36" fill="#d9b99b"/><ellipse cx="50" cy="67" rx="16" ry="12" fill="#f6e4d2"/><circle cx="38" cy="50" r="4" fill="#5b5675"/><circle cx="62" cy="50" r="4" fill="#5b5675"/><ellipse cx="50" cy="62" rx="5" ry="3.5" fill="#5b5675"/>' },
+    { id: 'rabbit', label: 'króliczek', glow: '#f0b8d0',
+      art: '<ellipse cx="34" cy="22" rx="9" ry="22" fill="#fbf7ff" stroke="#c9b8f2" stroke-width="3"/><ellipse cx="66" cy="22" rx="9" ry="22" fill="#fbf7ff" stroke="#c9b8f2" stroke-width="3"/><ellipse cx="34" cy="24" rx="4" ry="14" fill="#f7c4d8"/><ellipse cx="66" cy="24" rx="4" ry="14" fill="#f7c4d8"/>' +
+        '<circle cx="50" cy="62" r="30" fill="#fbf7ff" stroke="#c9b8f2" stroke-width="3"/><circle cx="40" cy="58" r="3.5" fill="#5b5675"/><circle cx="60" cy="58" r="3.5" fill="#5b5675"/><ellipse cx="50" cy="68" rx="4.5" ry="3" fill="#f7a8c9"/>' },
+    { id: 'cat', label: 'kotek', glow: '#ffcf9a',
+      art: '<path d="M16 46 L20 12 L44 30 Z" fill="#ffc9a0"/><path d="M84 46 L80 12 L56 30 Z" fill="#ffc9a0"/><path d="M23 34 L24 22 L33 30 Z" fill="#f7a8c9"/><path d="M77 34 L76 22 L67 30 Z" fill="#f7a8c9"/>' +
+        '<circle cx="50" cy="58" r="34" fill="#ffc9a0"/><circle cx="38" cy="54" r="4" fill="#5b5675"/><circle cx="62" cy="54" r="4" fill="#5b5675"/><path d="M45 64 h10 l-5 6 z" fill="#f7a8c9"/><path d="M12 62 h14 M12 70 h14 M74 62 h14 M74 70 h14" stroke="#b79a82" stroke-width="2" stroke-linecap="round"/>' },
+    { id: 'duck', label: 'kaczuszka', glow: '#ffe28a',
+      art: '<circle cx="50" cy="52" r="38" fill="#ffe28a"/><path d="M22 62 q-12-4-10-14 q10 2 14 10z" fill="#ffd25e"/><path d="M78 62 q12-4 10-14 q-10 2-14 10z" fill="#ffd25e"/>' +
+        '<ellipse cx="50" cy="62" rx="15" ry="9" fill="#ffb27a"/><circle cx="38" cy="45" r="4" fill="#5b5675"/><circle cx="62" cy="45" r="4" fill="#5b5675"/>' }
+  ];
+  var ROUND_SETS = [[0, 1], [2, 3], [1, 2], [3, 0]];
+  var GLOW_S = 2000, NEXT_S = 4000, FADE_MS = 700;
+
+  function animalSvg(t) { return '<svg ' + ATTR + '>' + TYPES[t].art + '</svg>'; }
+  function houseSvg(wall, roof, door) {
+    return '<svg ' + ATTR + '><rect x="10" y="42" width="80" height="50" rx="8" fill="' + wall + '"/>' +
+      '<path d="M3 46 L50 8 L97 46 Z" fill="' + roof + '" stroke="' + roof + '" stroke-width="6" stroke-linejoin="round"/>' +
+      '<rect x="40" y="58" width="20" height="34" rx="9" fill="' + door + '"/>' +
+      '<circle cx="50" cy="29" r="6" fill="#fff" fill-opacity=".7"/></svg>';
+  }
+  function smooth(t) { t = t < 0 ? 0 : t > 1 ? 1 : t; return t * t * (3 - 2 * t); }
+  function reduced() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+
+  function mount(container) {
+    container.style.display = 'block';
+    var board = document.createElement('div');
+    board.className = 'dm';
+    board.innerHTML = '<div class="dm-glow"></div><div class="dm-field"></div>';
+    container.appendChild(board);
+    var field = board.querySelector('.dm-field'), glowEl = board.querySelector('.dm-glow');
+
+    var fw = 0, fh = 0, B = 96, Sm = 48, selected = null, round = 0;
+    var raf = 0, last = 0, doneT = -1, doneGlow = 0, fade = 1, fadeDir = 0, phase = 'play';
+
+    var houses = [
+      { size: 'big', label: 'Duży domek', svg: houseSvg('#f6c9b0', '#d9b99b', '#fbe7c8'), cx: 0, base: 0, w: 0, glow: '#ffd9a8' },
+      { size: 'small', label: 'Mały domek', svg: houseSvg('#cfe3f7', '#b9b3e0', '#f4f0ff'), cx: 0, base: 0, w: 0, glow: '#c9d8ff' }
+    ];
+    houses.forEach(function (h) {
+      var el = document.createElement('button');
+      el.type = 'button'; el.className = 'dm-house'; el.setAttribute('aria-label', h.label);
+      el.innerHTML = h.svg;
+      field.appendChild(el);
+      el.addEventListener('click', function () { onHouse(h); });
+      h.el = el;
+    });
+    var items = [];
+    [0, 1, 2, 3].forEach(function (k) {
+      var el = document.createElement('button');
+      el.type = 'button'; el.className = 'dm-animal';
+      el.setAttribute('aria-pressed', 'false');
+      field.appendChild(el);
+      var it = { el: el, big: k < 2, k: k, type: 0, x: 0, y: 0, hx: 0, hy: 0, tx: 0, ty: 0, sz: 0, house: null,
+        mode: 'idle', pid: null, dx: 0, dy: 0, placed: false, glow: 0, fx: 0, fy: 0, gt: 0, gd: 1, gx: 0, gy: 0 };
+      items.push(it);
+      el.addEventListener('pointerdown', function (e) { down(it, e); });
+      el.addEventListener('pointermove', function (e) { move(it, e); });
+      el.addEventListener('pointerup', function (e) { up(it, e); });
+      el.addEventListener('pointercancel', function (e) { up(it, e); });
+      el.addEventListener('lostpointercapture', function (e) { up(it, e); });
+      el.addEventListener('click', function (e) { if (e.detail === 0) { select(it); } });
+    });
+
+    function setRound() {
+      var set = ROUND_SETS[round % ROUND_SETS.length];
+      items.forEach(function (it) {
+        it.type = set[it.k % 2];
+        it.el.innerHTML = animalSvg(it.type);
+        it.el.setAttribute('aria-label', (it.big ? 'Duży ' : 'Mały ') + TYPES[it.type].label + ' (Enter lub spacja, potem wybierz domek)');
+        it.placed = false; it.mode = 'idle'; it.glow = 0;
+        if (it.pid !== null) { try { it.el.releasePointerCapture(it.pid); } catch (e) { /* released */ } it.pid = null; }
+      });
+      shuffleRest();
+    }
+    // Random order of the 4 animals along the bottom row.
+    var order = [0, 1, 2, 3];
+    function shuffleRest() {
+      for (var i = order.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1)), t = order[i]; order[i] = order[j]; order[j] = t;
+      }
+    }
+
+    function layout() {
+      var r = field.getBoundingClientRect();
+      fw = r.width; fh = r.height;
+      B = Math.max(96, Math.min(180, Math.min(fw * 0.28, fh * 0.2)));
+      Sm = B / 2;
+      var restBottom = fh - 4, ground = restBottom - B - 14;
+      var Hb = Math.max(60, Math.min(fw * 0.5, ground)), Hs = Hb / 2, gap = fw * 0.06;
+      var left = (fw - (Hb + Hs + gap)) / 2;
+      houses[0].w = Hb; houses[0].cx = left + Hb / 2; houses[0].base = ground;
+      houses[1].w = Hs; houses[1].cx = left + Hb + gap + Hs / 2; houses[1].base = ground;
+      houses.forEach(function (h) {
+        h.el.style.width = h.w + 'px'; h.el.style.height = h.w + 'px';
+        h.el.style.transform = 'translate(' + (h.cx - h.w / 2) + 'px,' + (h.base - h.w) + 'px)';
+      });
+      // Resting row: widths in the shuffled order, centred.
+      var widths = order.map(function (k) { return items[k].big ? B : Sm; });
+      var sum = widths.reduce(function (a, b) { return a + b; }, 0);
+      var g = Math.max(4, Math.min(28, (fw * 0.96 - sum) / 3));
+      var x = (fw - sum - 3 * g) / 2;
+      order.forEach(function (k, i) {
+        var it = items[k]; it.sz = widths[i];
+        it.hx = x + it.sz / 2; it.hy = restBottom - it.sz / 2;
+        x += it.sz + g;
+        it.house = houses[it.big ? 0 : 1];
+        var off = Math.min(it.sz * 0.5, it.house.w * 0.28) * (it.k % 2 ? 1 : -1);
+        it.tx = it.house.cx + off; it.ty = it.house.base - it.sz / 2 - it.house.w * 0.03;
+        it.el.style.width = it.sz + 'px'; it.el.style.height = it.sz + 'px';
+        if (it.mode === 'drag') { cancelDrag(it); }
+        if (it.mode === 'glide') { glideTo(it, it.placed ? it.tx : it.hx, it.placed ? it.ty : it.hy, true); }
+        else if (it.placed) { it.x = it.tx; it.y = it.ty; }
+        else { it.x = it.hx; it.y = it.hy; }
+        place(it);
+      });
+    }
+    function place(it) { it.el.style.transform = 'translate(' + (it.x - it.sz / 2) + 'px,' + (it.y - it.sz / 2) + 'px)'; }
+    function paint(it) {
+      var g = it.glow + doneGlow * 0.5;
+      it.el.style.filter = g > 0.01 ? 'drop-shadow(0 0 ' + (6 + 14 * g) + 'px ' + TYPES[it.type].glow + ')' : '';
+      it.el.style.opacity = String(fade);
+    }
+    function paintHouses() {
+      houses.forEach(function (h) {
+        h.el.style.filter = doneGlow > 0.01 ? 'drop-shadow(0 0 ' + (8 + 22 * doneGlow) + 'px ' + h.glow + ')' : '';
+      });
+    }
+
+    function glideTo(it, x, y, quick) {
+      var d = Math.hypot(x - it.x, y - it.y);
+      it.fx = it.x; it.fy = it.y; it.gx = x; it.gy = y; it.gt = 0;
+      it.gd = quick ? 200 : (reduced() ? 300 : Math.min(1800, 800 + d * 1.0));
+      it.mode = 'glide';
+      it.el.style.zIndex = '2';
+      start();
+    }
+    function sendHome(it) { it.placed = false; glideTo(it, it.hx, it.hy); }
+    function snap(it) { it.placed = true; select(null); glideTo(it, it.tx, it.ty); }
+
+    function cancelDrag(it) {
+      if (it.pid !== null) { try { it.el.releasePointerCapture(it.pid); } catch (e) { /* already released */ } }
+      it.pid = null; it.mode = 'idle'; sendHome(it);
+    }
+    function down(it, e) {
+      if (phase !== 'play' || it.placed || it.pid !== null || (e.button !== undefined && e.button > 0)) { return; }
+      var r = field.getBoundingClientRect();
+      it.pid = e.pointerId; it.mode = 'drag';
+      it.dx = it.x - (e.clientX - r.left); it.dy = it.y - (e.clientY - r.top);
+      it.el.style.zIndex = '5';
+      try { it.el.setPointerCapture(e.pointerId); } catch (err) { /* synthetic pointer */ }
+      e.preventDefault();
+    }
+    function move(it, e) {
+      if (it.mode !== 'drag' || e.pointerId !== it.pid) { return; }
+      var r = field.getBoundingClientRect(), h = it.sz / 2;
+      var px = e.clientX - r.left + it.dx, py = e.clientY - r.top + it.dy;
+      // Keep the centre inside the visible screen so an animal can never be lost off-screen.
+      it.x = Math.max(-r.left + h, Math.min(window.innerWidth - r.left - h, px));
+      it.y = Math.max(-r.top + h, Math.min(window.innerHeight - r.top - h, py));
+      place(it);
+    }
+    // House under the animal's centre (nearest house centre wins at the edge between them), or null.
+    function houseAt(it) {
+      var best = null, bd = 1e9;
+      houses.forEach(function (h) {
+        var pad = h.w * 0.1;
+        if (Math.abs(it.x - h.cx) <= h.w / 2 + pad && it.y >= h.base - h.w - pad && it.y <= h.base + pad) {
+          var d = Math.abs(it.x - h.cx);
+          if (d < bd) { bd = d; best = h; }
+        }
+      });
+      return best;
+    }
+    function up(it, e) {
+      if (it.mode !== 'drag' || e.pointerId !== it.pid) { return; }
+      try { it.el.releasePointerCapture(it.pid); } catch (err) { /* already released */ }
+      it.pid = null; it.mode = 'idle';
+      if (houseAt(it) === it.house) { snap(it); } else { sendHome(it); }
+    }
+
+    function select(it) {
+      selected = selected === it ? null : it;
+      if (it && it.placed) { selected = null; }
+      items.forEach(function (o) {
+        var on = o === selected;
+        o.el.setAttribute('aria-pressed', on ? 'true' : 'false');
+        o.el.classList.toggle('dm-selected', on);
+      });
+    }
+    function onHouse(h) {
+      if (!selected || selected.mode === 'drag' || phase !== 'play') { return; }
+      var it = selected;
+      select(null);
+      if (it.house === h) { snap(it); } else { sendHome(it); }
+    }
+
+    function frame(now) {
+      raf = 0;
+      var dt = Math.min(now - last, 50); last = now;
+      var busy = false;
+      items.forEach(function (it) {
+        if (it.mode === 'glide') {
+          it.gt += dt;
+          var k = smooth(it.gt / it.gd);
+          it.x = it.fx + (it.gx - it.fx) * k; it.y = it.fy + (it.gy - it.fy) * k;
+          place(it);
+          if (it.gt >= it.gd) { it.mode = 'idle'; it.x = it.gx; it.y = it.gy; place(it); it.el.style.zIndex = ''; }
+          else { busy = true; }
+        }
+        var tg = it.placed && it.mode === 'idle' ? 1 : 0;
+        if (Math.abs(it.glow - tg) > 0.005) { it.glow += (tg - it.glow) * Math.min(1, dt / 250); busy = true; }
+        else { it.glow = tg; }
+        it.el.tabIndex = it.placed || phase !== 'play' ? -1 : 0;
+        it.el.disabled = it.placed;
+      });
+      // Round finished: soft glow ~2 s, new round after ~4 s (time only advances while the tab is visible).
+      if (phase === 'play' && doneT < 0 && items.every(function (it) { return it.placed && it.mode === 'idle'; })) { doneT = 0; }
+      if (doneT >= 0 && phase === 'play') {
+        doneT += dt; busy = true;
+        if (doneT >= NEXT_S) { phase = 'out'; fadeDir = -1; }
+      }
+      if (phase === 'out' || phase === 'in') {
+        fade += fadeDir * dt / FADE_MS; busy = true;
+        if (phase === 'out' && fade <= 0) {
+          fade = 0; round++; doneT = -1; setRound(); layout(); phase = 'in'; fadeDir = 1;
+        } else if (phase === 'in' && fade >= 1) { fade = 1; phase = 'play'; fadeDir = 0; }
+      }
+      var tgG = doneT >= 0 && doneT < GLOW_S && phase === 'play' ? 1 : 0;
+      if (Math.abs(doneGlow - tgG) > 0.005) { doneGlow += (tgG - doneGlow) * Math.min(1, dt / 500); busy = true; }
+      else { doneGlow = tgG; }
+      glowEl.style.opacity = String(doneGlow);
+      items.forEach(paint); paintHouses();
+      if (busy) { raf = requestAnimationFrame(frame); }
+    }
+    function start() {
+      if (raf || document.hidden) { return; }
+      last = performance.now(); raf = requestAnimationFrame(frame);
+    }
+    function onVis() {
+      if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0; } } else { start(); }
+    }
+    function onResize() { layout(); start(); }
+
+    window.addEventListener('resize', onResize);
+    window.addEventListener('orientationchange', onResize);
+    document.addEventListener('visibilitychange', onVis);
+    setRound(); layout();
+    items.forEach(paint); paintHouses();
+
+    return function cleanup() {
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('orientationchange', onResize);
+      document.removeEventListener('visibilitychange', onVis);
+      if (board.parentNode) { board.parentNode.removeChild(board); }
+    };
+  }
+
+  (window.ACTIVITIES || []).forEach(function (a) { if (a.id === 'duze-i-male') { a.mount = mount; } });
+})();

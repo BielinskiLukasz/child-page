@@ -40,6 +40,10 @@
       icon: svg('<circle cx="20" cy="26" r="9" fill="#c4e8a0"/><circle cx="44" cy="26" r="9" fill="#c4e8a0"/><circle cx="32" cy="44" r="9" fill="#c4e8a0"/><g fill="#f7a8c9"><circle cx="16" cy="56" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="36" cy="56" r="3"/></g>', '#fdf0d5') },
     { id: 'ubierz-misia', name: 'Ubierz Misia',
       icon: svg('<circle cx="19" cy="22" r="7" fill="#d9a77a"/><circle cx="45" cy="22" r="7" fill="#d9a77a"/><circle cx="32" cy="36" r="18" fill="#d9a77a"/><ellipse cx="32" cy="42" rx="8" ry="6" fill="#f1d3b3"/><circle cx="26" cy="33" r="2" fill="#5b5675"/><circle cx="38" cy="33" r="2" fill="#5b5675"/><ellipse cx="32" cy="40" rx="3" ry="2" fill="#5b5675"/><ellipse cx="32" cy="22" rx="22" ry="5" fill="#ffd98a"/><path d="M18 22Q18 8 32 8Q46 8 46 22Z" fill="#ffe3a0"/>', '#fdf0d5') },
+    { id: 'przeciwienstwa', name: 'Przeciwieństwa',
+      icon: svg('<rect x="10" y="14" width="20" height="34" rx="3" fill="#c9a0c0"/><path d="M30 14l10 5v30l-10-1z" fill="#f3d9a8"/><circle cx="46" cy="22" r="8" fill="#f7a8c9"/><path d="M46 30v10" stroke="#8a84a8" stroke-width="2"/><path d="M30 56h28" stroke="#cfeab4" stroke-width="4" stroke-linecap="round"/>', '#e6e0f7') },
+    { id: 'co-nie-pasuje', name: 'Co nie Pasuje?',
+      icon: svg('<circle cx="14" cy="32" r="9" fill="#f7a8a8"/><circle cx="34" cy="32" r="9" fill="#f7a8a8"/><rect x="44" y="22" width="18" height="20" rx="5" fill="#a8d8f0"/><circle cx="52" cy="14" r="4" fill="#fff3b8"/>', '#fdf0d5') },
     { id: 'chowany', name: 'Zabawa w chowanego',
       icon: svg('<g fill="#9fd4a8"><circle cx="22" cy="42" r="14"/><circle cx="38" cy="38" r="17"/><circle cx="50" cy="44" r="12"/><rect x="10" y="44" width="50" height="16" rx="8"/></g><ellipse cx="28" cy="20" rx="4" ry="10" fill="#fbf7ff"/><ellipse cx="40" cy="20" rx="4" ry="10" fill="#fbf7ff"/><circle cx="52" cy="14" r="6" fill="#ffe9a8"/>', '#e3f1d9') }
   ];

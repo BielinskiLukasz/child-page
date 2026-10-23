@@ -63,7 +63,9 @@
     { id: 'wieza', name: 'Wieża z Klocków',
       icon: svg('<rect x="18" y="40" width="28" height="18" rx="4" fill="#a8d8f0"/><rect x="22" y="24" width="20" height="16" rx="4" fill="#f7a8c9"/><path d="M32 8l11 16H21z" fill="#ffc9a0" stroke="#ffc9a0" stroke-width="3" stroke-linejoin="round"/>', '#fdf0d5') },
     { id: 'myjnia', name: 'Myjnia',
-      icon: svg('<path d="M10 42Q10 32 22 30L28 20Q31 17 36 17H44Q49 17 52 22L56 30Q60 32 60 42V46H10Z" fill="#f7a8c9"/><circle cx="22" cy="48" r="6" fill="#8a84a8"/><circle cx="48" cy="48" r="6" fill="#8a84a8"/><circle cx="46" cy="10" r="5" fill="#fff" fill-opacity=".8" stroke="#b7deff" stroke-width="2"/><circle cx="54" cy="18" r="3" fill="#fff" fill-opacity=".8" stroke="#b7deff" stroke-width="2"/>', '#d8ecfb') }
+      icon: svg('<path d="M10 42Q10 32 22 30L28 20Q31 17 36 17H44Q49 17 52 22L56 30Q60 32 60 42V46H10Z" fill="#f7a8c9"/><circle cx="22" cy="48" r="6" fill="#8a84a8"/><circle cx="48" cy="48" r="6" fill="#8a84a8"/><circle cx="46" cy="10" r="5" fill="#fff" fill-opacity=".8" stroke="#b7deff" stroke-width="2"/><circle cx="54" cy="18" r="3" fill="#fff" fill-opacity=".8" stroke="#b7deff" stroke-width="2"/>', '#d8ecfb') },
+    { id: 'cienie', name: 'Cienie',
+      icon: svg('<ellipse cx="20" cy="40" rx="11" ry="10" fill="#c4c0d4"/><ellipse cx="15" cy="24" rx="3" ry="8" fill="#c4c0d4"/><ellipse cx="25" cy="24" rx="3" ry="8" fill="#c4c0d4"/><ellipse cx="46" cy="40" rx="11" ry="10" fill="#fbd5e3"/><ellipse cx="41" cy="24" rx="3" ry="8" fill="#fbd5e3"/><ellipse cx="51" cy="24" rx="3" ry="8" fill="#fbd5e3"/>', '#e6e0f7') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

@@ -69,7 +69,9 @@
     { id: 'buzki', name: 'Buźki',
       icon: svg('<circle cx="32" cy="32" r="22" fill="#ffe9a8"/><circle cx="24" cy="28" r="3" fill="#5b5675"/><circle cx="40" cy="28" r="3" fill="#5b5675"/><path d="M22 38q10 10 20 0" fill="none" stroke="#8a6a8f" stroke-width="3" stroke-linecap="round"/><circle cx="17" cy="37" r="4" fill="#f7a8c9" opacity=".6"/><circle cx="47" cy="37" r="4" fill="#f7a8c9" opacity=".6"/>', '#e6e0f7') },
     { id: 'pamiec', name: 'Pamięć',
-      icon: svg('<rect x="8" y="14" width="22" height="30" rx="5" fill="#c9b8f2"/><rect x="34" y="14" width="22" height="30" rx="5" fill="#fff"/><circle cx="45" cy="29" r="7" fill="#f7a8c9"/><circle cx="19" cy="29" r="4" fill="#fff" fill-opacity=".8"/>', '#e6e0f7') }
+      icon: svg('<rect x="8" y="14" width="22" height="30" rx="5" fill="#c9b8f2"/><rect x="34" y="14" width="22" height="30" rx="5" fill="#fff"/><circle cx="45" cy="29" r="7" fill="#f7a8c9"/><circle cx="19" cy="29" r="4" fill="#fff" fill-opacity=".8"/>', '#e6e0f7') },
+    { id: 'pilka', name: 'Gdzie jest Piłka?',
+      icon: svg('<rect x="12" y="30" width="30" height="20" rx="4" fill="#c9a98a"/><rect x="12" y="26" width="30" height="6" rx="3" fill="#d9b185"/><circle cx="27" cy="14" r="9" fill="#f7a8c9"/><path d="M19 13Q27 18 35 13" fill="none" stroke="#fff" stroke-width="2.5" opacity=".8"/><circle cx="52" cy="40" r="6" fill="#fbf7ff" stroke="#c9b8f2" stroke-width="2"/>', '#e3f1d9') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

@@ -468,3 +468,18 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .pm-card > span { position: absolute; inset: 0; display: block; pointer-events: none; }
 .stage .pm-card svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .pm-card:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 4px; border-radius: 24px; }
+
+/* Gdzie jest Piłka? */
+.pk { position: fixed; inset: 0; overflow: hidden; touch-action: manipulation; user-select: none; -webkit-user-select: none; background: #e9f3fb; }
+.pk-field { position: absolute; display: flex; align-items: center; justify-content: center;
+  top: calc(var(--safe-t) + 64px); right: calc(var(--safe-r) + 12px);
+  bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
+.pk-board { position: relative; border-radius: 24px; overflow: hidden; }
+.stage .pk-board > svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage .pk-spot, .stage .pk-ball { position: absolute; padding: 0; border: 0; background: none; transform: translate(-50%, -50%); cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.stage .pk-spot { width: 18%; aspect-ratio: 1; min-width: 56px; min-height: 56px; z-index: 1; }
+.stage .pk-ball { width: 17.5%; aspect-ratio: 1; min-width: 56px; min-height: 56px; z-index: 3; touch-action: none; cursor: grab; }
+.pk-bunny { position: absolute; width: 16%; aspect-ratio: 64 / 68; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; }
+.stage .pk-spot svg, .stage .pk-ball svg, .stage .pk-bunny svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.pk-spot:focus-visible, .pk-ball:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 50%; }

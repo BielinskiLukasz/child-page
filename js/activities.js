@@ -37,7 +37,9 @@
     { id: 'farma', name: 'Zwierzątka na Farmie',
       icon: svg('<rect x="10" y="30" width="44" height="28" rx="4" fill="#f6c9b0"/><path d="M6 32L32 12l26 20z" fill="#d9b99b"/><rect x="26" y="40" width="12" height="18" rx="3" fill="#fbe7c8"/><circle cx="52" cy="50" r="7" fill="#fbf7ff" stroke="#c9b8f2" stroke-width="2"/>', '#e3f1d9') },
     { id: 'policz-razem', name: 'Policz Razem',
-      icon: svg('<circle cx="20" cy="26" r="9" fill="#c4e8a0"/><circle cx="44" cy="26" r="9" fill="#c4e8a0"/><circle cx="32" cy="44" r="9" fill="#c4e8a0"/><g fill="#f7a8c9"><circle cx="16" cy="56" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="36" cy="56" r="3"/></g>', '#fdf0d5') }
+      icon: svg('<circle cx="20" cy="26" r="9" fill="#c4e8a0"/><circle cx="44" cy="26" r="9" fill="#c4e8a0"/><circle cx="32" cy="44" r="9" fill="#c4e8a0"/><g fill="#f7a8c9"><circle cx="16" cy="56" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="36" cy="56" r="3"/></g>', '#fdf0d5') },
+    { id: 'wieza', name: 'Wieża z Klocków',
+      icon: svg('<rect x="18" y="40" width="28" height="18" rx="4" fill="#a8d8f0"/><rect x="22" y="24" width="20" height="16" rx="4" fill="#f7a8c9"/><path d="M32 8l11 16H21z" fill="#ffc9a0" stroke="#ffc9a0" stroke-width="3" stroke-linejoin="round"/>', '#fdf0d5') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

@@ -69,7 +69,7 @@
     }
 
     function touch(o) {
-      if (phase !== 'play') { return; }
+      if (phase !== 'play' && phase !== 'glow' && phase !== 'wait') { return; }
       o.t = 0;
       if (!o.counted) {
         o.counted = true;

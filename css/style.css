@@ -515,3 +515,17 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .sa-plane:focus-visible, .sa-cloud:focus-visible, .sa-pbtn:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; border-radius: 14px; }
 .sa-puffs { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
 .sa-puff { position: absolute; left: 0; top: 0; border-radius: 50%; background: #fff; opacity: 0; will-change: transform, opacity; }
+.tk { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #eaf6fb 60%); }
+.tk-sun { position: absolute; top: 6%; right: 10%; width: clamp(44px, 9vw, 80px); aspect-ratio: 1; border-radius: 50%; background: #fff1bd; box-shadow: 0 0 40px 16px rgba(255, 241, 189, .6); }
+.tk-field { position: absolute; left: 0; right: 0; top: var(--tk-ft); bottom: 0; background: linear-gradient(#bfe6b4, #a8d9a0); border-top: 4px solid #9fcf94; }
+.tk-furrows i { position: absolute; left: 0; right: 0; border-radius: 12px; background: #d9b48f; opacity: .85; }
+.tk-barn { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; min-width: 56px; min-height: 56px; }
+.stage .tk-barn svg, .stage .tk-tr svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.tk-plants { position: absolute; inset: 0; pointer-events: none; }
+.tk-pl { position: absolute; width: 56px; height: 56px; visibility: hidden; pointer-events: auto; cursor: pointer; }
+.tk-pi { position: absolute; transform-origin: 50% 100%; pointer-events: none; }
+.stage .tk-pi svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.tk-tr { position: absolute; left: 0; top: 0; width: var(--tk-tw); height: var(--tk-th); cursor: pointer; z-index: 2; will-change: transform; }
+.tk-dr { position: absolute; left: 31%; top: 30%; width: 25%; height: 40%; min-width: 56px; min-height: 56px; transform: translate(-25%, -25%); padding: 0; border: 0; background: none; cursor: pointer; }
+.tk-barn:focus-visible, .tk-tr:focus-visible, .tk-dr:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }

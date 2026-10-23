@@ -61,7 +61,9 @@
     { id: 'puzzle', name: 'Puzzle',
       icon: svg('<rect x="10" y="10" width="21" height="21" rx="4" fill="#ffe08a"/><rect x="33" y="10" width="21" height="21" rx="4" fill="#a8d8f0"/><rect x="10" y="33" width="21" height="21" rx="4" fill="#f7a8c9"/><rect x="33" y="33" width="21" height="21" rx="4" fill="#bfe6b4" stroke="#fff" stroke-width="2" stroke-dasharray="3 3"/>', '#e6e0f7') },
     { id: 'wieza', name: 'Wieża z Klocków',
-      icon: svg('<rect x="18" y="40" width="28" height="18" rx="4" fill="#a8d8f0"/><rect x="22" y="24" width="20" height="16" rx="4" fill="#f7a8c9"/><path d="M32 8l11 16H21z" fill="#ffc9a0" stroke="#ffc9a0" stroke-width="3" stroke-linejoin="round"/>', '#fdf0d5') }
+      icon: svg('<rect x="18" y="40" width="28" height="18" rx="4" fill="#a8d8f0"/><rect x="22" y="24" width="20" height="16" rx="4" fill="#f7a8c9"/><path d="M32 8l11 16H21z" fill="#ffc9a0" stroke="#ffc9a0" stroke-width="3" stroke-linejoin="round"/>', '#fdf0d5') },
+    { id: 'myjnia', name: 'Myjnia',
+      icon: svg('<path d="M10 42Q10 32 22 30L28 20Q31 17 36 17H44Q49 17 52 22L56 30Q60 32 60 42V46H10Z" fill="#f7a8c9"/><circle cx="22" cy="48" r="6" fill="#8a84a8"/><circle cx="48" cy="48" r="6" fill="#8a84a8"/><circle cx="46" cy="10" r="5" fill="#fff" fill-opacity=".8" stroke="#b7deff" stroke-width="2"/><circle cx="54" cy="18" r="3" fill="#fff" fill-opacity=".8" stroke="#b7deff" stroke-width="2"/>', '#d8ecfb') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

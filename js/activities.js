@@ -39,7 +39,9 @@
     { id: 'policz-razem', name: 'Policz Razem',
       icon: svg('<circle cx="20" cy="26" r="9" fill="#c4e8a0"/><circle cx="44" cy="26" r="9" fill="#c4e8a0"/><circle cx="32" cy="44" r="9" fill="#c4e8a0"/><g fill="#f7a8c9"><circle cx="16" cy="56" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="36" cy="56" r="3"/></g>', '#fdf0d5') },
     { id: 'pory-roku', name: 'Pory Roku',
-      icon: svg('<rect x="29" y="34" width="6" height="22" rx="3" fill="#b69272"/><circle cx="32" cy="26" r="14" fill="#cfeab4"/><circle cx="26" cy="22" r="3" fill="#fbc9dd"/><circle cx="38" cy="24" r="3" fill="#f6c35e"/><circle cx="32" cy="32" r="3" fill="#f2a65a"/><path d="M8 56q24-12 48 0z" fill="#fff"/>', '#dff1fb') }
+      icon: svg('<rect x="29" y="34" width="6" height="22" rx="3" fill="#b69272"/><circle cx="32" cy="26" r="14" fill="#cfeab4"/><circle cx="26" cy="22" r="3" fill="#fbc9dd"/><circle cx="38" cy="24" r="3" fill="#f6c35e"/><circle cx="32" cy="32" r="3" fill="#f2a65a"/><path d="M8 56q24-12 48 0z" fill="#fff"/>', '#dff1fb') },
+    { id: 'przeciwienstwa', name: 'Przeciwieństwa',
+      icon: svg('<rect x="10" y="14" width="20" height="34" rx="3" fill="#c9a0c0"/><path d="M30 14l10 5v30l-10-1z" fill="#f3d9a8"/><circle cx="46" cy="22" r="8" fill="#f7a8c9"/><path d="M46 30v10" stroke="#8a84a8" stroke-width="2"/><path d="M30 56h28" stroke="#cfeab4" stroke-width="4" stroke-linecap="round"/>', '#e6e0f7') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

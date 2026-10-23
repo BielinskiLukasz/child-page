@@ -39,7 +39,9 @@
     { id: 'policz-razem', name: 'Policz Razem',
       icon: svg('<circle cx="20" cy="26" r="9" fill="#c4e8a0"/><circle cx="44" cy="26" r="9" fill="#c4e8a0"/><circle cx="32" cy="44" r="9" fill="#c4e8a0"/><g fill="#f7a8c9"><circle cx="16" cy="56" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="36" cy="56" r="3"/></g>', '#fdf0d5') },
     { id: 'ubierz-misia', name: 'Ubierz Misia',
-      icon: svg('<circle cx="19" cy="22" r="7" fill="#d9a77a"/><circle cx="45" cy="22" r="7" fill="#d9a77a"/><circle cx="32" cy="36" r="18" fill="#d9a77a"/><ellipse cx="32" cy="42" rx="8" ry="6" fill="#f1d3b3"/><circle cx="26" cy="33" r="2" fill="#5b5675"/><circle cx="38" cy="33" r="2" fill="#5b5675"/><ellipse cx="32" cy="40" rx="3" ry="2" fill="#5b5675"/><ellipse cx="32" cy="22" rx="22" ry="5" fill="#ffd98a"/><path d="M18 22Q18 8 32 8Q46 8 46 22Z" fill="#ffe3a0"/>', '#fdf0d5') }
+      icon: svg('<circle cx="19" cy="22" r="7" fill="#d9a77a"/><circle cx="45" cy="22" r="7" fill="#d9a77a"/><circle cx="32" cy="36" r="18" fill="#d9a77a"/><ellipse cx="32" cy="42" rx="8" ry="6" fill="#f1d3b3"/><circle cx="26" cy="33" r="2" fill="#5b5675"/><circle cx="38" cy="33" r="2" fill="#5b5675"/><ellipse cx="32" cy="40" rx="3" ry="2" fill="#5b5675"/><ellipse cx="32" cy="22" rx="22" ry="5" fill="#ffd98a"/><path d="M18 22Q18 8 32 8Q46 8 46 22Z" fill="#ffe3a0"/>', '#fdf0d5') },
+    { id: 'chowany', name: 'Zabawa w chowanego',
+      icon: svg('<g fill="#9fd4a8"><circle cx="22" cy="42" r="14"/><circle cx="38" cy="38" r="17"/><circle cx="50" cy="44" r="12"/><rect x="10" y="44" width="50" height="16" rx="8"/></g><ellipse cx="28" cy="20" rx="4" ry="10" fill="#fbf7ff"/><ellipse cx="40" cy="20" rx="4" ry="10" fill="#fbf7ff"/><circle cx="52" cy="14" r="6" fill="#ffe9a8"/>', '#e3f1d9') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

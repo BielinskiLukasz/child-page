@@ -45,7 +45,9 @@
     { id: 'co-nie-pasuje', name: 'Co nie Pasuje?',
       icon: svg('<circle cx="14" cy="32" r="9" fill="#f7a8a8"/><circle cx="34" cy="32" r="9" fill="#f7a8a8"/><rect x="44" y="22" width="18" height="20" rx="5" fill="#a8d8f0"/><circle cx="52" cy="14" r="4" fill="#fff3b8"/>', '#fdf0d5') },
     { id: 'literki', name: 'Literki',
-      icon: svg('<rect x="8" y="12" width="48" height="40" rx="8" fill="#fff"/><text x="32" y="42" text-anchor="middle" font-size="26" font-weight="800" fill="#8f7fd1" font-family="sans-serif">Aa</text>', '#fdf0d5') }
+      icon: svg('<rect x="8" y="12" width="48" height="40" rx="8" fill="#fff"/><text x="32" y="42" text-anchor="middle" font-size="26" font-weight="800" fill="#8f7fd1" font-family="sans-serif">Aa</text>', '#fdf0d5') },
+    { id: 'sciezka', name: 'Ścieżka',
+      icon: svg('<path d="M12 50q14-4 14-16t14-8q14 4 12-10" fill="none" stroke="#fbf3dc" stroke-width="12" stroke-linecap="round"/><path d="M12 50q14-4 14-16" fill="none" stroke="#f9d6e4" stroke-width="7" stroke-linecap="round"/><circle cx="20" cy="42" r="6" fill="#f3c7a6"/><circle cx="52" cy="16" r="6" fill="#f7b6d2"/><circle cx="52" cy="16" r="2.5" fill="#ffe9a8"/>', '#e6f3e0') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

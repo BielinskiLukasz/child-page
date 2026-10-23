@@ -1,0 +1,355 @@
+// Activity "Mały Samolot": touch the plane -> it takes off and flies a slow loop; touch it again -> it descends and lands
+// on the runway (~4 s); touch a cloud while flying -> the plane curves toward it, circles it once and resumes its loop;
+// touch the pilot -> a slow wave. All motion runs from one rAF loop (capped dt, paused when the tab is hidden) so it keeps
+// working under the global prefers-reduced-motion rule that disables CSS animations.
+// The plane is a kinematic body (position, heading, speed): it never moves tail first, heading changes are rate-limited
+// and smoothed, the target is a lookahead point on the loop (or on a circle around the chosen cloud).
+(function () {
+  var CROSS_S = 15;            // seconds to cross the screen width at cruise speed (>= 12 s)
+  var LAND_S = 4;              // descent + roll-out
+  var MAX_DT = 0.05;
+  var MAX_PUFFS = 8, PUFF_S = 2.6, PUFF_EVERY = 0.55;
+  var WAVE_S = 2.4;
+  var NUDGE_S = 2.6;
+  var TWO_PI = Math.PI * 2;
+
+  function sm(u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }
+  function wrapPi(a) { a = (a + Math.PI) % TWO_PI; if (a < 0) { a += TWO_PI; } return a - Math.PI; }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+  function planeSvg() {
+    return '<svg viewBox="0 0 200 100" aria-hidden="true" focusable="false">' +
+      '<path d="M42 50L28 20Q34 15 44 20L66 44z" fill="#a8d8f0"/>' +
+      '<path d="M44 52L26 40Q22 44 28 50L50 58z" fill="#8fc6e6"/>' +
+      '<ellipse cx="100" cy="54" rx="72" ry="21" fill="#f7a8c9"/>' +
+      '<path d="M40 56Q100 74 170 58L168 64Q100 82 40 62z" fill="#fff" opacity=".5"/>' +
+      '<circle cx="119" cy="45" r="17" fill="#fdfbff"/>' +
+      '<g class="sa-pilot"><circle cx="107" cy="38" r="5" fill="#c99b72"/><circle cx="131" cy="38" r="5" fill="#c99b72"/>' +
+      '<circle cx="119" cy="46" r="12" fill="#c99b72"/><ellipse cx="119" cy="51" rx="5.5" ry="4" fill="#f3dcc4"/>' +
+      '<circle cx="114" cy="44" r="1.8" fill="#5b5675"/><circle cx="124" cy="44" r="1.8" fill="#5b5675"/>' +
+      '<circle cx="119" cy="49.5" r="1.6" fill="#6b5a73"/>' +
+      '<path d="M107 40Q119 28 131 40" fill="none" stroke="#8a6a8f" stroke-width="3" stroke-linecap="round"/>' +
+      '<g class="sa-paw"><circle cx="0" cy="0" r="5" fill="#c99b72"/></g></g>' +
+      '<path d="M96 60L136 60Q126 78 100 76Q88 70 96 60z" fill="#8fc6e6"/>' +
+      '<rect x="106" y="72" width="3" height="12" fill="#8a84a8"/><rect x="82" y="72" width="3" height="14" fill="#8a84a8"/>' +
+      '<circle cx="83" cy="88" r="7" fill="#6b6585"/><circle cx="83" cy="88" r="3" fill="#cfc9e6"/>' +
+      '<circle cx="108" cy="86" r="6" fill="#6b6585"/><circle cx="108" cy="86" r="2.6" fill="#cfc9e6"/>' +
+      '<circle cx="172" cy="54" r="7" fill="#ffe08a"/>' +
+      '<ellipse class="sa-disc" cx="175" cy="54" rx="4" ry="22" fill="#fff" opacity="0"/>' +
+      '<g class="sa-prop"><ellipse cx="175" cy="54" rx="3.5" ry="21" fill="#7a748f"/></g></svg>';
+  }
+
+  function cloudSvg() {
+    return '<svg viewBox="0 0 160 90" aria-hidden="true" focusable="false"><g fill="#fff" fill-opacity=".95">' +
+      '<circle cx="48" cy="52" r="26"/><circle cx="82" cy="38" r="32"/><circle cx="116" cy="52" r="24"/>' +
+      '<rect x="22" y="50" width="116" height="28" rx="14"/></g></svg>';
+  }
+
+  function hillsSvg() {
+    return '<svg class="sa-hills" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
+      '<path d="M0 200V100Q160 20 330 90T640 80T1000 60V200z" fill="#cdeac3"/>' +
+      '<path d="M0 200V150Q220 100 440 140T820 125T1000 140V200z" fill="#b6e0aa"/></svg>';
+  }
+
+  function mount(container) {
+    var scene = document.createElement('div');
+    scene.className = 'sa';
+    scene.setAttribute('role', 'group');
+    scene.setAttribute('aria-label', 'Mały samolot');
+    scene.innerHTML =
+      '<div class="sa-sun"></div>' + hillsSvg() + '<div class="sa-ground"></div>' +
+      '<div class="sa-runway"><div class="sa-dash"></div></div>' +
+      '<button class="sa-cloud" type="button" data-i="0" aria-label="Chmurka 1 – samolot poleci wokół niej">' + cloudSvg() + '</button>' +
+      '<button class="sa-cloud" type="button" data-i="1" aria-label="Chmurka 2 – samolot poleci wokół niej">' + cloudSvg() + '</button>' +
+      '<button class="sa-cloud" type="button" data-i="2" aria-label="Chmurka 3 – samolot poleci wokół niej">' + cloudSvg() + '</button>' +
+      '<div class="sa-puffs"></div>' +
+      '<div class="sa-plane" role="button" tabindex="0" aria-label="Samolot – wzlatuj lub ląduj">' + planeSvg() +
+      '<button class="sa-pbtn" type="button" aria-label="Miś pilot – pomachaj"></button></div>';
+    container.appendChild(scene);
+
+    var plane = scene.querySelector('.sa-plane');
+    var pbtn = scene.querySelector('.sa-pbtn');
+    var prop = scene.querySelector('.sa-prop');
+    var disc = scene.querySelector('.sa-disc');
+    var paw = scene.querySelector('.sa-paw');
+    var puffLayer = scene.querySelector('.sa-puffs');
+    var clouds = [].slice.call(scene.querySelectorAll('.sa-cloud'));
+    var CF = [[0.2, 0.3], [0.5, 0.27], [0.8, 0.35]];   // cloud centres as screen fractions
+    var cloudNudge = [-1, -1, -1];
+
+    var W = 0, H = 0, pw = 170, ph = 85, sc = 40, Rt = 60, Om = 0.5, R = 70, yC = 0;
+    var cx = 0, cy = 0, rx = 0, ry = 0;
+    var st = 'parked';                      // parked | flying | landing
+    var x = 0, y = 0, psi = 0, sy = 1, spd = 0, om = 0;
+    var face = 1;                           // +1 facing right, -1 facing left (only while parked / landing)
+    var dirP = 1;                           // +1 loop runs counter-clockwise on screen (right along the bottom)
+    var orbit = null;                       // { i, swept, prev, t, engaged }
+    var land = null;                        // Hermite landing plan
+    var propA = 0, propW = 0;
+    var puffs = [], puffT = 0;
+    var waveT = -1;
+    var clock = 0;
+    var raf = 0, last = 0;
+    var started = false;
+
+    function cloudPos(i) {
+      var t = cloudNudge[i], nx = 0;
+      if (t >= 0) { nx = Math.sin(Math.PI * Math.min(1, t / NUDGE_S)) * Math.min(W * 0.03, 26); }
+      return {
+        x: W * CF[i][0] + Math.sin(clock * 0.31 + i * 2.1) * Math.min(W * 0.012, 10) + nx,
+        y: Math.max(H * CF[i][1], R + 10) + Math.sin(clock * 0.23 + i) * 4
+      };
+    }
+
+    function layout() {
+      var oW = W, oH = H;
+      W = scene.clientWidth || window.innerWidth;
+      H = scene.clientHeight || window.innerHeight;
+      pw = clamp(Math.min(W * 0.42, H * 0.5), 170, 320);
+      ph = pw / 2;
+      sc = W / CROSS_S;
+      Rt = Math.max(Math.min(W, H) * 0.12, pw * 0.3, sc / 0.7);
+      Om = sc / Rt;
+      R = Rt * 1.15;
+      var runY = H * 0.86;
+      yC = runY - ph * 0.43;
+      cx = W / 2; cy = H * 0.4;
+      rx = W * (W < H ? 0.3 : 0.34); ry = H * 0.22;
+      var cw = clamp(W * 0.2, 96, 190);
+      scene.style.setProperty('--pw', pw.toFixed(1) + 'px');
+      scene.style.setProperty('--ph', ph.toFixed(1) + 'px');
+      scene.style.setProperty('--cw', cw.toFixed(1) + 'px');
+      scene.style.setProperty('--ry', runY.toFixed(1) + 'px');
+      if (!started) {
+        x = W * 0.3; y = yC; psi = 0; started = true;
+      } else if (oW && oH) {
+        x *= W / oW; y *= H / oH;
+        if (land) {
+          land.p0x *= W / oW; land.p1x *= W / oW; land.v0x *= W / oW;
+          land.p0y *= H / oH; land.p1y = yC; land.v0y *= H / oH;
+        }
+        if (st === 'parked') { y = yC; }
+      }
+      if (land) { land.p1y = yC; }
+      render();
+    }
+
+    function render() {
+      var deg = psi * 57.2958;
+      plane.style.transform = 'translate(' + (x - pw / 2).toFixed(1) + 'px,' + (y - ph / 2).toFixed(1) + 'px) rotate(' +
+        deg.toFixed(2) + 'deg) scale(1,' + sy.toFixed(3) + ')';
+      for (var i = 0; i < 3; i++) {
+        var c = cloudPos(i);
+        clouds[i].style.transform = 'translate(' + c.x.toFixed(1) + 'px,' + c.y.toFixed(1) + 'px) translate(-50%,-50%)';
+      }
+    }
+
+    function onPlane() {
+      if (st === 'parked') {
+        st = 'flying';
+        dirP = face >= 0 ? 1 : -1;
+        spd = 0; om = 0; orbit = null;
+      } else if (st === 'flying') {
+        startLanding();
+      } else if (st === 'landing') {      // go-around: from the current motion back into a climb
+        var vx = land.vx, vy = land.vy;
+        spd = Math.max(0.2 * sc, Math.hypot(vx, vy));
+        psi = Math.atan2(vy, vx);
+        om = 0; land = null; orbit = null;
+        dirP = face >= 0 ? 1 : -1;
+        st = 'flying';
+      }
+    }
+
+    function startLanding() {
+      var cs = Math.cos(psi), sn = Math.sin(psi);
+      var hd = Math.abs(cs) > 0.15 ? (cs > 0 ? 1 : -1) : face;
+      var T = LAND_S;
+      var dy = Math.max(0, yC - y);
+      var dmin = Math.max(1.3 * dy, 0.5 * sc * T) + pw * 0.25;
+      var margin = pw * 0.5;
+      var room = hd > 0 ? W - margin - x : x - margin;
+      face = room >= dmin * 0.8 ? hd : -hd;       // little room ahead: turn around and land the other way
+      var x1 = clamp(x + face * dmin, margin, W - margin);
+      var D = Math.max(8, (x1 - x) * face);
+      x1 = x + face * D;
+      var v0h = clamp(spd * cs * face, -2.8 * D / T, 2.8 * D / T);
+      var v0y = Math.min(spd * sn, 2.8 * dy / T);
+      land = { t: 0, T: T, p0x: x, p0y: y, p1x: x1, p1y: yC, v0x: v0h * face, v0y: v0y, vx: v0h * face, vy: v0y };
+      st = 'landing';
+      orbit = null;
+    }
+
+    function onCloud(i) {
+      if (st === 'flying') {
+        orbit = { i: i, swept: 0, prev: null, t: 0 };
+      } else if (cloudNudge[i] < 0) {
+        cloudNudge[i] = 0;
+      }
+    }
+
+    function onPilot() { if (waveT < 0) { waveT = 0; } }
+
+    function spawnPuff() {
+      if (puffs.length >= MAX_PUFFS) { return; }
+      var n = document.createElement('div');
+      n.className = 'sa-puff';
+      puffLayer.appendChild(n);
+      puffs.push({ n: n, t: 0, x: x - Math.cos(psi) * pw * 0.44, y: y - Math.sin(psi) * pw * 0.44 });
+    }
+
+    function steer(tx, ty, gate, dt) {
+      tx = clamp(tx, 0, W); ty = clamp(ty, 0, yC);
+      var diff = wrapPi(Math.atan2(ty - y, tx - x) - psi);
+      var want = clamp(diff * 1.5, -Om, Om) * gate;
+      om += (want - om) * Math.min(1, dt * 2.5);
+      psi += om * dt;
+    }
+
+    function updateFlying(dt) {
+      spd += (sc - spd) * (1 - Math.exp(-dt * 0.9));
+      var gate = sm((spd / sc - 0.5) / 0.4);
+      var tx, ty;
+      if (orbit) {
+        var C = cloudPos(orbit.i);
+        var dx = x - C.x, dy = y - C.y, dist = Math.hypot(dx, dy);
+        var phi = Math.atan2(dy, dx);
+        orbit.t += dt;
+        if (dist < R * 1.6) {
+          if (orbit.prev !== null) { orbit.swept = Math.max(0, orbit.swept - dirP * wrapPi(phi - orbit.prev)); }
+          orbit.prev = phi;
+        } else { orbit.prev = null; }
+        if (orbit.swept >= TWO_PI || orbit.t > 40) { orbit = null; }
+        else {
+          var a = phi - dirP * 0.7;
+          tx = C.x + R * Math.cos(a); ty = C.y + R * Math.sin(a);
+        }
+      }
+      if (!orbit) {
+        var th = Math.atan2((y - cy) / ry, (x - cx) / rx) - dirP * 0.6;
+        tx = cx + rx * Math.cos(th); ty = cy + ry * Math.sin(th);
+      }
+      steer(tx, ty, gate, dt);
+      x += Math.cos(psi) * spd * dt;
+      y += Math.sin(psi) * spd * dt;
+      if (y > yC) { y = yC; }
+      if (spd < 0.5 * sc && y >= yC - 0.5) { psi = face >= 0 ? 0 : Math.PI; }   // rolling on the runway: stay level
+    }
+
+    function updateLanding(dt) {
+      land.t = Math.min(land.T, land.t + dt);
+      var u = land.t / land.T, u2 = u * u, u3 = u2 * u, T = land.T;
+      var a = 2 * u3 - 3 * u2 + 1, b = u3 - 2 * u2 + u, c = -2 * u3 + 3 * u2;
+      x = a * land.p0x + b * T * land.v0x + c * land.p1x;
+      y = a * land.p0y + b * T * land.v0y + c * land.p1y;
+      var da = 6 * u2 - 6 * u, db = 3 * u2 - 4 * u + 1, dc = -6 * u2 + 6 * u;
+      land.vx = (da * land.p0x + db * T * land.v0x + dc * land.p1x) / T;
+      land.vy = (da * land.p0y + db * T * land.v0y + dc * land.p1y) / T;
+      if (y > yC) { y = yC; }
+      spd = Math.hypot(land.vx, land.vy);
+      var target = spd > 0.15 * sc ? Math.atan2(land.vy, land.vx) : (face >= 0 ? 0 : Math.PI);
+      if (u > 0.85) { target = face >= 0 ? 0 : Math.PI; }
+      psi += wrapPi(target - psi) * Math.min(1, dt * 3);
+      if (land.t >= land.T) { x = land.p1x; y = yC; spd = 0; om = 0; psi = face >= 0 ? 0 : Math.PI; land = null; st = 'parked'; }
+    }
+
+    function frame(now) {
+      raf = 0;
+      var dt = Math.min(MAX_DT, Math.max(0, (now - last) / 1000));
+      last = now;
+      clock += dt;
+      if (st === 'flying') { updateFlying(dt); }
+      else if (st === 'landing') { updateLanding(dt); }
+
+      // face the direction of travel without ever showing the plane upside down: smooth vertical flip
+      var cs = Math.cos(psi);
+      if (st !== 'parked' && Math.abs(cs) > 0.2) { face = cs > 0 ? 1 : -1; }
+      sy += ((face >= 0 ? 1 : -1) - sy) * Math.min(1, dt * 4);
+
+      // propeller: eases up with the speed, eases down when landed
+      var pt = st === 'parked' ? 0 : Math.min(1, spd / sc + (st === 'flying' ? 0.2 : 0)) * 1.1;
+      propW += (pt - propW) * Math.min(1, dt * 1.2);
+      if (propW < 0.003 && pt === 0) { propW = 0; }
+      propA += propW * TWO_PI * dt;
+      prop.setAttribute('transform', 'translate(175 54) scale(1,' + (0.25 + 0.75 * Math.abs(Math.cos(propA))).toFixed(3) + ') translate(-175 -54)');
+      disc.setAttribute('opacity', (0.28 * Math.min(1, propW)).toFixed(3));
+
+      if (waveT >= 0) {
+        waveT += dt;
+        if (waveT >= WAVE_S) { waveT = -1; paw.setAttribute('transform', 'translate(140 44)'); paw.setAttribute('opacity', '0'); }
+        else {
+          var k = waveT / WAVE_S, e = Math.sin(k * Math.PI);
+          paw.setAttribute('opacity', '1');
+          paw.setAttribute('transform', 'translate(' + (140 + Math.sin(k * Math.PI * 4) * 4 * e).toFixed(2) + ' ' + (36 - 8 * e).toFixed(2) + ')');
+        }
+      }
+
+      for (var i = 0; i < 3; i++) {
+        if (cloudNudge[i] >= 0) { cloudNudge[i] += dt; if (cloudNudge[i] >= NUDGE_S) { cloudNudge[i] = -1; } }
+      }
+
+      // soft trail: bounded, nodes removed when finished
+      if (st !== 'parked' && spd > 0.3 * sc) {
+        puffT -= dt;
+        if (puffT <= 0) { spawnPuff(); puffT = PUFF_EVERY; }
+      } else { puffT = 0; }
+      for (var j = puffs.length - 1; j >= 0; j--) {
+        var p = puffs[j];
+        p.t += dt;
+        if (p.t >= PUFF_S) { if (p.n.parentNode) { p.n.parentNode.removeChild(p.n); } puffs.splice(j, 1); continue; }
+        var q = p.t / PUFF_S, sz = ph * (0.14 + 0.2 * q);
+        p.n.style.width = p.n.style.height = sz.toFixed(1) + 'px';
+        p.n.style.opacity = (0.75 * (1 - q) * Math.min(1, q * 6)).toFixed(3);
+        p.n.style.transform = 'translate(' + (p.x - sz / 2).toFixed(1) + 'px,' + (p.y - sz / 2).toFixed(1) + 'px)';
+      }
+
+      render();
+      if (!document.hidden) { raf = requestAnimationFrame(frame); }
+    }
+
+    function start() {
+      if (raf || document.hidden) { return; }
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    }
+    function onVis() {
+      if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0; } } else { start(); }
+    }
+
+    var offs = [];
+    function bindTap(node, fn, stop) {
+      var h = function (e) { if (stop) { e.stopPropagation(); } e.preventDefault(); fn(); };
+      var k = function (e) { if (stop) { e.stopPropagation(); } if (e.detail === 0) { fn(); } };
+      node.addEventListener('pointerdown', h);
+      node.addEventListener('click', k);
+      offs.push(function () { node.removeEventListener('pointerdown', h); node.removeEventListener('click', k); });
+    }
+    bindTap(plane, onPlane, false);
+    bindTap(pbtn, onPilot, true);
+    clouds.forEach(function (c, i) { bindTap(c, function () { onCloud(i); }, true); });
+    var onKey = function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target === plane) { e.preventDefault(); onPlane(); } };
+    plane.addEventListener('keydown', onKey);
+    window.addEventListener('resize', layout);
+    window.addEventListener('orientationchange', layout);
+    document.addEventListener('visibilitychange', onVis);
+
+    paw.setAttribute('transform', 'translate(140 44)');
+    paw.setAttribute('opacity', '0');
+    layout();
+    start();
+
+    return function () {
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      offs.forEach(function (o) { o(); });
+      plane.removeEventListener('keydown', onKey);
+      window.removeEventListener('resize', layout);
+      window.removeEventListener('orientationchange', layout);
+      document.removeEventListener('visibilitychange', onVis);
+      puffs.forEach(function (p) { if (p.n.parentNode) { p.n.parentNode.removeChild(p.n); } });
+      puffs = [];
+      if (scene.parentNode) { scene.parentNode.removeChild(scene); }
+    };
+  }
+
+  window.ACTIVITIES.forEach(function (a) { if (a.id === 'samolot') { a.mount = mount; } });
+})();

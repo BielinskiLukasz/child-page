@@ -73,7 +73,9 @@
     { id: 'pilka', name: 'Gdzie jest Piłka?',
       icon: svg('<rect x="12" y="30" width="30" height="20" rx="4" fill="#c9a98a"/><rect x="12" y="26" width="30" height="6" rx="3" fill="#d9b185"/><circle cx="27" cy="14" r="9" fill="#f7a8c9"/><path d="M19 13Q27 18 35 13" fill="none" stroke="#fff" stroke-width="2.5" opacity=".8"/><circle cx="52" cy="40" r="6" fill="#fbf7ff" stroke="#c9b8f2" stroke-width="2"/>', '#e3f1d9') },
     { id: 'rysuj-ksztalty', name: 'Rysuj Kształty',
-      icon: svg('<path d="M10 40Q18 14 28 36T48 30T56 22" fill="none" stroke="#c9b8f2" stroke-width="3" stroke-dasharray="1 6" stroke-linecap="round"/><path d="M10 40Q18 14 28 36" fill="none" stroke="#f7a8c9" stroke-width="6" stroke-linecap="round"/><circle cx="10" cy="40" r="4" fill="#ffe08a"/>', '#e6e0f7') }
+      icon: svg('<path d="M10 40Q18 14 28 36T48 30T56 22" fill="none" stroke="#c9b8f2" stroke-width="3" stroke-dasharray="1 6" stroke-linecap="round"/><path d="M10 40Q18 14 28 36" fill="none" stroke="#f7a8c9" stroke-width="6" stroke-linecap="round"/><circle cx="10" cy="40" r="4" fill="#ffe08a"/>', '#e6e0f7') },
+    { id: 'samolot', name: 'Mały Samolot',
+      icon: svg('<path d="M12 22q4-6 12-2" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><ellipse cx="32" cy="34" rx="20" ry="8" fill="#f7a8c9"/><path d="M14 32L9 20q4-2 8 2l5 9z" fill="#a8d8f0"/><circle cx="36" cy="30" r="5.5" fill="#fdfbff"/><circle cx="36" cy="30" r="3.5" fill="#c99b72"/><path d="M28 38h14q-4 8-12 6z" fill="#8fc6e6"/><circle cx="53" cy="34" r="3" fill="#ffe08a"/><rect x="2" y="50" width="60" height="6" rx="3" fill="#b3adc9"/>', '#cfeaf7') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

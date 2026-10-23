@@ -364,6 +364,45 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .stage .dm-animal:disabled { cursor: default; }
 .stage .dm-house svg, .stage .dm-animal svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
 .dm-house:focus-visible, .dm-animal:focus-visible, .dm-selected { outline: 4px solid #8f7fd1; outline-offset: 4px; border-radius: 24px; }
+/* Kolorowe Kubeczki */
+.kc { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#f6f0fb, #e3f1ea); }
+.kc-field { position: absolute; --kc-b: 80px; --kc-c: 110px;
+  top: calc(var(--safe-t) + 64px); right: calc(var(--safe-r) + 12px);
+  bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
+.stage .kc-cup, .stage .kc-ball { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; will-change: transform; }
+.stage .kc-cup { width: var(--kc-c); height: var(--kc-c); cursor: default; }
+.stage .kc-ball { width: var(--kc-b); height: var(--kc-b); min-width: 64px; min-height: 64px; z-index: 1; cursor: grab; touch-action: none; }
+.stage .kc-ball:disabled { cursor: default; }
+.stage .kc-cup svg, .stage .kc-ball svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.kc-cup:focus-visible, .kc-ball:focus-visible, .kc-selected { outline: 4px solid #8f7fd1; outline-offset: 4px; border-radius: 24px; }
+/* Puzzle */
+.pz { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#f6f0fb, #e3f1ea); }
+.pz-field { position: absolute; --pz-p: 120px;
+  top: calc(var(--safe-t) + 64px); right: calc(var(--safe-r) + 12px);
+  bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
+.pz-frame { position: absolute; left: 0; top: 0; width: calc(var(--pz-p) * 2); height: calc(var(--pz-p) * 2); box-sizing: border-box;
+  border: 4px dashed #b9b3e0; border-radius: 26px; background: rgba(255, 255, 255, .55); pointer-events: none; }
+.stage .pz-slot, .stage .pz-piece { position: absolute; left: 0; top: 0; width: var(--pz-p); height: var(--pz-p); padding: 0; border: 0; background: none; }
+.stage .pz-piece { overflow: hidden; z-index: 1; cursor: grab; touch-action: none; will-change: transform; }
+.stage .pz-piece:disabled { cursor: default; }
+.stage .pz-slot { cursor: default; }
+.stage .pz-piece svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.pz-slot:focus-visible, .pz-piece:focus-visible, .pz-selected { outline: 4px solid #8f7fd1; outline-offset: -4px; }
+/* Wieża z Klocków */
+.wk { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#f3eefb, #fdf0d5); }
+.wk-field { position: absolute;
+  top: calc(var(--safe-t) + 64px); right: calc(var(--safe-r) + 12px);
+  bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
+.wk-base { position: absolute; left: 0; top: 0; border-radius: 8px; background: #d9c9ea; pointer-events: none; }
+.stage .wk-tower { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; cursor: default; }
+.stage .wk-block { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; z-index: 1; cursor: grab;
+  touch-action: none; will-change: transform; }
+.stage .wk-block:disabled { cursor: default; }
+.stage .wk-block svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.wk-tower:focus-visible, .wk-block:focus-visible, .wk-selected { outline: 4px solid #8f7fd1; outline-offset: 4px; border-radius: 16px; }
 
 /* Myjnia */
 .mj { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;

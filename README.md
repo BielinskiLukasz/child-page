@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens twenty-three gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens twenty-six gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -27,7 +27,10 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 20. **Zabawa w chowanego** – a garden with a bush, a box, a tree and a barrel. Touching a hiding place slowly lifts it to show the animal peeking behind it (or a flower if it is empty); when every place has been opened they glow softly, close and the animals move to new places.
 21. **Koraliki** – a bowl of eight big colourful beads to drag onto a string; a bead released away from the string drifts back, and when all eight are threaded the necklace glows softly and the beads return to the bowl in a new order.
 22. **Duże i Małe** – a big house and a small house, with big and small animals waiting at the bottom. Drag (or select) a big animal to the big house and a small one to the small house; anywhere else it floats gently back, and when all are home both houses glow and a new round with other animals begins.
-23. **Myjnia** – a muddy car (later a bus and an elephant) at a car wash. Dragging a finger scrubs the mud away and lets soap bubbles float up; when it is clean the vehicle glows softly and a new muddy one fades in.
+23. **Kolorowe Kubeczki** – three pastel cups and six soft balls (two per colour) to drag into the cup of the same colour; colours also differ by a subtle pattern. A ball dropped elsewhere simply floats back, and when all are sorted the cups glow softly and the balls drift out in a new order.
+24. **Puzzle** – a simple picture (a house with a sun, a fish or a flower) cut into four big pieces to drag to their places; pieces glide in when close and drift back otherwise. A finished picture glows softly and then fades into the next one.
+25. **Wieża z Klocków** – six soft blocks to drag onto a tower base in any order; each settles on top with a tiny sway and the tower can never fall. When all six are stacked the top glows softly and the blocks drift back so the tower can be built again.
+26. **Myjnia** – a muddy car (later a bus and an elephant) at a car wash. Dragging a finger scrubs the mud away and lets soap bubbles float up; when it is clean the vehicle glows softly and a new muddy one fades in.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirty gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirty-one gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -35,6 +35,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 28. **Buźki** – a big friendly face and a small cat. Touching the face cycles calmly through happy, sleepy, surprised and calm expressions (the cat copies them); touching the eyes, cheeks or mouth gives a slow blink, a pink glow or a gentle smile or yawn.
 29. **Pamięć** – six large picture cards (three pairs) to turn over two at a time. Matching cards glow and stay open, other cards simply turn back; when all pairs are found the cards glow and a new set of pictures is dealt.
 30. **Gdzie jest Piłka?** – a ball, an open box on a table and a little bunny. Touching one of four marked spots (in, on, under, next to the box) or dragging the ball makes it glide there, and the bunny reacts gently.
+31. **Rysuj Kształty** – tracing practice: a dotted line, circle, zigzag, cross, wave or spiral to follow with a finger. A soft, gently changing coloured line appears along the guide; when the shape is finished it glows and the next one fades in.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

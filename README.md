@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirteen gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens fourteen gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -18,6 +18,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 11. **Kolorowe Kształty** – nine soft shapes to drag onto their matching outlines (two 3×3 grids: stacked in portrait, side by side in landscape). There are no wrong answers: a shape dropped elsewhere simply drifts back.
 12. **Zwierzątka na Farmie** – a pastel farm. Touching an animal makes it react slowly; touching the barn opens its door so an animal can peek out.
 13. **Policz Razem** – a few friendly objects (apples, ducks, flowers, fish) to touch one by one: each touch adds a dot to a counting row and shows the numeral 1–5; the group glows softly when all are counted and a new scene fades in.
+14. **Duże i Małe** – a big house and a small house, with big and small animals waiting at the bottom. Drag (or select) a big animal to the big house and a small one to the small house; anywhere else it floats gently back, and when all are home both houses glow and a new round with other animals begins.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

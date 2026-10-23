@@ -28,12 +28,12 @@
         k.setAttribute('r', (4.5 - 1.5 * e).toFixed(2));
       } },
     { name: 'Kubek', off: 'pusty', on: 'pełny', bg: '#dff1fb',
-      build: function () {
+      build: function (n) {
         var body = 'M26 30h48l-6 56q-1 7-8 7H40q-7 0-8-7z';
-        return '<defs><clipPath id="pw-cup-clip"><path d="' + body + '"/></clipPath></defs>' +
+        return '<defs><clipPath id="pw-cup-clip-' + n + '"><path d="' + body + '"/></clipPath></defs>' +
           '<path d="M72 40q20 0 18 17t-20 17" fill="none" stroke="#fbf7ff" stroke-width="7" stroke-linecap="round"/>' +
           '<path d="' + body + '" fill="#fbf7ff" fill-opacity=".7"/>' +
-          '<g clip-path="url(#pw-cup-clip)"><rect class="pw-liquid" x="20" y="93" width="60" height="64" fill="#a9d6f2"/>' +
+          '<g clip-path="url(#pw-cup-clip-' + n + ')"><rect class="pw-liquid" x="20" y="93" width="60" height="64" fill="#a9d6f2"/>' +
           '<path class="pw-wave" d="M20 93q10-4 20 0t20 0t20 0" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2"/></g>' +
           '<path d="' + body + '" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>' +
           '<path d="M24 94h52" stroke="#d6cdef" stroke-width="5" stroke-linecap="round"/>' + sparkSvg();
@@ -100,14 +100,16 @@
       btn.style.background = o.bg;
       // Reduced motion: two static views (first state, opposite) cross-fade instead of moving.
       var views = reduced ? [0, 1] : [null];
-      btn.innerHTML = views.map(function (v) {
-        return '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + o.build() + '</svg>';
+      btn.innerHTML = views.map(function (v, vi) {
+        return '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + o.build(vi) + '</svg>';
       }).join('');
       var svgs = btn.querySelectorAll('svg');
       if (reduced) {
         o.paint(svgs[0], 0);
         o.paint(svgs[1], 1);
-        svgs[1].style.position = 'absolute';
+        svgs[0].style.position = svgs[1].style.position = 'absolute';
+        svgs[0].style.inset = svgs[1].style.inset = '6%';
+        svgs[0].style.width = svgs[1].style.width = svgs[0].style.height = svgs[1].style.height = '88%';
       }
       var it = { o: o, btn: btn, svgs: svgs, v: 0, t: 0, spark: 1 };
       it.paint = function () {

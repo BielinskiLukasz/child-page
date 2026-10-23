@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirty-four gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirty-five gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -39,6 +39,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 32. **Mały Samolot** – a little propeller plane with a bear pilot on a runway among hills and clouds. Touching the plane makes it take off and fly slowly, touching it again lands it; touching a cloud makes it curve around that cloud, and touching the pilot makes him wave.
 33. **Traktor** – a pastel farm with a barn, a field of three rows and a little tractor with a bear driver. Touching the tractor starts or stops it (slowly), and it leaves sprouts that grow into flowers and vegetables; touching a plant makes it wiggle, touching the barn parks the tractor there, and touching the driver makes him wave. When all rows are full the plants fade and the field starts again.
 34. **Autobusik** – a little bus drives slowly round a village road with three bus stops, each with a waiting animal. Touching the bus starts it or slows it to a halt; touching a stop makes it brake there (only the last touched stop counts), open its doors and let the animal hop in. Touching an animal in a window makes it step out at the stop or, while moving, wave.
+35. **Rakieta** – a small rocket with a bear astronaut drifts through a starry night sky with three friendly planets. Touching the rocket makes it fly slowly along a smooth loop or slow down and hover; touching a planet makes it curve over, hover beside it while the planet glows softly, and then carry on. Touching a star makes it twinkle once, touching the astronaut makes him wave.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

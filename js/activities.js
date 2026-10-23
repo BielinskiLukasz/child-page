@@ -53,7 +53,9 @@
     { id: 'chowany', name: 'Zabawa w chowanego',
       icon: svg('<g fill="#9fd4a8"><circle cx="22" cy="42" r="14"/><circle cx="38" cy="38" r="17"/><circle cx="50" cy="44" r="12"/><rect x="10" y="44" width="50" height="16" rx="8"/></g><ellipse cx="28" cy="20" rx="4" ry="10" fill="#fbf7ff"/><ellipse cx="40" cy="20" rx="4" ry="10" fill="#fbf7ff"/><circle cx="52" cy="14" r="6" fill="#ffe9a8"/>', '#e3f1d9') },
     { id: 'koraliki', name: 'Koraliki',
-      icon: svg('<path d="M6 40Q32 26 58 40" fill="none" stroke="#c9a0c0" stroke-width="3" stroke-linecap="round"/><circle cx="14" cy="38" r="7" fill="#f7a8c9"/><rect x="23" y="34" width="12" height="12" rx="4" fill="#a8d8f0"/><circle cx="43" cy="38" r="6" fill="#ffe08a"/><circle cx="53" cy="40" r="5" fill="#bfe6b4"/><circle cx="32" cy="54" r="5" fill="#c9b8f2"/>', '#fdf0d5') }
+      icon: svg('<path d="M6 40Q32 26 58 40" fill="none" stroke="#c9a0c0" stroke-width="3" stroke-linecap="round"/><circle cx="14" cy="38" r="7" fill="#f7a8c9"/><rect x="23" y="34" width="12" height="12" rx="4" fill="#a8d8f0"/><circle cx="43" cy="38" r="6" fill="#ffe08a"/><circle cx="53" cy="40" r="5" fill="#bfe6b4"/><circle cx="32" cy="54" r="5" fill="#c9b8f2"/>', '#fdf0d5') },
+    { id: 'duze-i-male', name: 'Duże i Małe',
+      icon: svg('<path d="M4 34L20 18l16 16z" fill="#b9b3e0"/><rect x="7" y="34" width="26" height="20" rx="3" fill="#f6c9b0"/><path d="M38 46l9-9 9 9z" fill="#b9b3e0"/><rect x="40" y="46" width="14" height="8" rx="2" fill="#cfe3f7"/>', '#fdf0d5') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

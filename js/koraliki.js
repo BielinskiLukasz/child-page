@@ -115,7 +115,7 @@
       var hp = S * 1.12, bw = cols * hp + S * 0.5, bh = (N / cols) * hp + S * 0.5, bx = (fw - bw) / 2, by = fh - 6 - bh;
       homes = [];
       for (var h = 0; h < N; h++) { homes.push([bx + bw / 2 + ((h % cols) - (cols - 1) / 2) * hp, by + S * 0.25 + hp / 2 + Math.floor(h / cols) * hp + 2]); }
-      drawDeco(bx, by, bw, bh, last);
+      drawDeco(bx, by, bw, bh);
       var top = Math.min(y1, y2) - S / 2 - 8, bot = (two ? y2 : y1) + S / 2 + 8;
       strBtn.style.cssText = 'left:0;top:' + top + 'px;width:' + fw + 'px;height:' + (bot - top) + 'px';
       glowEl.style.background = 'radial-gradient(ellipse ' + fw * 0.55 + 'px ' + (bot - top) * 0.9 + 'px at 50% ' +
@@ -127,7 +127,7 @@
         place(b);
       });
     }
-    function drawDeco(bx, by, bw, bh, end) {
+    function drawDeco(bx, by, bw, bh) {
       deco.setAttribute('width', fw); deco.setAttribute('height', fh);
       deco.setAttribute('viewBox', '0 0 ' + fw + ' ' + fh);
       var d = 'M' + pts[0][0] + ' ' + pts[0][1];
@@ -145,7 +145,6 @@
         '<circle cx="' + pts[0][0] + '" cy="' + pts[0][1] + '" r="9" fill="#b58aad"/>' +
         '<path d="M' + (ex + 10) + ' ' + (ey - 18) + ' v22 a11 11 0 1 0 11 -11" fill="none" stroke="#9fb7d8" stroke-width="5" stroke-linecap="round"/>' +
         '<circle cx="' + ex + '" cy="' + ey + '" r="4" fill="#c9a0c0"/>';
-      void end;
     }
     function target(b) {
       return b.onString ? slots[string.indexOf(b)] : homes[b.home];

@@ -57,7 +57,9 @@
     { id: 'duze-i-male', name: 'Duże i Małe',
       icon: svg('<path d="M4 34L20 18l16 16z" fill="#b9b3e0"/><rect x="7" y="34" width="26" height="20" rx="3" fill="#f6c9b0"/><path d="M38 46l9-9 9 9z" fill="#b9b3e0"/><rect x="40" y="46" width="14" height="8" rx="2" fill="#cfe3f7"/>', '#fdf0d5') },
     { id: 'kubeczki', name: 'Kolorowe Kubeczki',
-      icon: svg('<path d="M14 22h36l-5 32q-1 4-5 4H24q-4 0-5-4z" fill="#f7a8c9"/><circle cx="46" cy="14" r="7" fill="#a8d8f0"/><circle cx="18" cy="14" r="6" fill="#ffd98a"/>', '#e6e0f7') }
+      icon: svg('<path d="M14 22h36l-5 32q-1 4-5 4H24q-4 0-5-4z" fill="#f7a8c9"/><circle cx="46" cy="14" r="7" fill="#a8d8f0"/><circle cx="18" cy="14" r="6" fill="#ffd98a"/>', '#e6e0f7') },
+    { id: 'puzzle', name: 'Puzzle',
+      icon: svg('<rect x="10" y="10" width="21" height="21" rx="4" fill="#ffe08a"/><rect x="33" y="10" width="21" height="21" rx="4" fill="#a8d8f0"/><rect x="10" y="33" width="21" height="21" rx="4" fill="#f7a8c9"/><rect x="33" y="33" width="21" height="21" rx="4" fill="#bfe6b4" stroke="#fff" stroke-width="2" stroke-dasharray="3 3"/>', '#e6e0f7') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

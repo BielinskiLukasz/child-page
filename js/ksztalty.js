@@ -1,6 +1,6 @@
-// Activity "Kolorowe Kształty": drag three soft shapes onto their matching outlines. No wrong answers:
+// Activity "Kolorowe Kształty": drag nine soft shapes (3x3) onto their matching outlines (3x3). No wrong answers:
 // a shape released anywhere else drifts back. One rAF loop (works under prefers-reduced-motion, pauses
-// when the tab is hidden, stops when idle); fixed DOM of 3 outlines + 3 shapes.
+// when the tab is hidden, stops when idle); fixed DOM of 9 outlines + 9 shapes. Portrait: outline grid above shape grid; landscape: side by side.
 (function () {
   var DEFS = [
     { id: 'circle', label: 'kółko', color: '#f7a8c9', glow: '#f7a8c9',
@@ -8,10 +8,22 @@
     { id: 'square', label: 'kwadrat', color: '#a8d8f0', glow: '#8cc8ea',
       path: '<rect x="12" y="12" width="76" height="76" rx="18" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' },
     { id: 'triangle', label: 'trójkąt', color: '#ffd98a', glow: '#ffcf66',
-      path: '<path d="M50 16 L86 80 L14 80 Z" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' }
+      path: '<path d="M50 16 L86 80 L14 80 Z" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' },
+    { id: 'star', label: 'gwiazdka', color: '#fff0a0', glow: '#ffe66b',
+      path: '<path d="M50 10 L61 38 L91 38 L67 56 L76 87 L50 69 L24 87 L33 56 L9 38 L39 38 Z" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' },
+    { id: 'heart', label: 'serduszko', color: '#f7b0b8', glow: '#f58f9c',
+      path: '<path d="M50 84 C14 58 10 34 28 24 C40 18 48 26 50 34 C52 26 60 18 72 24 C90 34 86 58 50 84 Z" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' },
+    { id: 'diamond', label: 'romb', color: '#c9b8f2', glow: '#b39cf0',
+      path: '<path d="M50 8 L88 50 L50 92 L12 50 Z" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' },
+    { id: 'hexagon', label: 'sześciokąt', color: '#bfe6b4', glow: '#9fd990',
+      path: '<path d="M50 10 L84 30 L84 70 L50 90 L16 70 L16 30 Z" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' },
+    { id: 'oval', label: 'owal', color: '#ffc9a0', glow: '#ffb27a',
+      path: '<ellipse cx="50" cy="50" rx="42" ry="28" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' },
+    { id: 'plus', label: 'krzyżyk', color: '#a8e0d6', glow: '#82d2c4',
+      path: '<path d="M38 12 H62 V38 H88 V62 H62 V88 H38 V62 H12 V38 H38 Z" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' }
   ];
-  // Shapes start in a different order than the outlines so the match is a real (but gentle) choice.
-  var SHAPE_ORDER = [1, 2, 0];
+  // Shapes start in a different order than the outlines (no shape begins at its own place) so the match is a real (but gentle) choice.
+  var SHAPE_ORDER = [4, 7, 5, 8, 0, 6, 2, 1, 3];
   var RETURN_AFTER = 4000, SVGNS = 'viewBox="0 0 100 100" aria-hidden="true" focusable="false"';
 
   function shapeSvg(def, outline) {
@@ -67,14 +79,23 @@
     function layout() {
       var r = field.getBoundingClientRect();
       fw = r.width; fh = r.height;
-      S = Math.max(64, Math.min(140, fw / 3.6, fh * 0.3));
+      // Two 3x3 grids: stacked in portrait (targets above, shapes below), side by side in landscape.
+      var portrait = fh >= fw, rw = portrait ? fw : fw / 2, rh = portrait ? fh / 2 : fh;
+      var cw = rw / 3, ch = rh / 3;
+      S = Math.max(48, Math.min(140, Math.min(cw, ch) * 0.82));
       field.style.setProperty('--ks-s', S + 'px');
+      function cell(slot, region) {
+        var ox = portrait ? 0 : region * rw, oy = portrait ? region * rh : 0;
+        return [ox + ((slot % 3) + 0.5) * cw, oy + (Math.floor(slot / 3) + 0.5) * ch];
+      }
       DEFS.forEach(function (def, i) {
-        def.ox = fw * (i + 0.5) / 3; def.oy = S / 2 + 4;
+        var c = cell(i, 0);
+        def.ox = c[0]; def.oy = c[1];
         def.outlineEl.style.transform = 'translate(' + (def.ox - S / 2) + 'px,' + (def.oy - S / 2) + 'px)';
       });
       items.forEach(function (it) {
-        it.hx = fw * (it.slot + 0.5) / 3; it.hy = Math.max(fh - S / 2 - 4, S * 1.6);
+        var h = cell(it.slot, 1);
+        it.hx = h[0]; it.hy = h[1];
         it.tx = it.def.ox; it.ty = it.def.oy;
         if (it.mode === 'drag') { cancelDrag(it); }
         if (it.mode === 'glide') { glideTo(it, it.placed ? it.tx : it.hx, it.placed ? it.ty : it.hy, true); }

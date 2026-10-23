@@ -56,7 +56,7 @@
     var s = '<svg class="db-glow" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
       '<rect width="400" height="300" fill="#2a3a74" opacity=".38"/>';
     STARS.forEach(function (p) { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + p[2] + '" fill="#fff6d0"/>'; });
-    return s + '<circle cx="335" cy="52" r="24" fill="#ffe9a8"/><circle cx="347" cy="46" r="21" fill="#a79fd6" opacity=".55"/>' +
+    return s + '<path d="M336.14 28.03A24 24 0 1 0 354.86 65.47A21 21 0 0 1 336.14 28.03Z" fill="#ffe9a8"/>' +
       '<path d="M318 56q6 6 12 0" fill="none" stroke="#7a6f9f" stroke-width="2" stroke-linecap="round"/></svg>';
   }
 

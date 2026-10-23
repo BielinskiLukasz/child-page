@@ -28,8 +28,8 @@
     barn: '<g class="fm-all"><path d="M4 42L50 8l46 34z" fill="#d9b99b"/><rect x="10" y="38" width="80" height="58" rx="5" fill="#f6c9b0"/>' +
       '<rect x="34" y="52" width="32" height="44" rx="4" fill="#8f7fa3"/>' +
       '<g clip-path="url(#fm-clip)"><g class="fm-peek"><circle cx="50" cy="94" r="12" fill="#fff4dc"/><circle cx="45" cy="92" r="2" fill="#4a4560"/><circle cx="55" cy="92" r="2" fill="#4a4560"/><path d="M47 98q3 3 6 0" fill="none" stroke="#4a4560" stroke-width="1.6" stroke-linecap="round"/></g></g>' +
-      '<rect class="fm-door" x="34" y="52" width="32" height="44" rx="4" fill="#fbe7c8" stroke="#e9cfa4" stroke-width="2"/>' +
-      '<path d="M34 52l32 44M66 52L34 96" stroke="#e9cfa4" stroke-width="2"/>' +
+      '<g class="fm-door"><rect x="34" y="52" width="32" height="44" rx="4" fill="#fbe7c8" stroke="#e9cfa4" stroke-width="2"/>' +
+      '<path d="M34 52l32 44M66 52L34 96" stroke="#e9cfa4" stroke-width="2"/></g>' +
       '<circle cx="50" cy="26" r="5" fill="#fbe7c8"/></g><defs><clipPath id="fm-clip"><rect x="34" y="52" width="32" height="44"/></clipPath></defs>'
   };
   var LABEL = { sheep: 'Owieczka', cow: 'Krowa', hen: 'Kura', cat: 'Kotek', barn: 'Stodoła' };

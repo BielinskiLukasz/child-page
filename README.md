@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens sixteen gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens seventeen gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -21,6 +21,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 14. **Ubierz Misia** – a teddy bear in a room with a window. Touching the window slowly changes the weather (sun, rain, snow); six clothes (sun hat, umbrella, scarf, rain boots, warm hat, sunglasses) can be dragged onto the bear, which does a small happy hop with a soft glow for fitting clothes and a gentle head tilt for others; touching worn clothes takes them off.
 15. **Przeciwieństwa** – four big objects (a door, a cup, a balloon, a lamp) that slowly change to their opposite when touched – open, full, high, on – and back again; the scene glows softly when all four are in their second state.
 16. **Co nie Pasuje?** – three large pictures, two of one kind and one different (e.g. two fruits and a car). Touching the odd one makes it glow and bounce softly before the next set fades in; touching the others only makes them wobble, so there are no wrong answers.
+17. **Literki** – one big letter (Aa) on a soft card with a friendly picture of something starting with it. Touching the picture makes it wiggle and shows its word for a few seconds, touching the letter makes it glow, and the arrows (or a swipe) move through twelve letters.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

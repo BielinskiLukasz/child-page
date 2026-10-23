@@ -246,3 +246,16 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .stage .pr-btn svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
 .pr-btn:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 24px; }
+
+/* Kolorowe Kubeczki */
+.kc { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#f6f0fb, #e3f1ea); }
+.kc-field { position: absolute; --kc-b: 80px; --kc-c: 110px;
+  top: calc(var(--safe-t) + 64px); right: calc(var(--safe-r) + 12px);
+  bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
+.stage .kc-cup, .stage .kc-ball { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; will-change: transform; }
+.stage .kc-cup { width: var(--kc-c); height: var(--kc-c); cursor: default; }
+.stage .kc-ball { width: var(--kc-b); height: var(--kc-b); min-width: 64px; min-height: 64px; z-index: 1; cursor: grab; touch-action: none; }
+.stage .kc-ball:disabled { cursor: default; }
+.stage .kc-cup svg, .stage .kc-ball svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.kc-cup:focus-visible, .kc-ball:focus-visible, .kc-selected { outline: 4px solid #8f7fd1; outline-offset: 4px; border-radius: 24px; }

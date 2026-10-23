@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens fourteen gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens fifteen gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -18,7 +18,8 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 11. **Kolorowe Kształty** – nine soft shapes to drag onto their matching outlines (two 3×3 grids: stacked in portrait, side by side in landscape). There are no wrong answers: a shape dropped elsewhere simply drifts back.
 12. **Zwierzątka na Farmie** – a pastel farm. Touching an animal makes it react slowly; touching the barn opens its door so an animal can peek out.
 13. **Policz Razem** – a few friendly objects (apples, ducks, flowers, fish) to touch one by one: each touch adds a dot to a counting row and shows the numeral 1–5; the group glows softly when all are counted and a new scene fades in.
-14. **Koraliki** – a bowl of eight big colourful beads to drag onto a string; a bead released away from the string drifts back, and when all eight are threaded the necklace glows softly and the beads return to the bowl in a new order.
+14. **Ubierz Misia** – a teddy bear in a room with a window. Touching the window slowly changes the weather (sun, rain, snow); six clothes (sun hat, umbrella, scarf, rain boots, warm hat, sunglasses) can be dragged onto the bear, which does a small happy hop with a soft glow for fitting clothes and a gentle head tilt for others; touching worn clothes takes them off.
+15. **Koraliki** – a bowl of eight big colourful beads to drag onto a string; a bead released away from the string drifts back, and when all eight are threaded the necklace glows softly and the beads return to the bowl in a new order.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

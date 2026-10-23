@@ -73,7 +73,7 @@
     var parts = [grab(face), grab(cat)];
 
     var cur = 0, from = EXPR[0], changeT = -1, fx = null;       // fx: { type, t, d }
-    var idleT = 0, idleBlink = null, raf = 0, last = 0;
+    var idleBlink = null, idleTimer = 0, raf = 0, last = 0;
 
     function busy() { return changeT >= 0 || fx !== null; }
     function nextExpr() {
@@ -129,19 +129,22 @@
       }
       if (fx) { fx.t += dt; if (fx.t >= fx.d) { fx = null; } }
       if (idleBlink) { idleBlink.t += dt; if (idleBlink.t >= BLINK_S) { idleBlink = null; } }
-      else if (!busy()) {
-        idleT += dt;
-        if (idleT >= IDLE_BLINK_S) { idleT = 0; idleBlink = { t: 0 }; }
-      } else { idleT = 0; }
       paint();
-      if (!document.hidden) { raf = requestAnimationFrame(frame); }
+      if (document.hidden) { return; }
+      if (busy() || idleBlink) { raf = requestAnimationFrame(frame); }
+      else { armIdle(); }              // nothing animating: stop the loop, wake for the next idle blink
+    }
+    function armIdle() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(function () { idleTimer = 0; idleBlink = { t: 0 }; start(); }, IDLE_BLINK_S * 1000);
     }
     function start() {
+      clearTimeout(idleTimer); idleTimer = 0;
       if (raf || document.hidden) { return; }
       last = performance.now(); raf = requestAnimationFrame(frame);
     }
     function onVis() {
-      if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0; } } else { start(); }
+      if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0; } clearTimeout(idleTimer); idleTimer = 0; } else { start(); }
     }
 
     function layout() {
@@ -171,6 +174,7 @@
 
     return function cleanup() {
       if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      clearTimeout(idleTimer); idleTimer = 0;
       window.removeEventListener('resize', onResize);
       window.removeEventListener('orientationchange', onResize);
       document.removeEventListener('visibilitychange', onVis);

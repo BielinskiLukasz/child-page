@@ -529,3 +529,23 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .tk-tr { position: absolute; left: 0; top: 0; width: var(--tk-tw); height: var(--tk-th); cursor: pointer; z-index: 2; will-change: transform; }
 .tk-dr { position: absolute; left: 31%; top: 30%; width: 25%; height: 40%; min-width: 56px; min-height: 56px; transform: translate(-25%, -25%); padding: 0; border: 0; background: none; cursor: pointer; }
 .tk-barn:focus-visible, .tk-tr:focus-visible, .tk-dr:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }
+
+/* Autobusik */
+.ab { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #eaf6fb 55%, #f4eefb); }
+.ab-sun { position: absolute; top: 6%; right: 10%; width: clamp(44px, 9vw, 80px); aspect-ratio: 1; border-radius: 50%; background: #fff1bd; box-shadow: 0 0 40px 16px rgba(255, 241, 189, .6); }
+.ab-cloud { position: absolute; height: 5%; border-radius: 999px; background: #fff; opacity: .85; }
+.ab-c1 { left: 8%; top: 10%; width: 22%; } .ab-c2 { left: 46%; top: 18%; width: 16%; }
+.ab-house, .ab-tree { position: absolute; pointer-events: none; }
+.stage .ab-house svg, .stage .ab-tree svg { width: 100%; height: 100%; display: block; }
+.ab-sidewalk { position: absolute; left: 0; right: 0; top: calc(var(--sy) - 4px); height: calc(var(--ry) - var(--sy) + 8px); background: #e6e0f7; border-radius: 6px; }
+.ab-road { position: absolute; left: 0; right: 0; top: var(--ry); height: var(--rh); background: #b3adc9; }
+.ab-dash { position: absolute; left: 3%; right: 3%; top: 58%; height: 4px; border-radius: 2px;
+  background: repeating-linear-gradient(90deg, #fdfbff 0 28px, transparent 28px 56px); }
+.ab-stop { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; z-index: 3; }
+.stage .ab-stop svg { width: 100%; height: 100%; display: block; }
+.ab-bus { position: absolute; left: 0; top: 0; width: var(--bw); height: var(--bh); cursor: pointer; z-index: 2; will-change: transform; }
+.stage .ab-bus svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ab-an { position: absolute; left: 0; top: 0; width: var(--as); height: var(--as); min-width: 56px; min-height: 56px; padding: 0; border: 0; background: none; cursor: pointer; z-index: 4; will-change: transform; }
+.stage .ab-an svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ab-stop:focus-visible, .ab-bus:focus-visible, .ab-an:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }

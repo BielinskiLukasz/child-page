@@ -47,7 +47,9 @@
     { id: 'literki', name: 'Literki',
       icon: svg('<rect x="8" y="12" width="48" height="40" rx="8" fill="#fff"/><text x="32" y="42" text-anchor="middle" font-size="26" font-weight="800" fill="#8f7fd1" font-family="sans-serif">Aa</text>', '#fdf0d5') },
     { id: 'sciezka', name: 'Ścieżka',
-      icon: svg('<path d="M12 50q14-4 14-16t14-8q14 4 12-10" fill="none" stroke="#fbf3dc" stroke-width="12" stroke-linecap="round"/><path d="M12 50q14-4 14-16" fill="none" stroke="#f9d6e4" stroke-width="7" stroke-linecap="round"/><circle cx="20" cy="42" r="6" fill="#f3c7a6"/><circle cx="52" cy="16" r="6" fill="#f7b6d2"/><circle cx="52" cy="16" r="2.5" fill="#ffe9a8"/>', '#e6f3e0') }
+      icon: svg('<path d="M12 50q14-4 14-16t14-8q14 4 12-10" fill="none" stroke="#fbf3dc" stroke-width="12" stroke-linecap="round"/><path d="M12 50q14-4 14-16" fill="none" stroke="#f9d6e4" stroke-width="7" stroke-linecap="round"/><circle cx="20" cy="42" r="6" fill="#f3c7a6"/><circle cx="52" cy="16" r="6" fill="#f7b6d2"/><circle cx="52" cy="16" r="2.5" fill="#ffe9a8"/>', '#e6f3e0') },
+    { id: 'wzorki', name: 'Wzorki',
+      icon: svg('<path d="M8 32h48" stroke="#d9d0ee" stroke-width="3"/><circle cx="14" cy="32" r="8" fill="#f7a8c9"/><rect x="24" y="24" width="16" height="16" rx="4" fill="#a8d8f0"/><circle cx="50" cy="32" r="8" fill="#f7a8c9"/><circle cx="32" cy="52" r="7" fill="#fff" fill-opacity=".6" stroke="#c9bde8" stroke-width="2" stroke-dasharray="3 3"/>', '#e6e0f7') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

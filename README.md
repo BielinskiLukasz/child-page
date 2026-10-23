@@ -1,11 +1,24 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with six large picture tiles opens a set of gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens twelve gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
 ## Activities
-Akwarium Artura, Magiczny Ogród, Nocne Niebo, Dzień i Noc, Ogród Motyli, Malowanie Światłem, Bańki Mydlane, Mały Pociąg.
+1. **Akwarium Artura** – a calm aquarium with fish. Touching the water drops food that the fish swim over to eat; touching a fish makes it blow soft bubbles.
+2. **Magiczny Ogród** – a meadow. Touching the lawn grows a flower or a mushroom from a seed; touching the cloud gently clears the garden.
+3. **Nocne Niebo** – glowing stars in a night sky. Touching them in turn connects the stars into a car, a bear, a house or a cat.
+4. **Dzień i Noc** – touching the sun slowly brings night with stars, touching the moon brings the day back, and touching the sky sends a cloud drifting by.
+5. **Ogród Motyli** – a garden of swaying flowers. Touching a flower makes the butterfly fly slowly to it along a smooth curve.
+6. **Malowanie Światłem** – a dark canvas. Touching and dragging paints soft glowing colours that drift and fade away after a few seconds.
+7. **Mały Pociąg** – a little train with animals in its wagons. Touching the train starts or stops it, touching the station stops it there, and touching an animal makes it nod.
+8. **Bańki Mydlane** – touching the screen blows a big soft bubble that floats up; touching a bubble splits it into smaller ones.
+9. **Dobranoc** – a house at dusk. Touching a window dims or relights it and touching an animal tucks it in or wakes it; when all lights are off and all animals sleep, stars and a sleeping moon appear.
+10. **Deszczyk i Tęcza** – touching a cloud makes it rain gently and the puddles ripple; after a while of rain a soft rainbow appears and fades out again.
+11. **Kolorowe Kształty** – three soft shapes to drag onto their matching outlines. There are no wrong answers: a shape dropped elsewhere simply drifts back.
+12. **Zwierzątka na Farmie** – a pastel farm. Touching an animal makes it react slowly; touching the barn opens its door so an animal can peek out.
+
+All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 
 ## Run locally
 Plain HTML/CSS/JS, no build step:

@@ -1,10 +1,10 @@
 // Activity "Deszczyk i Tęcza": touch a cloud -> gentle rain for ~5 s; puddles ripple and fill a little;
-// after ~10 s of total rain a soft rainbow fades in, stays, then fades out.
+// after 30 cloud-seconds of rain (each raining cloud adds 1 s per second) a soft rainbow fades in, stays, then fades out.
 // All motion (rain, ripples, puddles, rainbow) runs in one rAF loop with a capped dt, so it works under
 // prefers-reduced-motion and pauses (never replays) while the tab is hidden. DOM is bounded by fixed pools.
 (function () {
   var NS = 'http://www.w3.org/2000/svg';
-  var RAIN_S = 5, RAINBOW_AFTER_S = 10, FADE_IN_S = 4, HOLD_S = 10, FADE_OUT_S = 4;
+  var RAIN_S = 5, RAINBOW_AFTER_S = 30, FADE_IN_S = 4, HOLD_S = 10, FADE_OUT_S = 4;
   var MAX_DROPS = 60, MAX_RIPPLES = 12, DROPS_PER_S = 7, FALL = 0.2, RIPPLE_S = 2.6;
   var CLOUDS = [{ x: 0.2, y: 0.17, w: 0.34 }, { x: 0.52, y: 0.1, w: 0.36 }, { x: 0.82, y: 0.2, w: 0.3 }];
   var PUDDLES = [{ x: 0.24, y: 0.84, w: 0.24 }, { x: 0.56, y: 0.92, w: 0.22 }, { x: 0.8, y: 0.8, w: 0.2 }];
@@ -101,14 +101,13 @@
         var d = drops[k];
         if (d.live) { continue; }
         d.live = true;
-        d.puddle = Math.random() < 0.6 ? puddles[Math.floor(Math.random() * puddles.length)].p : null;
-        if (d.puddle) {
-          d.x = d.puddle.x + (Math.random() - 0.5) * d.puddle.w * 0.6;
-          d.ground = d.puddle.y;
-        } else {
-          d.x = cl.c.x + (Math.random() - 0.5) * cl.c.w * 0.7;
-          d.ground = GROUND_MIN + Math.random() * (GROUND_MAX - GROUND_MIN);
+        // drops fall straight below their own cloud; they ripple only if they land inside a puddle
+        d.x = cl.c.x + (Math.random() - 0.5) * cl.c.w * 0.7;
+        d.puddle = null;
+        for (var q = 0; q < puddles.length; q++) {
+          if (Math.abs(d.x - puddles[q].p.x) < puddles[q].p.w * 0.4) { d.puddle = puddles[q].p; break; }
         }
+        d.ground = d.puddle ? d.puddle.y : GROUND_MIN + Math.random() * (GROUND_MAX - GROUND_MIN);
         d.y = cl.c.y + 0.05;
         d.node.style.display = '';
         return;
@@ -118,15 +117,16 @@
       raf = 0;
       var dt = Math.min((now - last) / 1000, 0.05); // long gaps (hidden tab) are never replayed
       last = now;
-      var raining = false;
+      var raining = false, nRain = 0;
       clouds.forEach(function (cl) {
         if (cl.rain <= 0) { return; }
         raining = true;
+        nRain++;
         cl.rain -= dt;
         cl.acc += dt * DROPS_PER_S;
         while (cl.acc >= 1) { cl.acc -= 1; spawn(cl); }
       });
-      if (raining && bowState === 0) { rainTotal += dt; } // rain while the rainbow shows doesn't count towards the next one
+      if (raining && bowState === 0) { rainTotal += dt * nRain; } // rain while the rainbow shows doesn't count towards the next one
       drops.forEach(function (d) {
         if (!d.live) { return; }
         d.y += FALL * dt;

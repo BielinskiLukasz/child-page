@@ -14,8 +14,8 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 7. **Mały Pociąg** – a little train with animals in its wagons. Touching the train starts or stops it, touching the station stops it there, and touching an animal makes it nod.
 8. **Bańki Mydlane** – touching the screen blows a big soft bubble that floats up; touching a bubble splits it into smaller ones.
 9. **Dobranoc** – a house at dusk. Touching a window dims or relights it and touching an animal tucks it in or wakes it; when all lights are off and all animals sleep, stars and a sleeping moon appear.
-10. **Deszczyk i Tęcza** – touching a cloud makes it rain gently and the puddles ripple; after a while of rain a soft rainbow appears and fades out again.
-11. **Kolorowe Kształty** – three soft shapes to drag onto their matching outlines. There are no wrong answers: a shape dropped elsewhere simply drifts back.
+10. **Deszczyk i Tęcza** – touching a cloud makes it rain gently and the puddles ripple; each cloud rains on its own, and after a while of rain (faster when several clouds rain together) a soft rainbow appears and fades out again.
+11. **Kolorowe Kształty** – nine soft shapes to drag onto their matching outlines (two 3×3 grids: stacked in portrait, side by side in landscape). There are no wrong answers: a shape dropped elsewhere simply drifts back.
 12. **Zwierzątka na Farmie** – a pastel farm. Touching an animal makes it react slowly; touching the barn opens its door so an animal can peek out.
 13. **Policz Razem** – a few friendly objects (apples, ducks, flowers, fish) to touch one by one: each touch adds a dot to a counting row and shows the numeral 1–5; the group glows softly when all are counted and a new scene fades in.
 

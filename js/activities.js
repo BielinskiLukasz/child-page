@@ -37,7 +37,9 @@
     { id: 'farma', name: 'Zwierzątka na Farmie',
       icon: svg('<rect x="10" y="30" width="44" height="28" rx="4" fill="#f6c9b0"/><path d="M6 32L32 12l26 20z" fill="#d9b99b"/><rect x="26" y="40" width="12" height="18" rx="3" fill="#fbe7c8"/><circle cx="52" cy="50" r="7" fill="#fbf7ff" stroke="#c9b8f2" stroke-width="2"/>', '#e3f1d9') },
     { id: 'policz-razem', name: 'Policz Razem',
-      icon: svg('<circle cx="20" cy="26" r="9" fill="#c4e8a0"/><circle cx="44" cy="26" r="9" fill="#c4e8a0"/><circle cx="32" cy="44" r="9" fill="#c4e8a0"/><g fill="#f7a8c9"><circle cx="16" cy="56" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="36" cy="56" r="3"/></g>', '#fdf0d5') }
+      icon: svg('<circle cx="20" cy="26" r="9" fill="#c4e8a0"/><circle cx="44" cy="26" r="9" fill="#c4e8a0"/><circle cx="32" cy="44" r="9" fill="#c4e8a0"/><g fill="#f7a8c9"><circle cx="16" cy="56" r="3"/><circle cx="26" cy="56" r="3"/><circle cx="36" cy="56" r="3"/></g>', '#fdf0d5') },
+    { id: 'wzorki', name: 'Wzorki',
+      icon: svg('<path d="M8 32h48" stroke="#d9d0ee" stroke-width="3"/><circle cx="14" cy="32" r="8" fill="#f7a8c9"/><rect x="24" y="24" width="16" height="16" rx="4" fill="#a8d8f0"/><circle cx="50" cy="32" r="8" fill="#f7a8c9"/><circle cx="32" cy="52" r="7" fill="#fff" fill-opacity=".6" stroke="#c9bde8" stroke-width="2" stroke-dasharray="3 3"/>', '#e6e0f7') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

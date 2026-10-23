@@ -246,3 +246,12 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .stage .pr-btn svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
 .pr-btn:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 24px; }
+
+/* Wzorki */
+.wz { position: fixed; inset: 0; overflow: hidden; background: #f3eefb; }
+.wz-field { position: absolute; top: calc(var(--safe-t) + 56px); bottom: calc(var(--safe-b) + 8px); left: calc(var(--safe-l) + 8px); right: calc(var(--safe-r) + 8px); }
+.stage .wz-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.stage .wz-btn { position: absolute; padding: 0; border: 0; border-radius: 24px; background: rgba(255,255,255,.7); cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.stage .wz-btn svg { width: 78%; height: 78%; display: block; margin: 11%; pointer-events: none; overflow: visible; }
+.wz-btn:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; }

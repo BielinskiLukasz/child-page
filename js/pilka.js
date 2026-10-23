@@ -88,7 +88,7 @@
       if (dragPid !== null) { return; }
       spot = i; tx = SPOTS[i].x; ty = SPOTS[i].y;
       react = null;
-      if (reduced()) { fade = { t: 0, phase: 0 }; moving = true; }  // soft cross-fade instead of a glide
+      if (reduced()) { if (!fade || fade.phase === 1) { fade = { t: (1 - op) * FADE_S, phase: 0 }; } moving = true; }  // soft cross-fade instead of a glide
       else { moving = true; }
       start();
     }

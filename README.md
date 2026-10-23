@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirty-two gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirty-three gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -37,6 +37,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 30. **Gdzie jest Piłka?** – a ball, an open box on a table and a little bunny. Touching one of four marked spots (in, on, under, next to the box) or dragging the ball makes it glide there, and the bunny reacts gently.
 31. **Rysuj Kształty** – tracing practice: a dotted line, circle, zigzag, cross, wave or spiral to follow with a finger. A soft, gently changing coloured line appears along the guide; when the shape is finished it glows and the next one fades in.
 32. **Mały Samolot** – a little propeller plane with a bear pilot on a runway among hills and clouds. Touching the plane makes it take off and fly slowly, touching it again lands it; touching a cloud makes it curve around that cloud, and touching the pilot makes him wave.
+33. **Traktor** – a pastel farm with a barn, a field of three rows and a little tractor with a bear driver. Touching the tractor starts or stops it (slowly), and it leaves sprouts that grow into flowers and vegetables; touching a plant makes it wiggle, touching the barn parks the tractor there, and touching the driver makes him wave. When all rows are full the plants fade and the field starts again.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

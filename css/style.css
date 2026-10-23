@@ -296,3 +296,13 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .stage .lt-nav { flex: 0 0 auto; width: 60px; height: 60px; border-radius: 50%; color: #8f7fd1; background: rgba(255, 255, 255, .8); display: grid; place-items: center; }
 .stage .lt-nav svg { width: 30px; height: 30px; }
 .lt-letter:focus-visible, .lt-pic:focus-visible, .lt-nav:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 4px; border-radius: 24px; }
+/* Co nie Pasuje? */
+.cn { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; box-sizing: border-box;
+  padding: calc(var(--safe-t) + 56px) calc(var(--safe-r) + 8px) calc(var(--safe-b) + 8px) calc(var(--safe-l) + 8px);
+  background: #fdf0d5; --cn-s: min(28vw, 56dvh, 260px); }
+.cn-row { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 4vw; }
+@media (max-aspect-ratio: 1/1) { .cn { --cn-s: min(56vw, 22dvh, 260px); } .cn-row { flex-direction: column; gap: 3dvh; } }
+.stage .cn-btn { width: var(--cn-s); height: var(--cn-s); min-width: 72px; min-height: 72px; padding: 0; border: 0; background: none;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.stage .cn-btn svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.cn-btn:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 4px; border-radius: 28px; }

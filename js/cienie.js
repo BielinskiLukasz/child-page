@@ -42,10 +42,10 @@
   function mount(container) {
     container.style.display = 'block';
     var board = document.createElement('div');
-    board.className = 'cn';
-    board.innerHTML = '<div class="cn-glow"></div><div class="cn-field"></div>';
+    board.className = 'ci';
+    board.innerHTML = '<div class="ci-glow"></div><div class="ci-field"></div>';
     container.appendChild(board);
-    var field = board.querySelector('.cn-field'), glowEl = board.querySelector('.cn-glow');
+    var field = board.querySelector('.ci-field'), glowEl = board.querySelector('.ci-glow');
 
     var S = 96, fw = 0, fh = 0, selected = null, setIdx = 0, slots = rotation();
     var raf = 0, last = 0, doneT = -1, doneActive = false, doneGlow = 0, fade = 1, fadeDir = 0;
@@ -54,7 +54,7 @@
     for (var i = 0; i < 3; i++) {
       (function (i) {
         var o = document.createElement('button');
-        o.type = 'button'; o.className = 'cn-item cn-shadow';
+        o.type = 'button'; o.className = 'ci-item ci-shadow';
         field.appendChild(o);
         o.addEventListener('click', function () { onShadow(i); });
         shadows.push({ el: o, x: 0, y: 0 });
@@ -63,7 +63,7 @@
     for (var k = 0; k < 3; k++) {
       (function (k) {
         var el = document.createElement('button');
-        el.type = 'button'; el.className = 'cn-item cn-animal';
+        el.type = 'button'; el.className = 'ci-item ci-animal';
         el.setAttribute('aria-pressed', 'false');
         field.appendChild(el);
         var it = { k: k, el: el, slot: slots[k], x: 0, y: 0, hx: 0, hy: 0, tx: 0, ty: 0, mode: 'idle', pid: null, dx: 0, dy: 0,
@@ -92,7 +92,7 @@
       var r = field.getBoundingClientRect();
       fw = r.width; fh = r.height;
       S = Math.max(64, Math.min(140, fw / 3.6, fh * 0.3));
-      field.style.setProperty('--cn-s', S + 'px');
+      field.style.setProperty('--ci-s', S + 'px');
       shadows.forEach(function (sh, i) {
         sh.x = fw * (i + 0.5) / 3; sh.y = S / 2 + 4;
         sh.el.style.transform = 'translate(' + (sh.x - S / 2) + 'px,' + (sh.y - S / 2) + 'px)';
@@ -160,7 +160,7 @@
       items.forEach(function (o) {
         var on = o === selected;
         o.el.setAttribute('aria-pressed', on ? 'true' : 'false');
-        o.el.classList.toggle('cn-selected', on);
+        o.el.classList.toggle('ci-selected', on);
       });
     }
     function onShadow(i) {

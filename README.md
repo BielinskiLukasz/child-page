@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens twenty-seven gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens twenty-eight gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -32,6 +32,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 25. **Wieża z Klocków** – six soft blocks to drag onto a tower base in any order; each settles on top with a tiny sway and the tower can never fall. When all six are stacked the top glows softly and the blocks drift back so the tower can be built again.
 26. **Myjnia** – a muddy car (later a bus and an elephant) at a car wash. Dragging a finger scrubs the mud away and lets soap bubbles float up; when it is clean the vehicle glows softly and a new muddy one fades in.
 27. **Cienie** – three grey animal shadows and the three matching coloured animals to drag onto them. An animal dropped on the wrong shadow simply floats back; when all are matched the picture glows softly and a new set of animals appears.
+28. **Buźki** – a big friendly face and a small cat. Touching the face cycles calmly through happy, sleepy, surprised and calm expressions (the cat copies them); touching the eyes, cheeks or mouth gives a slow blink, a pink glow or a gentle smile or yawn.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

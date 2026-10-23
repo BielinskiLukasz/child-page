@@ -24,6 +24,8 @@
       icon: svg('<ellipse cx="22" cy="28" rx="10" ry="12" fill="#f7a8c9"/><ellipse cx="42" cy="28" rx="10" ry="12" fill="#c9b8f2"/><rect x="30" y="20" width="4" height="26" rx="2" fill="#5b5675"/>', '#fdf0d5') },
     { id: 'malowanie', name: 'Malowanie Światłem',
       icon: svg('<path d="M14 40q10-24 20-4t16-14" fill="none" stroke="#ffb7a5" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="22" r="4" fill="#ffe9a8"/>', '#e6e0f7') },
+    { id: 'koraliki', name: 'Koraliki',
+      icon: svg('<path d="M6 40Q32 26 58 40" fill="none" stroke="#c9a0c0" stroke-width="3" stroke-linecap="round"/><circle cx="14" cy="38" r="7" fill="#f7a8c9"/><rect x="23" y="34" width="12" height="12" rx="4" fill="#a8d8f0"/><circle cx="43" cy="38" r="6" fill="#ffe08a"/><circle cx="53" cy="40" r="5" fill="#bfe6b4"/><circle cx="32" cy="54" r="5" fill="#c9b8f2"/>', '#fdf0d5') },
     { id: 'pociag', name: 'Mały Pociąg',
       icon: svg('<rect x="10" y="28" width="14" height="14" rx="3" fill="#f7a8c9"/><rect x="26" y="28" width="14" height="14" rx="3" fill="#a9d6f2"/><rect x="42" y="22" width="12" height="20" rx="3" fill="#9ed8c6"/><circle cx="17" cy="46" r="3" fill="#5b5675"/><circle cx="33" cy="46" r="3" fill="#5b5675"/><circle cx="48" cy="46" r="3" fill="#5b5675"/><path d="M8 50h48" stroke="#8a84a8" stroke-width="2"/><circle cx="46" cy="14" r="4" fill="#fff"/>', '#dff1fb') },
     { id: 'banki', name: 'Bańki Mydlane',

@@ -277,7 +277,7 @@
       }
       odo += df;
       place();
-      var ang = (df ? odo : odo) / 15 * 57.2958;
+      var ang = odo / 15 * 57.2958;
       wheels.forEach(function (w, i) {
         var a = i === 0 ? ang * 0.8 : ang * 1.2;
         w.setAttribute('transform', 'rotate(' + (a % 360).toFixed(1) + ' ' + w.getAttribute('data-cx') + ' ' + w.getAttribute('data-cy') + ')');

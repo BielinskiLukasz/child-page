@@ -5,7 +5,7 @@
 // One capped-dt rAF loop (works under prefers-reduced-motion, pauses when hidden, stops when idle); fixed DOM of
 // 6 blocks + 1 tower button + base; nothing is stored.
 (function () {
-  // w/h are in block units; shape: 'rect' or 'roof'.
+  // w/h are in block units; shape: 'rect' or 'roof'. The smallest block is 0.8 units, so U is floored at 70 px to keep every block >= 56 px.
   var BLOCKS = [
     { label: 'różowy kwadrat', color: '#f7a8c9', w: 1, h: 1, shape: 'rect' },
     { label: 'niebieski prostokąt', color: '#a8d8f0', w: 1.6, h: 0.8, shape: 'rect' },
@@ -78,12 +78,12 @@
       var wx0, wy0, ww, wh, tx0, tw0, th0;
       if (portrait) {
         ww = fw; wx0 = 0;
-        U = Math.max(56, Math.min(84, ww / cols / 1.7, fh * 0.13));
+        U = Math.max(70, Math.min(84, ww / cols / 1.7, fh * 0.13));
         wh = rows * U * 1.2; wy0 = fh - wh;
         tx0 = 0; tw0 = fw; th0 = Math.max(0, wy0 - 8);
       } else {
         ww = fw / 2; wx0 = fw / 2;
-        U = Math.max(56, Math.min(84, ww / cols / 1.7, fh / rows / 1.2));
+        U = Math.max(70, Math.min(84, ww / cols / 1.7, fh / rows / 1.2));
         wh = rows * U * 1.2; wy0 = (fh - wh) / 2;
         tx0 = 0; tw0 = fw / 2; th0 = fh;
       }

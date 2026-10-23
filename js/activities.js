@@ -51,7 +51,9 @@
     { id: 'wzorki', name: 'Wzorki',
       icon: svg('<path d="M8 32h48" stroke="#d9d0ee" stroke-width="3"/><circle cx="14" cy="32" r="8" fill="#f7a8c9"/><rect x="24" y="24" width="16" height="16" rx="4" fill="#a8d8f0"/><circle cx="50" cy="32" r="8" fill="#f7a8c9"/><circle cx="32" cy="52" r="7" fill="#fff" fill-opacity=".6" stroke="#c9bde8" stroke-width="2" stroke-dasharray="3 3"/>', '#e6e0f7') },
     { id: 'chowany', name: 'Zabawa w chowanego',
-      icon: svg('<g fill="#9fd4a8"><circle cx="22" cy="42" r="14"/><circle cx="38" cy="38" r="17"/><circle cx="50" cy="44" r="12"/><rect x="10" y="44" width="50" height="16" rx="8"/></g><ellipse cx="28" cy="20" rx="4" ry="10" fill="#fbf7ff"/><ellipse cx="40" cy="20" rx="4" ry="10" fill="#fbf7ff"/><circle cx="52" cy="14" r="6" fill="#ffe9a8"/>', '#e3f1d9') }
+      icon: svg('<g fill="#9fd4a8"><circle cx="22" cy="42" r="14"/><circle cx="38" cy="38" r="17"/><circle cx="50" cy="44" r="12"/><rect x="10" y="44" width="50" height="16" rx="8"/></g><ellipse cx="28" cy="20" rx="4" ry="10" fill="#fbf7ff"/><ellipse cx="40" cy="20" rx="4" ry="10" fill="#fbf7ff"/><circle cx="52" cy="14" r="6" fill="#ffe9a8"/>', '#e3f1d9') },
+    { id: 'koraliki', name: 'Koraliki',
+      icon: svg('<path d="M6 40Q32 26 58 40" fill="none" stroke="#c9a0c0" stroke-width="3" stroke-linecap="round"/><circle cx="14" cy="38" r="7" fill="#f7a8c9"/><rect x="23" y="34" width="12" height="12" rx="4" fill="#a8d8f0"/><circle cx="43" cy="38" r="6" fill="#ffe08a"/><circle cx="53" cy="40" r="5" fill="#bfe6b4"/><circle cx="32" cy="54" r="5" fill="#c9b8f2"/>', '#fdf0d5') }
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

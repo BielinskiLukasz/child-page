@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens twenty gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens twenty-one gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -25,6 +25,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 18. **Ścieżka** – drag a finger along a wide, curvy path and a little figure (snail, car, ladybird or bee) slowly follows it to a flower or house; if the finger slips off, it simply waits. Arrow keys, Enter or Space also move it step by step.
 19. **Wzorki** – a string of four beads in a simple repeating pattern with an empty slot; touching the matching one of two big beads glides it into place, the other one only wobbles gently, and after three beads the whole string glows and a new pattern appears.
 20. **Zabawa w chowanego** – a garden with a bush, a box, a tree and a barrel. Touching a hiding place slowly lifts it to show the animal peeking behind it (or a flower if it is empty); when every place has been opened they glow softly, close and the animals move to new places.
+21. **Koraliki** – a bowl of eight big colourful beads to drag onto a string; a bead released away from the string drifts back, and when all eight are threaded the necklace glows softly and the beads return to the bowl in a new order.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

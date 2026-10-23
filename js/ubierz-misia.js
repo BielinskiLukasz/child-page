@@ -158,6 +158,10 @@
       start();
     }
     function wear(it) {
+      // The two hats share one spot on the head, so wearing one returns the other to its shelf.
+      items.forEach(function (o) {
+        if (o !== it && o.worn && o.def.wy === it.def.wy && o.def.wx === it.def.wx) { takeOff(o); }
+      });
       it.worn = true; it.pending = true; it.z = zTop++; select(null);
       var p = wornPos(it);
       glideTo(it, p[0], p[1]);

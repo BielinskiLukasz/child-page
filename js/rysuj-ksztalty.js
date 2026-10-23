@@ -22,7 +22,7 @@
   }
   function spiral() {
     var p = [];
-    for (var i = 0; i <= 140; i++) { var t = i / 140, a = -Math.PI / 2 + t * Math.PI * 2 * 2.5, r = 0.05 + 0.35 * t; p.push([0.5 + r * Math.cos(a), 0.5 + r * Math.sin(a)]); }
+    for (var i = 0; i <= 140; i++) { var t = i / 140, a = -Math.PI / 2 + t * Math.PI * 2 * 2, r = 0.05 + 0.37 * t; p.push([0.5 + r * Math.cos(a), 0.5 + r * Math.sin(a)]); }
     return [p];
   }
   var SHAPES = [

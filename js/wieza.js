@@ -1,19 +1,37 @@
-// Activity "Wieża z Klocków": six soft blocks wait at the bottom (portrait) or the side (landscape); drag them onto
+// Activity "Wieża z Klocków": soft blocks wait at the bottom (portrait) or the side (landscape); drag them onto
 // the tower base in any order. A block released over the tower column glides down and settles on top; the tower sways
 // very slightly for ~1 s. The tower can never fall. A block released elsewhere drifts back and can be picked up again.
-// When all six are stacked the top glows ~3 s, then at ~7 s the blocks drift back to their starting places.
-// One capped-dt rAF loop (works under prefers-reduced-motion, pauses when hidden, stops when idle); fixed DOM of
-// 6 blocks + 1 tower button + base; nothing is stored.
+// When all are stacked the top glows ~3 s, then at ~7 s the blocks drift back to their starting places.
+// One capped-dt rAF loop (works under prefers-reduced-motion, pauses when hidden, stops when idle); DOM of
+// 5-9 blocks (random count and colours per launch) + 1 tower button + base; nothing is stored.
 (function () {
-  // w/h are in block units; shape: 'rect' or 'roof'. The smallest block is 0.8 units, so U is floored at 70 px to keep every block >= 56 px.
-  var BLOCKS = [
-    { label: 'różowy kwadrat', color: '#f7a8c9', w: 1, h: 1, shape: 'rect' },
-    { label: 'niebieski prostokąt', color: '#a8d8f0', w: 1.6, h: 0.8, shape: 'rect' },
-    { label: 'żółty kwadrat', color: '#ffd98a', w: 0.9, h: 0.9, shape: 'rect' },
-    { label: 'zielony prostokąt', color: '#bfe6b4', w: 1.3, h: 0.8, shape: 'rect' },
-    { label: 'fioletowy kwadrat', color: '#c9b8f2', w: 0.8, h: 0.8, shape: 'rect' },
-    { label: 'pomarańczowy daszek', color: '#ffc9a0', w: 1.1, h: 0.8, shape: 'roof' }
+  // Block shapes: w/h are in block units; shape: 'rect' or 'roof'. The smallest block is 0.8 units, so U is floored at 70 px to keep
+  // every block >= 56 px. Each launch builds a tower of 5-9 of these, each with its own colour from PALETTE.
+  var SHAPES = [
+    { noun: 'kwadrat', w: 1, h: 1, shape: 'rect' },
+    { noun: 'prostokąt', w: 1.6, h: 0.8, shape: 'rect' },
+    { noun: 'kwadrat', w: 0.9, h: 0.9, shape: 'rect' },
+    { noun: 'prostokąt', w: 1.3, h: 0.8, shape: 'rect' },
+    { noun: 'kwadrat', w: 0.8, h: 0.8, shape: 'rect' },
+    { noun: 'daszek', w: 1.1, h: 0.8, shape: 'roof' },
+    { noun: 'prostokąt', w: 1.45, h: 0.85, shape: 'rect' },
+    { noun: 'kwadrat', w: 0.95, h: 0.95, shape: 'rect' },
+    { noun: 'daszek', w: 1.3, h: 0.9, shape: 'roof' }
   ];
+  var PALETTE = [
+    { name: 'różowy', color: '#f7a8c9' }, { name: 'niebieski', color: '#a8d8f0' }, { name: 'żółty', color: '#ffd98a' },
+    { name: 'zielony', color: '#bfe6b4' }, { name: 'fioletowy', color: '#c9b8f2' }, { name: 'pomarańczowy', color: '#ffc9a0' },
+    { name: 'miętowy', color: '#a8e6d4' }, { name: 'czerwony', color: '#f4a3a3' }, { name: 'brzoskwiniowy', color: '#f9d0b4' },
+    { name: 'błękitny', color: '#b3c7f5' }
+  ];
+  var MIN_BLOCKS = 5, MAX_BLOCKS = 9;
+  function makeBlocks() {
+    var n = MIN_BLOCKS + Math.floor(Math.random() * (MAX_BLOCKS - MIN_BLOCKS + 1));
+    var cols = Rand.pick(PALETTE, n);
+    return Rand.pick(SHAPES, n).map(function (sh, i) {
+      return { label: cols[i].name + ' ' + sh.noun, color: cols[i].color, w: sh.w, h: sh.h, shape: sh.shape };
+    });
+  }
   var GLOW_S = 3000, RESET_S = 7000, SWAY_S = 1.2, SWAY_DEG = 2;
 
   function blockSvg(b) {
@@ -28,6 +46,7 @@
 
   function mount(container) {
     container.style.display = 'block';
+    var BLOCKS = makeBlocks();
     var board = document.createElement('div');
     board.className = 'wk';
     board.innerHTML = '<div class="wk-field"><div class="wk-base"></div></div>';
@@ -74,7 +93,7 @@
     function layout() {
       var r = field.getBoundingClientRect();
       fw = r.width; fh = r.height;
-      var portrait = fh >= fw, rows = 2, cols = 3;
+      var portrait = fh >= fw, cols = 3, rows = Math.ceil(BLOCKS.length / cols);
       var wx0, wy0, ww, wh, tx0, tw0, th0;
       if (portrait) {
         ww = fw; wx0 = 0;

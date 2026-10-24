@@ -85,7 +85,8 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   background: #cfe8f8; }
 .g-sky { position: absolute; inset: 0 0 45% 0; background: linear-gradient(#bfe0f6, #dff1fb); }
 .g-lawn { position: absolute; inset: 55% 0 0 0; background: linear-gradient(#bfe6b4, #a8d9a0); border-radius: 50% 50% 0 0 / 18px 18px 0 0; }
-.g-lawn:focus-visible, .g-wx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.g-lawn:focus-visible, .g-cloud:focus-visible { outline: 4px solid #8f7fd1; outline-offset: -4px; }
+.g-wx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .g-wx i { position: absolute; display: block; }
 .garden.tod-night { background: #1d2a5c; }
 .garden.tod-night .g-sky { background: linear-gradient(#1d2a5c, #3b4a8c); }
@@ -110,7 +111,6 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .g-wind { left: 0; width: 22%; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .7); animation: g-gust 7s linear infinite; }
 .garden.tod-night .g-wind { background: rgba(220, 230, 255, .5); }
 @keyframes g-gust { from { transform: translateX(-30vw); } to { transform: translateX(125vw); } }
-.g-cloud:focus-visible { outline: 4px solid #8f7fd1; outline-offset: -4px; }
 .g-plants { position: absolute; inset: 0; pointer-events: none; }
 .g-plant { position: absolute; width: calc(60px * var(--s) * 1.4); height: calc(100px * var(--s) * 1.4);
   transform: translate(-50%, -100%); max-height: 30vh; transition: opacity .9s ease; pointer-events: none; }

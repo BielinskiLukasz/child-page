@@ -13,11 +13,13 @@
     return a;
   }
 
-  // N unique items from the pool; N >= pool size returns the whole pool shuffled.
+  // N unique items from the pool; N >= pool size returns the whole pool shuffled;
+  // a negative or non-numeric N returns [].
   function pick(list, n) {
     var a = shuffle(list);
     n = Math.floor(n);
-    return n >= 0 && n < a.length ? a.slice(0, n) : a;
+    if (!(n >= 0)) return [];
+    return n < a.length ? a.slice(0, n) : a;
   }
 
   // One item, never the one returned last time for the same key (pools of 2+).

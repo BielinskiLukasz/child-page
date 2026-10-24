@@ -81,7 +81,9 @@
     { id: 'autobusik', name: 'Autobusik',
       icon: svg('<rect x="2" y="44" width="60" height="12" rx="5" fill="#b3adc9"/><rect x="6" y="16" width="52" height="34" rx="9" fill="#ffd98a"/><rect x="11" y="22" width="12" height="12" rx="4" fill="#cfeaf7"/><rect x="26" y="22" width="12" height="12" rx="4" fill="#cfeaf7"/><rect x="41" y="22" width="12" height="20" rx="4" fill="#a8d8f0"/><rect x="6" y="40" width="52" height="6" rx="3" fill="#f7a8c9"/><circle cx="18" cy="50" r="6" fill="#6b6585"/><circle cx="46" cy="50" r="6" fill="#6b6585"/>', '#d8ecfb') },
     { id: 'rakieta', name: 'Rakieta',
-      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#4a528f"/><circle cx="12" cy="14" r="2" fill="#fff4cf"/><circle cx="50" cy="10" r="2.4" fill="#fff4cf"/><circle cx="54" cy="44" r="2" fill="#fff4cf"/><circle cx="48" cy="26" r="6" fill="#c9b8f2"/><path d="M12 48Q8 40 18 38L40 22Q52 20 54 14Q54 26 44 36L26 52Q20 56 12 48z" fill="#fdfbff"/><circle cx="34" cy="30" r="5" fill="#cfeaf7"/><path d="M14 46L6 54M20 52L12 60" stroke="#ffd98a" stroke-width="4" stroke-linecap="round"/>', '#c7cdf0') }
+      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#4a528f"/><circle cx="12" cy="14" r="2" fill="#fff4cf"/><circle cx="50" cy="10" r="2.4" fill="#fff4cf"/><circle cx="54" cy="44" r="2" fill="#fff4cf"/><circle cx="48" cy="26" r="6" fill="#c9b8f2"/><path d="M12 48Q8 40 18 38L40 22Q52 20 54 14Q54 26 44 36L26 52Q20 56 12 48z" fill="#fdfbff"/><circle cx="34" cy="30" r="5" fill="#cfeaf7"/><path d="M14 46L6 54M20 52L12 60" stroke="#ffd98a" stroke-width="4" stroke-linecap="round"/>', '#c7cdf0') },
+    { id: 'lodka', name: 'Mała Łódka',
+      icon: svg('<rect x="2" y="38" width="60" height="24" fill="#a8d8f0"/><path d="M2 44q8-6 15 0t15 0t15 0t15 0" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><path d="M30 8v32" stroke="#a8946f" stroke-width="3"/><path d="M33 10l15 26H33z" fill="#fdfbff"/><path d="M27 18L14 36h13z" fill="#ffe9a8"/><path d="M10 38h44q-3 12-14 12H24q-11 0-14-12z" fill="#f2a98f"/>', '#dff1fb') },
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

@@ -563,3 +563,26 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .rq-rbtn:focus-visible, .rq-star:focus-visible, .rq-planet:focus-visible, .rq-abtn:focus-visible { outline: 4px solid #fff4cf; outline-offset: 3px; border-radius: 14px; }
 .rq-puffs { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
 .rq-puff { position: absolute; left: 0; top: 0; border-radius: 50%; background: #fff; opacity: 0; will-change: transform, opacity; }
+
+/* Mała Łódka (ld-) */
+.ld { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #eaf6fb 40%, #f4eefb); }
+.ld-sun { position: absolute; top: 6%; left: 12%; width: clamp(44px, 9vw, 80px); aspect-ratio: 1; border-radius: 50%; background: #fff1bd; box-shadow: 0 0 40px 16px rgba(255, 241, 189, .6); }
+.ld-cloud { position: absolute; height: 5%; border-radius: 999px; background: #fff; opacity: .85; }
+.ld-c1 { left: 52%; top: 9%; width: 24%; } .ld-c2 { left: 30%; top: 19%; width: 15%; }
+.ld-water { position: absolute; left: 0; right: 0; top: calc(var(--wl) - 12%); bottom: 0; background: linear-gradient(#b9e0f2, #a4d3ec); }
+.ld-bank { position: absolute; border-radius: 20px 0 0 20px; background: #bfe6b4; pointer-events: none; }
+.ld-wave { position: absolute; left: 0; right: 0; background-repeat: repeat-x; pointer-events: none; }
+.ld-w1 { z-index: 1; } .ld-w2 { z-index: 3; }
+.ld-jetty { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; z-index: 1; }
+.stage .ld-jetty svg { width: 100%; height: 100%; display: block; }
+.ld-boat { position: absolute; left: 0; top: 0; z-index: 2; will-change: transform; transform-origin: 50% 85%; pointer-events: none; }
+.stage .ld-boat > svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.ld-hull { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; }
+.ld-an { position: absolute; min-width: 56px; min-height: 56px; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; }
+.stage .ld-an svg, .stage .ld-dk svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ld-dk { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; cursor: pointer; z-index: 4; will-change: transform; }
+.ld-flip svg { transform: scaleX(-1); }
+.ld-ring { position: absolute; left: 0; top: 0; width: 80px; height: 28px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, .9);
+  opacity: 0; pointer-events: none; z-index: 3; will-change: transform, opacity; }
+.ld-hull:focus-visible, .ld-an:focus-visible, .ld-jetty:focus-visible, .ld-dk:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }

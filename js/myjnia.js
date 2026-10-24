@@ -1,4 +1,4 @@
-// Activity "Myjnia": a muddy vehicle (car, bus, elephant) in a car wash. Dragging a finger over it scrubs the mud away
+// Activity "Myjnia": a muddy vehicle (6 types x 6 colours) or animal (6 kinds) in a car wash, V V A V V A ... in random order per launch. Dragging a finger over it scrubs the mud away
 // (a persistent mud mask on a canvas in logical coordinates, so resize/rotation keeps the cleaned areas) and releases a
 // few soap bubbles from a bounded pool. At ~90% clean the rest of the mud fades, the vehicle glows ~3 s, a few extra
 // bubbles float up and ~4 s later a new muddy vehicle fades in. Keyboard: arrow keys move the brush, Enter/Space
@@ -15,28 +15,101 @@
       'Q' + (x + w) + ' ' + (y + h) + ' ' + (x + w - r) + ' ' + (y + h) + 'H' + (x + r) + 'Q' + x + ' ' + (y + h) + ' ' + x + ' ' + (y + h - r) +
       'V' + (y + r) + 'Q' + x + ' ' + y + ' ' + (x + r) + ' ' + y + 'Z';
   }
-  // Each vehicle: list of { d: path, fill }. The same shapes make the clean drawing and the mud silhouette.
+  // Vehicle bodies use the placeholder fill 'BODY', replaced by one of COLOURS when an item is built.
+  var COLOURS = ['#f7a8c9', '#ffd98a', '#9fd0f0', '#a8dcb0', '#ffb98a', '#c9b4ec'];
+  var GLASS = '#dff1fb', TYRE = '#8a84a8', HUB = '#d9d4ec';
+  function wheel(cx, cy, r) { return [{ d: circ(cx, cy, r), fill: TYRE }, { d: circ(cx, cy, r * 0.4), fill: HUB }]; }
+  function legs(a, b, y, h, fill) { return { d: rrect(a, y, 20, h, 8) + rrect(b, y, 20, h, 8), fill: fill }; }
   var VEHICLES = [
     { label: 'samochód', shapes: [
-      { d: 'M14 84Q14 58 44 54L62 34Q68 28 80 28H124Q134 28 142 36L158 54Q188 58 188 84V92H14Z', fill: '#f7a8c9' },
-      { d: 'M70 36H98V54H60ZM104 36H126L142 54H104Z', fill: '#dff1fb' },
-      { d: circ(58, 94, 17), fill: '#8a84a8' }, { d: circ(148, 94, 17), fill: '#8a84a8' },
-      { d: circ(58, 94, 7), fill: '#d9d4ec' }, { d: circ(148, 94, 7), fill: '#d9d4ec' },
-      { d: 'M176 70h10v10h-10z', fill: '#fff0a8' }] },
+      { d: 'M14 84Q14 58 44 54L62 34Q68 28 80 28H124Q134 28 142 36L158 54Q188 58 188 84V92H14Z', fill: 'BODY' },
+      { d: 'M70 36H98V54H60ZM104 36H126L142 54H104Z', fill: GLASS }
+    ].concat(wheel(58, 94, 17), wheel(148, 94, 17), [{ d: 'M176 70h10v10h-10z', fill: '#fff0a8' }]) },
     { label: 'autobus', shapes: [
-      { d: rrect(10, 22, 180, 72, 16), fill: '#ffd98a' },
-      { d: rrect(22, 34, 26, 24, 5) + rrect(54, 34, 26, 24, 5) + rrect(86, 34, 26, 24, 5) + rrect(118, 34, 26, 24, 5), fill: '#dff1fb' },
-      { d: rrect(152, 34, 28, 48, 6), fill: '#fbe7c8' },
-      { d: circ(48, 96, 16), fill: '#8a84a8' }, { d: circ(150, 96, 16), fill: '#8a84a8' },
-      { d: circ(48, 96, 6), fill: '#d9d4ec' }, { d: circ(150, 96, 6), fill: '#d9d4ec' }] },
+      { d: rrect(10, 22, 180, 72, 16), fill: 'BODY' },
+      { d: rrect(22, 34, 26, 24, 5) + rrect(54, 34, 26, 24, 5) + rrect(86, 34, 26, 24, 5) + rrect(118, 34, 26, 24, 5), fill: GLASS },
+      { d: rrect(152, 34, 28, 48, 6), fill: '#fbe7c8' }
+    ].concat(wheel(48, 96, 16), wheel(150, 96, 16)) },
+    { label: 'ciężarówka', shapes: [
+      { d: rrect(8, 26, 116, 64, 8), fill: 'BODY' },
+      { d: 'M128 46H154Q166 46 172 60L190 70V92H128Z', fill: '#f4efe6' },
+      { d: 'M136 52H156Q162 52 166 60H136Z', fill: GLASS }
+    ].concat(wheel(36, 96, 15), wheel(86, 96, 15), wheel(158, 96, 15)) },
+    { label: 'furgonetka', shapes: [
+      { d: 'M12 90V40Q12 26 28 26H132Q146 26 154 40L176 62Q190 68 190 82V90Z', fill: 'BODY' },
+      { d: rrect(24, 36, 70, 24, 6), fill: GLASS },
+      { d: 'M122 36H136Q142 36 148 46L156 58H122Z', fill: GLASS }
+    ].concat(wheel(52, 94, 16), wheel(152, 94, 16)) },
+    { label: 'traktor', shapes: [
+      { d: rrect(70, 44, 90, 34, 10), fill: 'BODY' },
+      { d: rrect(78, 18, 44, 40, 8), fill: 'BODY' },
+      { d: rrect(86, 26, 28, 22, 5), fill: GLASS },
+      { d: rrect(150, 30, 8, 22, 3), fill: '#8a84a8' }
+    ].concat(wheel(86, 82, 28), wheel(156, 92, 18)) },
+    { label: 'kamper', shapes: [
+      { d: rrect(8, 24, 140, 68, 14), fill: 'BODY' },
+      { d: 'M144 44H166Q182 44 190 64V92H144Z', fill: '#f4efe6' },
+      { d: rrect(22, 36, 32, 24, 5) + rrect(64, 36, 32, 24, 5), fill: GLASS },
+      { d: 'M152 52H168Q174 52 178 62H152Z', fill: GLASS }
+    ].concat(wheel(46, 96, 16), wheel(150, 96, 16)) }
+  ];
+  // Muddy animals (no 'BODY' placeholder; each has its own colours).
+  var ANIMALS = [
     { label: 'słoń', shapes: [
       { d: 'M46 52Q46 28 96 28Q148 28 150 56Q152 84 146 92H50Q44 84 46 52Z', fill: '#c9d6e8' },
       { d: circ(148, 50, 26), fill: '#c9d6e8' },
       { d: 'M170 56Q190 60 186 84Q184 98 172 96Q180 84 168 74Z', fill: '#c9d6e8' },
       { d: circ(128, 44, 18), fill: '#b4c4dc' },
-      { d: rrect(54, 80, 22, 32, 8) + rrect(112, 80, 22, 32, 8), fill: '#b4c4dc' },
-      { d: circ(156, 44, 3.5), fill: '#5b5675' }] }
+      legs(54, 112, 80, 32, '#b4c4dc'),
+      { d: circ(156, 44, 3.5), fill: '#5b5675' }] },
+    { label: 'świnka', shapes: [
+      { d: rrect(34, 38, 118, 56, 28), fill: '#f9b8c8' },
+      { d: circ(158, 62, 25), fill: '#f9b8c8' },
+      { d: 'M144 42l6-18 16 12zM166 38l12-14 6 18z', fill: '#f2a0b6' },
+      { d: rrect(172, 58, 18, 14, 6), fill: '#f2a0b6' },
+      legs(50, 112, 86, 24, '#f2a0b6'),
+      { d: 'M34 56q-14-4-10-16', fill: '#f2a0b6' },
+      { d: circ(160, 54, 3.5), fill: '#5b5675' }] },
+    { label: 'krowa', shapes: [
+      { d: rrect(30, 34, 122, 58, 22), fill: '#f4f1ea' },
+      { d: rrect(146, 38, 40, 40, 14), fill: '#f4f1ea' },
+      { d: circ(70, 56, 14) + circ(112, 70, 12), fill: '#6f6a85' },
+      { d: 'M150 36l-6-12 14 6zM178 36l8-12 2 14z', fill: '#d9d4ec' },
+      { d: rrect(166, 62, 20, 16, 7), fill: '#f6c3cf' },
+      legs(44, 112, 84, 28, '#e6e1d6'),
+      { d: circ(160, 52, 3.5), fill: '#5b5675' }] },
+    { label: 'hipopotam', shapes: [
+      { d: rrect(28, 36, 128, 56, 26), fill: '#b9b4d6' },
+      { d: rrect(128, 40, 62, 46, 20), fill: '#b9b4d6' },
+      { d: circ(142, 36, 8) + circ(170, 36, 8), fill: '#a39dc6' },
+      { d: circ(176, 66, 3) + circ(162, 66, 3), fill: '#8a84a8' },
+      legs(44, 104, 86, 24, '#a39dc6'),
+      { d: circ(156, 52, 3.5), fill: '#5b5675' }] },
+    { label: 'piesek', shapes: [
+      { d: rrect(34, 44, 112, 48, 22), fill: '#f2c98c' },
+      { d: circ(156, 52, 24), fill: '#f2c98c' },
+      { d: 'M140 38Q128 50 138 70Q150 62 150 44Z', fill: '#b98a5a' },
+      { d: circ(170, 60, 5), fill: '#5b5675' },
+      { d: 'M38 54Q18 46 16 30Q30 34 40 46Z', fill: '#f2c98c' },
+      legs(48, 108, 86, 26, '#e0b57a'),
+      { d: circ(158, 48, 3.5), fill: '#5b5675' }] },
+    { label: 'owieczka', shapes: [
+      { d: circ(60, 62, 24) + circ(90, 50, 26) + circ(122, 58, 24) + circ(80, 76, 22) + circ(112, 78, 22), fill: '#f6f1e6' },
+      { d: circ(156, 60, 20), fill: '#6f6a85' },
+      { d: 'M140 46q-10 4-8 16q8-2 12-10z', fill: '#5b5675' },
+      legs(66, 106, 84, 28, '#6f6a85'),
+      { d: circ(162, 56, 3), fill: '#f4efe6' }] }
   ];
+
+  // Item n of a launch: a vehicle in a random type and colour, with an animal after every two vehicles (V V A V V A ...).
+  function makeItem(n) {
+    if (n % 3 === 2) {
+      var an = Rand.pickOne(ANIMALS, 'myjnia-animal');
+      return { label: an.label, animal: true, shapes: an.shapes };
+    }
+    var v = Rand.pickOne(VEHICLES, 'myjnia-vehicle'), col = Rand.pickOne(COLOURS, 'myjnia-colour');
+    return { label: v.label, animal: false, shapes: v.shapes.map(function (sh) { return { d: sh.d, fill: sh.fill === 'BODY' ? col : sh.fill }; }) };
+  }
 
   function svgFor(v) {
     var s = '<svg viewBox="0 0 200 120" aria-hidden="true" focusable="false">' +
@@ -72,7 +145,7 @@
       bubbles.push({ node: bn, age: -1, x: 0, y: 0, r: 0, dx: 0 });
     }
 
-    var vi = 0, baseline = 1, boxW = 300, brushLogical = 40;
+    var item = null, seq = 0, baseline = 1, boxW = 300, brushLogical = 40;
     var phase = 'play', phaseT = 0, mudOp = 1, glow = 0, boxOp = 1, swapDir = 0;
     var pointers = {}, lastSpawn = 0, dirty = false, checkT = 0, kx = 0.15, ky = 0.35, kdir = 1, raf = 0, last = 0, clock = 0;
 
@@ -90,7 +163,7 @@
       ctx.save();
       ctx.scale(k, k);
       ctx.fillStyle = '#b99a7a';
-      VEHICLES[vi].shapes.forEach(function (sh) { ctx.fill(new Path2D(sh.d)); });
+      item.shapes.forEach(function (sh) { ctx.fill(new Path2D(sh.d)); });
       ctx.restore();
       // darker blotches only where the mud is
       ctx.globalCompositeOperation = 'source-atop';
@@ -103,10 +176,10 @@
       ctx.globalCompositeOperation = 'source-over';
       baseline = Math.max(1, remaining());
     }
-    function setVehicle(i) {
-      vi = i;
-      clean.innerHTML = svgFor(VEHICLES[vi]);
-      box.setAttribute('aria-label', 'Brudny pojazd: ' + VEHICLES[vi].label + '. Strzałki przesuwają szczotkę, Enter lub spacja szoruje dalej.');
+    function setItem(it) {
+      item = it;
+      clean.innerHTML = svgFor(item);
+      box.setAttribute('aria-label', (item.animal ? 'Brudne zwierzę: ' : 'Brudny pojazd: ') + item.label + '. Strzałki przesuwają szczotkę, Enter lub spacja szoruje dalej.');
       drawMud();
       mudOp = 1; mud.style.opacity = '1';
       glow = 0; phase = 'play'; phaseT = 0; kx = 0.15; ky = 0.35; kdir = 1;
@@ -227,7 +300,7 @@
       } else if (phase === 'swap') {
         phaseT += dt; busy = true;
         boxOp += swapDir * dt / SWAP_S;
-        if (swapDir < 0 && boxOp <= 0) { boxOp = 0; setVehicle((vi + 1) % VEHICLES.length); phase = 'swap'; swapDir = 1; // (setVehicle resets the phase)
+        if (swapDir < 0 && boxOp <= 0) { boxOp = 0; seq++; setItem(makeItem(seq)); phase = 'swap'; swapDir = 1; // (setVehicle resets the phase)
           box.style.filter = ''; }
         else if (swapDir > 0 && boxOp >= 1) { boxOp = 1; phase = 'play'; swapDir = 0; }
         box.style.opacity = boxOp.toFixed(3);
@@ -262,7 +335,7 @@
     window.addEventListener('orientationchange', onResize);
     document.addEventListener('visibilitychange', onVis);
     layout();
-    setVehicle(0);
+    setItem(makeItem(0));
 
     return function cleanup() {
       if (raf) { cancelAnimationFrame(raf); raf = 0; }

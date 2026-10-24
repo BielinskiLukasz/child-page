@@ -1,4 +1,4 @@
-// Activity "Buźki": a big friendly face and a small cat copy the same calm expression. Touch the face to cycle
+// Activity "Buźki": a big friendly face and a small random animal copy the same calm expression. Touch the face to cycle
 // happy -> sleepy -> surprised -> calm (about 1 s of easing); touch the eyes (slow blink), the cheeks (soft pink
 // glow) or the mouth (gentle smile or yawn) for about 1.5 s. Touches are ignored while something is changing.
 // Only an idle blink every ~5 s happens by itself. No angry/sad/crying faces, no red; expressions differ by the
@@ -21,18 +21,21 @@
   function bump(u) { return Math.sin(Math.PI * Math.min(1, Math.max(0, u))); }
   function reduced() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
 
+  // kind: 'face' (the big smiley) or a shared animal (js/animals.js) drawn as a smaller head: the animal is scaled so
+  // its ears stay near the box, and the same eye/cheek/mouth parts are laid over it at the same relative positions.
   function headSvg(kind) {
-    var base = kind === 'cat'
-      ? '<path d="M14 40L18 8l26 18zM86 40L82 8 56 26z" fill="#f7d6b4"/><path d="M21 34l2-14 12 9zM79 34l-2-14-12 9z" fill="#f7c9d6"/>' +
-        '<circle cx="50" cy="55" r="40" fill="#f7d6b4"/>'
+    var animal = kind !== 'face', k = 1, ec = animal ? window.Animals.eyeColor(kind.id) : EYE; // white eyes on the panda's dark patches
+    var base = animal
+      ? '<g transform="translate(50 58) scale(' + (k = Math.min(0.85, Math.max(0.62, 48 / (kind.top * 2.5)))) * 2.5 + ')">' +
+        window.Animals.head(kind.id, { bare: true }) + '</g>'
       : '<circle cx="50" cy="50" r="46" fill="#ffe9a8"/><path d="M20 28a34 34 0 0 1 20-14" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="5" stroke-linecap="round"/>';
-    var oy = kind === 'cat' ? 5 : 0;
-    return '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + base +
-      '<g transform="translate(0 ' + oy + ')">' +
-      '<ellipse class="bz-ch" cx="24" cy="60" rx="9" ry="6" fill="#f7a8c9" opacity=".3"/><ellipse class="bz-ch" cx="76" cy="60" rx="9" ry="6" fill="#f7a8c9" opacity=".3"/>' +
-      '<ellipse class="bz-eye" cx="34" cy="43" rx="6" ry="8" fill="' + EYE + '" stroke="' + EYE + '" stroke-width="1.6"/>' +
-      '<ellipse class="bz-eye" cx="66" cy="43" rx="6" ry="8" fill="' + EYE + '" stroke="' + EYE + '" stroke-width="1.6"/>' +
-      '<path class="bz-mouth" d="" fill="' + MOUTH + '" stroke="' + MOUTH + '" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></g></svg>';
+    var inner = '<ellipse class="bz-ch" cx="24" cy="60" rx="9" ry="6" fill="#f7a8c9" opacity=".3"/><ellipse class="bz-ch" cx="76" cy="60" rx="9" ry="6" fill="#f7a8c9" opacity=".3"/>' +
+      '<ellipse class="bz-eye" cx="34" cy="43" rx="6" ry="8" fill="' + ec + '" stroke="' + ec + '" stroke-width="1.6"/>' +
+      '<ellipse class="bz-eye" cx="66" cy="43" rx="6" ry="8" fill="' + ec + '" stroke="' + ec + '" stroke-width="1.6"/>' +
+      '<path class="bz-mouth" d="" fill="' + MOUTH + '" stroke="' + MOUTH + '" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>';
+    // animal expression: same parts, scaled about the head centre so they sit on the smaller face
+    var wrap = animal ? '<g transform="translate(50 58) scale(' + k + ') translate(-50 -55)">' : '<g>';
+    return '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + base + wrap + inner + '</g></svg>';
   }
 
   function mount(container) {
@@ -57,14 +60,15 @@
     field.appendChild(face);
     var cat = document.createElement('div');
     cat.className = 'bz-cat';
-    cat.innerHTML = headSvg('cat');
+    var buddy = window.Animals.pick(1)[0]; // one random animal per launch, nothing stored
+    cat.innerHTML = headSvg(buddy);
     field.appendChild(cat);
     box('bz-hit bz-all', face, 'Buźka: zmień minę', nextExpr);
     box('bz-hit bz-eyes', face, 'Oczy', function () { effect('blink'); });
     box('bz-hit bz-cheek bz-cl', face, 'Lewy policzek', function () { effect('cheeks'); });
     box('bz-hit bz-cheek bz-cr', face, 'Prawy policzek', function () { effect('cheeks'); });
     box('bz-hit bz-mouth', face, 'Buzia', function () { effect('mouth'); });
-    box('bz-hit bz-all', cat, 'Kotek: zmień minę', nextExpr);
+    box('bz-hit bz-all', cat, buddy.name + ': zmień minę', nextExpr);
 
     function grab(root) {
       return { eyes: [].slice.call(root.querySelectorAll('.bz-eye')), cheeks: [].slice.call(root.querySelectorAll('.bz-ch')),

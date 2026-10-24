@@ -1,4 +1,4 @@
-// Activity "Nocne Niebo": connect glowing stars to complete car, bear, house and cat constellations.
+// Activity "Nocne Niebo": connect glowing stars to complete constellations (10 shapes, shuffled on every launch).
 // Stars are buttons over a square sky; lines are SVG paths created once per constellation (no growth over time).
 (function () {
   var NS = 'http://www.w3.org/2000/svg', FADE_MS = 800;
@@ -11,7 +11,19 @@
     { name: 'domek', ring: 7, extra: [],
       pts: [[12, 52], [50, 20], [88, 52], [78, 52], [78, 84], [22, 84], [22, 52]] },
     { name: 'kot', ring: 8, extra: [],
-      pts: [[24, 16], [40, 32], [60, 32], [76, 16], [82, 50], [68, 80], [32, 80], [18, 50]] }
+      pts: [[24, 16], [40, 32], [60, 32], [76, 16], [82, 50], [68, 80], [32, 80], [18, 50]] },
+    { name: 'ryba', ring: 9, extra: [],
+      pts: [[12, 50], [32, 28], [58, 28], [80, 42], [92, 24], [92, 76], [80, 58], [58, 72], [32, 72]] },
+    { name: 'drzewo', ring: 11, extra: [],
+      pts: [[50, 8], [76, 36], [62, 36], [86, 62], [58, 62], [58, 88], [42, 88], [42, 62], [14, 62], [38, 36], [24, 36]] },
+    { name: 'serce', ring: 8, extra: [],
+      pts: [[50, 30], [34, 14], [14, 26], [14, 48], [50, 86], [86, 48], [86, 26], [66, 14]] },
+    { name: 'łódka', ring: 4, extra: [[4, 5], [5, 6], [6, 4]],
+      pts: [[10, 60], [90, 60], [74, 84], [26, 84], [50, 10], [50, 44], [78, 44]] },
+    { name: 'gwiazda', ring: 10, extra: [],
+      pts: [[50, 10], [61, 35], [88, 38], [68, 57], [74, 82], [50, 68], [26, 82], [32, 57], [12, 38], [39, 35]] },
+    { name: 'latawiec', ring: 4, extra: [[2, 4], [4, 5]],
+      pts: [[50, 8], [80, 36], [50, 78], [20, 36], [66, 90], [84, 80]] }
   ];
 
   function svgEl(name, attrs, parent) {
@@ -29,15 +41,23 @@
     container.appendChild(scene);
     var sky = scene.querySelector('.n-sky'), lines = scene.querySelector('.n-lines');
     var msg = scene.querySelector('.n-msg'), next = scene.querySelector('.n-next');
-    var index = 0, busy = false, timers = [], stars, edges, active, shape;
+    var order = [], index = 0, busy = false, timers = [], stars, edges, active, shape;
 
     function later(fn, ms) {
       var t = setTimeout(function () { timers.splice(timers.indexOf(t), 1); fn(); }, ms);
       timers.push(t);
     }
 
+    // Every shape once in random order; reshuffled when used up (the first of a new round never repeats the last).
+    function reshuffle() {
+      var last = order.length ? order[order.length - 1] : null;
+      order = window.Rand.shuffle(SHAPES);
+      if (last && order.length > 1 && order[0] === last) { order.push(order.shift()); }
+      index = 0;
+    }
+
     function build() {
-      shape = SHAPES[index];
+      shape = order[index];
       active = shape.pts.map(function () { return false; });
       lines.textContent = '';
       Array.prototype.slice.call(sky.querySelectorAll('.n-star')).forEach(function (b) { sky.removeChild(b); });
@@ -92,7 +112,8 @@
       sky.classList.add('fade');
       msg.classList.remove('show');
       later(function () {
-        index = (index + 1) % SHAPES.length;
+        index++;
+        if (index >= order.length) { reshuffle(); }
         build();
         sky.classList.remove('fade');
         later(function () { busy = false; }, FADE_MS);
@@ -103,6 +124,7 @@
     sky.addEventListener('click', onSky);
     next.addEventListener('click', onNext);
     document.addEventListener('visibilitychange', onVis);
+    reshuffle();
     build();
     onVis();
 

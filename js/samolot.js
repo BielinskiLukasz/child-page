@@ -4,6 +4,8 @@
 // working under the global prefers-reduced-motion rule that disables CSS animations.
 // The plane is a kinematic body (position, heading, speed): it never moves tail first, heading changes are rate-limited
 // and smoothed, the target is a lookahead point on the loop (or on a circle around the chosen cloud).
+// Variety: on every launch the plane colour, airport, weather and pilot animal are picked independently (Rand.pickOne);
+// nothing is stored. Weather is decoration only (thin, translucent, below the plane and the cloud buttons).
 (function () {
   var CROSS_S = 15;            // seconds to cross the screen width at cruise speed (>= 12 s)
   var LAND_S = 4;              // descent + roll-out
@@ -13,24 +15,65 @@
   var NUDGE_S = 2.6;
   var TWO_PI = Math.PI * 2;
 
+  // Content pools (picked afresh on every launch)
+  var PLANES = [                         // body, wing/belly, tail
+    { b: '#f7a8c9', w: '#8fc6e6', t: '#a8d8f0' },
+    { b: '#9fdcc4', w: '#f7a8c9', t: '#c8ecde' },
+    { b: '#f9d96e', w: '#8fc6e6', t: '#fbe9a6' },
+    { b: '#c5b3ee', w: '#ffd08a', t: '#ddd2f6' },
+    { b: '#f8b88a', w: '#9ed8c6', t: '#fbd5b8' },
+    { b: '#8fc6e6', w: '#f7a8c9', t: '#b7dcf1' }
+  ];
+  var AIRPORTS = [
+    { id: 'tower', run: '#b3adc9', g1: '#a8d9a0', g2: '#bfe6b4', h1: '#cdeac3', h2: '#b6e0aa',
+      svg: '<rect x="50" y="34" width="20" height="62" fill="#e9e4f5"/><rect x="42" y="14" width="36" height="22" rx="6" fill="#8fc6e6"/>' +
+        '<rect x="46" y="18" width="28" height="12" rx="4" fill="#fdfbff"/><rect x="56" y="4" width="8" height="12" fill="#f7a8c9"/>' +
+        '<rect x="20" y="68" width="80" height="28" rx="4" fill="#f3d9c4"/><rect x="28" y="76" width="14" height="10" fill="#fdfbff"/><rect x="78" y="76" width="14" height="10" fill="#fdfbff"/>' },
+    { id: 'hangar', run: '#bdb2a8', g1: '#c9dc9a', g2: '#dbe8b0', h1: '#dfe9b4', h2: '#cfdf9c',
+      svg: '<path d="M8 96V62Q8 26 60 26Q112 26 112 62V96z" fill="#f3b48a"/><path d="M8 62Q8 26 60 26Q112 26 112 62" fill="none" stroke="#e39a6c" stroke-width="5"/>' +
+        '<rect x="36" y="58" width="48" height="38" rx="3" fill="#fdfbff"/><path d="M60 58V96M36 77H84" stroke="#d6cfe6" stroke-width="3"/>' },
+    { id: 'terminal', run: '#a9b7cf', g1: '#b7e0c6', g2: '#cdeed8', h1: '#c3e8d2', h2: '#a9dcbd',
+      svg: '<rect x="6" y="52" width="108" height="44" rx="6" fill="#c9b7ee"/><rect x="14" y="60" width="92" height="14" rx="4" fill="#e8f4fb"/>' +
+        '<rect x="24" y="80" width="16" height="16" fill="#fdfbff"/><rect x="52" y="80" width="16" height="16" fill="#fdfbff"/><rect x="80" y="80" width="16" height="16" fill="#fdfbff"/>' +
+        '<rect x="58" y="12" width="3" height="42" fill="#8a84a8"/><path d="M61 12L88 20L61 30z" fill="#f7a8c9"/>' }
+  ];
+  var WEATHERS = ['sunny', 'cloudy', 'rain', 'snow'];
+  var PILOTS = [                         // name (genitive-free label), head colour, snout colour, ears markup
+    { name: 'Miś', head: '#c99b72', snout: '#f3dcc4', nose: '#6b5a73',
+      ears: '<circle cx="107" cy="38" r="5" fill="#c99b72"/><circle cx="131" cy="38" r="5" fill="#c99b72"/>' },
+    { name: 'Zajączek', head: '#f4eaf0', snout: '#ffd6e4', nose: '#e58aa8',
+      ears: '<ellipse cx="111" cy="27" rx="4" ry="10" fill="#f4eaf0"/><ellipse cx="127" cy="27" rx="4" ry="10" fill="#f4eaf0"/>' +
+        '<ellipse cx="111" cy="27" rx="1.8" ry="7" fill="#ffc2d6"/><ellipse cx="127" cy="27" rx="1.8" ry="7" fill="#ffc2d6"/>' },
+    { name: 'Kotek', head: '#b9b4c8', snout: '#ece8f4', nose: '#e58aa8',
+      ears: '<path d="M105 42L106 28L116 36z" fill="#b9b4c8"/><path d="M133 42L132 28L122 36z" fill="#b9b4c8"/>' },
+    { name: 'Piesek', head: '#e6c79c', snout: '#fbf0e0', nose: '#5b5675',
+      ears: '<ellipse cx="105" cy="45" rx="5" ry="9" fill="#a9795a"/><ellipse cx="133" cy="45" rx="5" ry="9" fill="#a9795a"/>' },
+    { name: 'Myszka', head: '#cfcad8', snout: '#f0edf6', nose: '#e58aa8',
+      ears: '<circle cx="107" cy="36" r="7" fill="#cfcad8"/><circle cx="131" cy="36" r="7" fill="#cfcad8"/>' +
+        '<circle cx="107" cy="36" r="4" fill="#ffc2d6"/><circle cx="131" cy="36" r="4" fill="#ffc2d6"/>' },
+    { name: 'Lisek', head: '#f0a35c', snout: '#fdf3e6', nose: '#5b5675',
+      ears: '<path d="M104 43L105 26L116 36z" fill="#f0a35c"/><path d="M134 43L133 26L122 36z" fill="#f0a35c"/>' }
+  ];
+  var RAIN_N = 26, SNOW_N = 22;
+
   function sm(u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }
   function wrapPi(a) { a = (a + Math.PI) % TWO_PI; if (a < 0) { a += TWO_PI; } return a - Math.PI; }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
-  function planeSvg() {
+  function planeSvg(pc, pl) {
     return '<svg viewBox="0 0 200 100" aria-hidden="true" focusable="false">' +
-      '<path d="M42 50L28 20Q34 15 44 20L66 44z" fill="#a8d8f0"/>' +
-      '<path d="M44 52L26 40Q22 44 28 50L50 58z" fill="#8fc6e6"/>' +
-      '<ellipse cx="100" cy="54" rx="72" ry="21" fill="#f7a8c9"/>' +
+      '<path d="M42 50L28 20Q34 15 44 20L66 44z" fill="' + pc.t + '"/>' +
+      '<path d="M44 52L26 40Q22 44 28 50L50 58z" fill="' + pc.w + '"/>' +
+      '<ellipse cx="100" cy="54" rx="72" ry="21" fill="' + pc.b + '"/>' +
       '<path d="M40 56Q100 74 170 58L168 64Q100 82 40 62z" fill="#fff" opacity=".5"/>' +
       '<circle cx="119" cy="45" r="17" fill="#fdfbff"/>' +
-      '<g class="sa-pilot"><circle cx="107" cy="38" r="5" fill="#c99b72"/><circle cx="131" cy="38" r="5" fill="#c99b72"/>' +
-      '<circle cx="119" cy="46" r="12" fill="#c99b72"/><ellipse cx="119" cy="51" rx="5.5" ry="4" fill="#f3dcc4"/>' +
+      '<g class="sa-pilot">' + pl.ears +
+      '<circle cx="119" cy="46" r="12" fill="' + pl.head + '"/><ellipse cx="119" cy="51" rx="5.5" ry="4" fill="' + pl.snout + '"/>' +
       '<circle cx="114" cy="44" r="1.8" fill="#5b5675"/><circle cx="124" cy="44" r="1.8" fill="#5b5675"/>' +
-      '<circle cx="119" cy="49.5" r="1.6" fill="#6b5a73"/>' +
+      '<circle cx="119" cy="49.5" r="1.6" fill="' + pl.nose + '"/>' +
       '<path d="M107 40Q119 28 131 40" fill="none" stroke="#8a6a8f" stroke-width="3" stroke-linecap="round"/>' +
-      '<g class="sa-paw"><circle cx="0" cy="0" r="5" fill="#c99b72"/></g></g>' +
-      '<path d="M96 60L136 60Q126 78 100 76Q88 70 96 60z" fill="#8fc6e6"/>' +
+      '<g class="sa-paw"><circle cx="0" cy="0" r="5" fill="' + pl.head + '"/></g></g>' +
+      '<path d="M96 60L136 60Q126 78 100 76Q88 70 96 60z" fill="' + pc.w + '"/>' +
       '<rect x="106" y="72" width="3" height="12" fill="#8a84a8"/><rect x="82" y="72" width="3" height="14" fill="#8a84a8"/>' +
       '<circle cx="83" cy="88" r="7" fill="#6b6585"/><circle cx="83" cy="88" r="3" fill="#cfc9e6"/>' +
       '<circle cx="108" cy="86" r="6" fill="#6b6585"/><circle cx="108" cy="86" r="2.6" fill="#cfc9e6"/>' +
@@ -45,26 +88,46 @@
       '<rect x="22" y="50" width="116" height="28" rx="14"/></g></svg>';
   }
 
-  function hillsSvg() {
+  function hillsSvg(ap) {
     return '<svg class="sa-hills" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
-      '<path d="M0 200V100Q160 20 330 90T640 80T1000 60V200z" fill="#cdeac3"/>' +
-      '<path d="M0 200V150Q220 100 440 140T820 125T1000 140V200z" fill="#b6e0aa"/></svg>';
+      '<path d="M0 200V100Q160 20 330 90T640 80T1000 60V200z" fill="' + ap.h1 + '"/>' +
+      '<path d="M0 200V150Q220 100 440 140T820 125T1000 140V200z" fill="' + ap.h2 + '"/></svg>';
+  }
+
+  function weatherDrops(kind) {
+    var h = '';
+    var n = kind === 'rain' ? RAIN_N : kind === 'snow' ? SNOW_N : 0;
+    for (var i = 0; i < n; i++) {
+      h += '<i class="sa-' + (kind === 'rain' ? 'drop' : 'flake') + '" style="left:' + (Math.random() * 98).toFixed(1) + '%;top:' +
+        (Math.random() * 100).toFixed(1) + '%;animation-delay:-' + (Math.random() * 3).toFixed(2) + 's;animation-duration:' +
+        (kind === 'rain' ? 0.9 + Math.random() * 0.5 : 4 + Math.random() * 3).toFixed(2) + 's"></i>';
+    }
+    return h;
   }
 
   function mount(container) {
+    var pc = Rand.pickOne(PLANES, 'samolot-plane');
+    var ap = Rand.pickOne(AIRPORTS, 'samolot-airport');
+    var wx = Rand.pickOne(WEATHERS, 'samolot-weather');
+    var pl = Rand.pickOne(PILOTS, 'samolot-pilot');
     var scene = document.createElement('div');
-    scene.className = 'sa';
+    scene.className = 'sa sa-w-' + wx;
+    scene.style.setProperty('--rw', ap.run);
+    scene.style.setProperty('--g1', ap.g1);
+    scene.style.setProperty('--g2', ap.g2);
     scene.setAttribute('role', 'group');
     scene.setAttribute('aria-label', 'Mały samolot');
     scene.innerHTML =
-      '<div class="sa-sun"></div>' + hillsSvg() + '<div class="sa-ground"></div>' +
+      '<div class="sa-sun"></div>' + hillsSvg(ap) + '<div class="sa-wx" aria-hidden="true">' + weatherDrops(wx) + '</div>' +
+      '<div class="sa-ground"></div>' +
+      '<svg class="sa-apt" viewBox="0 0 120 100" aria-hidden="true" focusable="false">' + ap.svg + '</svg>' +
       '<div class="sa-runway"><div class="sa-dash"></div></div>' +
       '<button class="sa-cloud" type="button" data-i="0" aria-label="Chmurka 1 – samolot poleci wokół niej">' + cloudSvg() + '</button>' +
       '<button class="sa-cloud" type="button" data-i="1" aria-label="Chmurka 2 – samolot poleci wokół niej">' + cloudSvg() + '</button>' +
       '<button class="sa-cloud" type="button" data-i="2" aria-label="Chmurka 3 – samolot poleci wokół niej">' + cloudSvg() + '</button>' +
       '<div class="sa-puffs"></div>' +
-      '<div class="sa-plane" role="button" tabindex="0" aria-label="Samolot – wzlatuj lub ląduj">' + planeSvg() +
-      '<button class="sa-pbtn" type="button" aria-label="Miś pilot – pomachaj"></button></div>';
+      '<div class="sa-plane" role="button" tabindex="0" aria-label="Samolot – wzlatuj lub ląduj">' + planeSvg(pc, pl) +
+      '<button class="sa-pbtn" type="button" aria-label="' + pl.name + ' pilot – pomachaj"></button></div>';
     container.appendChild(scene);
 
     var plane = scene.querySelector('.sa-plane');

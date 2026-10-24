@@ -19,8 +19,8 @@
       art: '<path d="M8 54A42 42 0 0 1 92 54Q82 46 71 54Q60 46 50 54Q40 46 29 54Q18 46 8 54Z" fill="#a8d8f0"/><path d="M50 54V80Q50 90 41 88" fill="none" stroke="#8a84a8" stroke-width="5" stroke-linecap="round"/><path d="M50 12V18" stroke="#8a84a8" stroke-width="4" stroke-linecap="round"/>' },
     { id: 'scarf', label: 'szalik', fits: 2, wx: 165, wy: 184,
       art: '<rect x="10" y="32" width="80" height="26" rx="13" fill="#f7a8c9"/><rect x="56" y="48" width="22" height="42" rx="9" fill="#f08fb6"/><path d="M60 66h14M60 76h14" stroke="#fff" stroke-width="3" stroke-linecap="round"/>' },
-    { id: 'boots', label: 'kalosze', fits: 1, wx: 165, wy: 254,
-      art: '<g fill="#9ed8c6"><path d="M6 16H28V54Q28 60 36 62Q46 66 46 76V84H6Z"/><path d="M54 16H76V54Q76 60 84 62Q94 66 94 76V84H54Z"/></g><path d="M6 26H28M54 26H76" stroke="#7fc4b0" stroke-width="5"/>' },
+    { id: 'boots', label: 'kalosze', fits: 1, wx: 165, wy: 241,
+      art: '<g fill="#9ed8c6"><rect x="10" y="40" width="28" height="22" rx="5"/><ellipse cx="24" cy="68" rx="23" ry="14"/><rect x="62" y="40" width="28" height="22" rx="5"/><ellipse cx="76" cy="68" rx="23" ry="14"/></g><path d="M10 47H38M62 47H90" stroke="#7fc4b0" stroke-width="5"/><path d="M8 74Q24 80 40 74M60 74Q76 80 92 74" fill="none" stroke="#7fc4b0" stroke-width="3" stroke-linecap="round"/>' },
     { id: 'warmhat', label: 'ciepła czapka', fits: 2, wx: 165, wy: 112,
       art: '<path d="M18 62Q18 22 50 22Q82 22 82 62Z" fill="#c9b8f2"/><rect x="13" y="56" width="74" height="18" rx="9" fill="#b39cf0"/><circle cx="50" cy="16" r="9" fill="#fff"/>' },
     { id: 'sunglasses', label: 'okulary przeciwsłoneczne', fits: 0, wx: 165, wy: 144,
@@ -113,7 +113,7 @@
 
     ITEMS.forEach(function (def, n) {
       var b = document.createElement('button');
-      b.type = 'button'; b.className = 'um-item';
+      b.type = 'button'; b.className = 'um-item'; b.setAttribute('data-id', def.id);
       b.setAttribute('aria-label', def.label + ' (Enter lub spacja, potem wybierz misia)');
       b.setAttribute('aria-pressed', 'false');
       b.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + def.art.replace('', '') + '</svg>';
@@ -162,12 +162,12 @@
       items.forEach(function (o) {
         if (o !== it && o.worn && o.def.wy === it.def.wy && o.def.wx === it.def.wx) { takeOff(o); }
       });
-      it.worn = true; it.pending = true; it.z = zTop++; select(null);
+      it.worn = true; it.el.classList.add('um-worn'); it.pending = true; it.z = zTop++; select(null);
       var p = wornPos(it);
       glideTo(it, p[0], p[1]);
     }
     function takeOff(it) {
-      it.worn = false; it.pending = false; select(null);
+      it.worn = false; it.el.classList.remove('um-worn'); it.pending = false; select(null);
       glideTo(it, it.hx, it.hy);
     }
     function startReaction(type) {

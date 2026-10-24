@@ -1,8 +1,9 @@
-// Activity "Kolorowe Kształty": drag nine soft shapes (3x3) onto their matching outlines (3x3). No wrong answers:
+// Activity "Kolorowe Kształty": drag soft shapes onto their matching outlines; starts as 2x2, becomes 3x3 after 3
+// completed layouts (per launch, nothing stored). Each layout draws fresh shapes, colours (unique) and positions. No wrong answers:
 // a shape released anywhere else drifts back. One rAF loop (works under prefers-reduced-motion, pauses
-// when the tab is hidden, stops when idle); fixed DOM of 9 outlines + 9 shapes. Portrait: outline grid above shape grid; landscape: side by side.
+// when the tab is hidden, stops when idle); DOM rebuilt for every layout. Portrait: outline grid above shape grid; landscape: side by side.
 (function () {
-  var DEFS = [
+  var SHAPES = [
     { id: 'circle', label: 'kółko', color: '#f7a8c9', glow: '#f7a8c9',
       path: '<circle cx="50" cy="50" r="40" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' },
     { id: 'square', label: 'kwadrat', color: '#a8d8f0', glow: '#8cc8ea',
@@ -22,8 +23,10 @@
     { id: 'plus', label: 'krzyżyk', color: '#a8e0d6', glow: '#82d2c4',
       path: '<path d="M38 12 H62 V38 H88 V62 H62 V88 H38 V62 H12 V38 H38 Z" fill="FILL" stroke="STROKE" stroke-width="SW" stroke-linejoin="round"/>' }
   ];
-  // Shapes start in a different order than the outlines (no shape begins at its own place) so the match is a real (but gentle) choice.
-  var SHAPE_ORDER = [4, 7, 5, 8, 0, 6, 2, 1, 3];
+  // The nine existing colours (with a soft glow each), independent of the shape they are paired with.
+  var COLORS = SHAPES.map(function (d) { return { color: d.color, glow: d.glow }; });
+  var WIN_AFTER = 3; // completed 2x2 layouts before the grid becomes 3x3
+  var Rand = window.Rand;
   var RETURN_AFTER = 4000, SVGNS = 'viewBox="0 0 100 100" aria-hidden="true" focusable="false"';
 
   function shapeSvg(def, outline) {
@@ -43,52 +46,70 @@
     container.appendChild(board);
     var field = board.querySelector('.ks-field'), glowEl = board.querySelector('.ks-glow');
 
-    var S = 96, fw = 0, fh = 0, items = [], selected = null;
+    var S = 96, fw = 0, fh = 0, items = [], defs = [], selected = null, g = 2, completed = 0;
     var raf = 0, last = 0, doneT = -1, doneGlow = 0, doneActive = false;
 
-    DEFS.forEach(function (def, i) {
-      var o = document.createElement('button');
-      o.type = 'button'; o.className = 'ks-item ks-outline';
-      o.setAttribute('aria-label', 'Miejsce na ' + def.label);
-      o.innerHTML = shapeSvg(def, true);
-      field.appendChild(o);
-      o.addEventListener('click', function () { onOutline(def); });
-      def.outlineEl = o; def.index = i;
-    });
-    DEFS.forEach(function (def, k) {
-      var el = document.createElement('button');
-      el.type = 'button'; el.className = 'ks-item ks-shape';
-      el.setAttribute('aria-label', def.label + ' (Enter lub spacja, potem wybierz miejsce)');
-      el.setAttribute('aria-pressed', 'false');
-      el.innerHTML = shapeSvg(def, false);
-      field.appendChild(el);
-      var it = { def: def, el: el, slot: SHAPE_ORDER.indexOf(k), x: 0, y: 0, hx: 0, hy: 0, tx: 0, ty: 0,
-        mode: 'idle', pid: null, dx: 0, dy: 0, placed: false, glow: 0,
-        fx: 0, fy: 0, gt: 0, gd: 1, gx: 0, gy: 0 };
-      items.push(it);
-      el.addEventListener('pointerdown', function (e) { down(it, e); });
-      el.addEventListener('pointermove', function (e) { move(it, e); });
-      el.addEventListener('pointerup', function (e) { up(it, e); });
-      el.addEventListener('pointercancel', function (e) { up(it, e); });
-      el.addEventListener('lostpointercapture', function (e) { up(it, e); });
-      el.addEventListener('click', function (e) { if (e.detail === 0) { select(it); } });
-    });
+    // Fresh layout: g*g unique shapes, g*g unique colours, random pairing; outlines and shapes both in random slots,
+    // and no shape starts at its own outline's slot, so the match is a real (but gentle) choice.
+    function newRound() {
+      var n = g * g, i;
+      items.forEach(function (it) { field.removeChild(it.el); });
+      defs.forEach(function (def) { field.removeChild(def.outlineEl); });
+      selected = null; doneActive = false; doneT = -1;
+      var shp = Rand.pick(SHAPES, n), col = Rand.pick(COLORS, n);
+      defs = shp.map(function (sh, k) {
+        return { id: sh.id, label: sh.label, path: sh.path, color: col[k].color, glow: col[k].glow };
+      });
+      var order;
+      do { order = Rand.shuffle(defs.map(function (d, k) { return k; })); }
+      while (order.some(function (v, k) { return v === k; }));
+      items = [];
+      defs.forEach(function (def, i) {
+        var o = document.createElement('button');
+        o.type = 'button'; o.className = 'ks-item ks-outline';
+        o.setAttribute('aria-label', 'Miejsce na ' + def.label);
+        o.innerHTML = shapeSvg(def, true);
+        field.appendChild(o);
+        o.addEventListener('click', function () { onOutline(def); });
+        def.outlineEl = o; def.index = i;
+      });
+      defs.forEach(function (def, k) {
+        var el = document.createElement('button');
+        el.type = 'button'; el.className = 'ks-item ks-shape';
+        el.setAttribute('aria-label', def.label + ' (Enter lub spacja, potem wybierz miejsce)');
+        el.setAttribute('aria-pressed', 'false');
+        el.innerHTML = shapeSvg(def, false);
+        field.appendChild(el);
+        var it = { def: def, el: el, slot: order[k], x: 0, y: 0, hx: 0, hy: 0, tx: 0, ty: 0,
+          mode: 'idle', pid: null, dx: 0, dy: 0, placed: false, glow: 0,
+          fx: 0, fy: 0, gt: 0, gd: 1, gx: 0, gy: 0 };
+        items.push(it);
+        el.addEventListener('pointerdown', function (e) { down(it, e); });
+        el.addEventListener('pointermove', function (e) { move(it, e); });
+        el.addEventListener('pointerup', function (e) { up(it, e); });
+        el.addEventListener('pointercancel', function (e) { up(it, e); });
+        el.addEventListener('lostpointercapture', function (e) { up(it, e); });
+        el.addEventListener('click', function (e) { if (e.detail === 0) { select(it); } });
+      });
+      layout();
+      items.forEach(paintGlow);
+    }
 
     function itemFor(def) { for (var i = 0; i < items.length; i++) { if (items[i].def === def) { return items[i]; } } }
 
     function layout() {
       var r = field.getBoundingClientRect();
       fw = r.width; fh = r.height;
-      // Two 3x3 grids: stacked in portrait (targets above, shapes below), side by side in landscape.
+      // Two g x g grids: stacked in portrait (targets above, shapes below), side by side in landscape.
       var portrait = fh >= fw, rw = portrait ? fw : fw / 2, rh = portrait ? fh / 2 : fh;
-      var cw = rw / 3, ch = rh / 3;
-      S = Math.max(48, Math.min(140, Math.min(cw, ch) * 0.82));
+      var cw = rw / g, ch = rh / g;
+      S = Math.max(56, Math.min(140, Math.min(cw, ch) * 0.82));
       field.style.setProperty('--ks-s', S + 'px');
       function cell(slot, region) {
         var ox = portrait ? 0 : region * rw, oy = portrait ? region * rh : 0;
-        return [ox + ((slot % 3) + 0.5) * cw, oy + (Math.floor(slot / 3) + 0.5) * ch];
+        return [ox + ((slot % g) + 0.5) * cw, oy + (Math.floor(slot / g) + 0.5) * ch];
       }
-      DEFS.forEach(function (def, i) {
+      defs.forEach(function (def, i) {
         var c = cell(i, 0);
         def.ox = c[0]; def.oy = c[1];
         def.outlineEl.style.transform = 'translate(' + (def.ox - S / 2) + 'px,' + (def.oy - S / 2) + 'px)';
@@ -197,8 +218,10 @@
       if (doneActive) {
         doneT += dt;
         if (doneT >= RETURN_AFTER) {
-          doneActive = false; doneT = -1;
-          items.forEach(sendHome);
+          completed++;
+          if (g === 2 && completed >= WIN_AFTER) { g = 3; }
+          newRound();
+          busy = true;
         } else { busy = true; }
       }
       var tgG = doneActive ? 1 : 0;
@@ -220,8 +243,7 @@
     window.addEventListener('resize', onResize);
     window.addEventListener('orientationchange', onResize);
     document.addEventListener('visibilitychange', onVis);
-    layout();
-    items.forEach(paintGlow);
+    newRound();
 
     return function cleanup() {
       if (raf) { cancelAnimationFrame(raf); raf = 0; }

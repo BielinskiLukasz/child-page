@@ -4,12 +4,28 @@
 (function () {
   var NS = 'http://www.w3.org/2000/svg';
   var OMEGA = 2.2, TURN = 0.55, SWAY_MS = 2200, SWAY_AMP = 7, IDLE_MIN = 10, IDLE_MAX = 15; // seconds resting before it flies by itself
+  // Flower layout: petal count (n) differs per flower, so shapes stay distinguishable whatever the colours are.
   var FLOWERS = [
-    { x: 0.22, y: 0.24, petal: '#f7a8c9', core: '#ffe9a8', n: 6 },
-    { x: 0.74, y: 0.22, petal: '#ffd98a', core: '#f2b7a0', n: 8 },
-    { x: 0.48, y: 0.5, petal: '#c9b8f2', core: '#fff3c4', n: 5 },
-    { x: 0.22, y: 0.7, petal: '#ffb7a5', core: '#ffe9a8', n: 7 },
-    { x: 0.76, y: 0.68, petal: '#a8d8f0', core: '#fff3c4', n: 6 }
+    { x: 0.22, y: 0.24, n: 6 },
+    { x: 0.74, y: 0.22, n: 8 },
+    { x: 0.48, y: 0.5, n: 5 },
+    { x: 0.22, y: 0.7, n: 7 },
+    { x: 0.76, y: 0.68, n: 6 }
+  ];
+  // Colour sets: one set is picked at random per launch (flowers and butterfly independently). Each flower set has
+  // a {petal, core} pair per flower, in FLOWERS order.
+  var FLOWER_SETS = [
+    [['#f7a8c9', '#ffe9a8'], ['#ffd98a', '#f2b7a0'], ['#c9b8f2', '#fff3c4'], ['#ffb7a5', '#ffe9a8'], ['#a8d8f0', '#fff3c4']],
+    [['#ffd98a', '#f2b7a0'], ['#a8d8f0', '#fff3c4'], ['#f7a8c9', '#ffe9a8'], ['#c9b8f2', '#fff3c4'], ['#ffb7a5', '#ffe9a8']],
+    [['#ffb7a5', '#fff3c4'], ['#ffb7a5', '#ffe9a8'], ['#ffd98a', '#f2b7a0'], ['#ffd98a', '#c9b8f2'], ['#f7a8c9', '#ffe9a8']],
+    [['#a8d8f0', '#ffe9a8'], ['#c9b8f2', '#fff3c4'], ['#a8d8f0', '#f7a8c9'], ['#c9b8f2', '#ffe9a8'], ['#b7e4c7', '#fff3c4']],
+    [['#b7e4c7', '#ffe9a8'], ['#ffd98a', '#f7a8c9'], ['#b7e4c7', '#f2b7a0'], ['#a8d8f0', '#ffe9a8'], ['#ffb7a5', '#fff3c4']],
+    [['#fff3c4', '#f2b7a0'], ['#f7a8c9', '#fff3c4'], ['#fff3c4', '#c9b8f2'], ['#ffd98a', '#f7a8c9'], ['#c9b8f2', '#ffe9a8']]
+  ];
+  // Butterfly sets: [upper wing, lower wing]
+  var BUTTERFLY_SETS = [
+    ['#f7a8c9', '#c9b8f2'], ['#ffd98a', '#f2a07a'], ['#a8d8f0', '#7fb8e8'],
+    ['#b7e4c7', '#f7e08a'], ['#ffb7a5', '#f7a8c9'], ['#c9b8f2', '#a8d8f0']
   ];
 
   function el(name, attrs, parent) {
@@ -28,10 +44,12 @@
     el('circle', { cx: 50, cy: 50, r: 14, fill: f.core }, svg);
     return svg;
   }
-  var BUTTERFLY = '<svg viewBox="-50 -40 100 80" aria-hidden="true" focusable="false">' +
-    '<g class="m-wl"><ellipse cx="-20" cy="-12" rx="20" ry="22" fill="#f7a8c9" stroke="#fff" stroke-width="3"/><ellipse cx="-16" cy="14" rx="13" ry="14" fill="#c9b8f2" stroke="#fff" stroke-width="3"/></g>' +
-    '<g class="m-wr"><ellipse cx="20" cy="-12" rx="20" ry="22" fill="#f7a8c9" stroke="#fff" stroke-width="3"/><ellipse cx="16" cy="14" rx="13" ry="14" fill="#c9b8f2" stroke="#fff" stroke-width="3"/></g>' +
-    '<rect x="-3" y="-24" width="6" height="48" rx="3" fill="#5b5675" stroke="#fff" stroke-width="2"/></svg>';
+  function butterflySvg(c) {
+    return '<svg viewBox="-50 -40 100 80" aria-hidden="true" focusable="false">' +
+      '<g class="m-wl"><ellipse cx="-20" cy="-12" rx="20" ry="22" fill="' + c[0] + '" stroke="#fff" stroke-width="3"/><ellipse cx="-16" cy="14" rx="13" ry="14" fill="' + c[1] + '" stroke="#fff" stroke-width="3"/></g>' +
+      '<g class="m-wr"><ellipse cx="20" cy="-12" rx="20" ry="22" fill="' + c[0] + '" stroke="#fff" stroke-width="3"/><ellipse cx="16" cy="14" rx="13" ry="14" fill="' + c[1] + '" stroke="#fff" stroke-width="3"/></g>' +
+      '<rect x="-3" y="-24" width="6" height="48" rx="3" fill="#5b5675" stroke="#fff" stroke-width="2"/></svg>';
+  }
 
   function mount(container) {
     var scene = document.createElement('div');
@@ -41,7 +59,9 @@
     scene.appendChild(box);
     container.appendChild(scene);
 
-    var flowers = FLOWERS.map(function (f, i) {
+    var fset = Rand.pickOne(FLOWER_SETS, 'motyle-flowers'), bset = Rand.pickOne(BUTTERFLY_SETS, 'motyle-butterfly');
+    var flowers = FLOWERS.map(function (f0, i) {
+      var f = { x: f0.x, y: f0.y, n: f0.n, petal: fset[i][0], core: fset[i][1] };
       var b = document.createElement('button');
       b.type = 'button';
       b.className = 'm-flower';
@@ -55,7 +75,7 @@
     var fly = document.createElement('div');
     fly.className = 'm-butterfly';
     fly.setAttribute('aria-hidden', 'true');
-    fly.innerHTML = BUTTERFLY;
+    fly.innerHTML = butterflySvg(bset);
     box.appendChild(fly);
     var wl = fly.querySelector('.m-wl'), wr = fly.querySelector('.m-wr');
 

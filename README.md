@@ -9,7 +9,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 2. **Magiczny Ogród** – a meadow with a random weather (sunny, cloudy, rain or breeze) and day or night each time it is opened. Touching the lawn grows a flower or a mushroom from a seed; touching the cloud gently clears the garden.
 3. **Nocne Niebo** – glowing stars in a night sky. Touching them in turn connects the stars into a car, a bear, a house or a cat.
 4. **Dzień i Noc** – touching the sun slowly brings night with stars, touching the moon brings the day back, and touching the sky sends a cloud drifting by.
-5. **Ogród Motyli** – a garden of swaying flowers. Touching a flower makes the butterfly fly slowly to it along a smooth curve.
+5. **Ogród Motyli** – a garden of swaying flowers. Touching a flower makes the butterfly fly slowly to it along a smooth curve. Each visit picks a random set of flower colours and a random butterfly colouring (petal counts differ per flower, so colour is never the only cue).
 6. **Malowanie Światłem** – a dark canvas. Touching and dragging paints soft glowing colours that drift and fade away after a few seconds.
 7. **Mały Pociąg** – a little train with animals in its wagons. Touching the train starts or stops it, touching the station stops it there, and touching an animal makes it nod.
 8. **Bańki Mydlane** – touching the screen blows a big soft bubble that floats up; touching a bubble splits it into smaller ones.

@@ -18,8 +18,9 @@
     { label: 'Żółta gwiazdka', svg: '<polygon points="' + STAR + '" fill="#ffd98a" stroke="#f3c26a" stroke-width="3" stroke-linejoin="round"/>' },
     { label: 'Zielony romb', svg: '<path d="M50 8L92 50L50 92L8 50z" fill="#9ed8c6" stroke="#7dc4ae" stroke-width="3" stroke-linejoin="round"/><path d="M50 32L68 50L50 68L32 50z" fill="#fff" opacity=".8"/>' }
   ];
-  // symbols of the repeating pattern: A B A B, A A B A A B, A B C A B C, A B B A B B
-  var PATTERNS = [[0, 1], [0, 0, 1], [0, 1, 2], [0, 1, 1]];
+  // symbols of the repeating pattern (12 sets): ABAB, AABAAB, ABCABC, ABBABB, AABB, ABCC, ABCD, AABC, ABBC, ABAC, AAAB, ABCB
+  var PATTERNS = [[0, 1], [0, 0, 1], [0, 1, 2], [0, 1, 1], [0, 0, 1, 1], [0, 1, 2, 2],
+    [0, 1, 2, 3], [0, 0, 1, 2], [0, 1, 1, 2], [0, 1, 0, 2], [0, 0, 0, 1], [0, 1, 2, 1]];
 
   function smooth(t) { t = t < 0 ? 0 : t > 1 ? 1 : t; return t * t * (3 - 2 * t); }
   function el(name, attrs, parent) {
@@ -50,10 +51,20 @@
       beads.push({ g: g, gl: gl, body: body, glow: 0 });
     }
 
-    var round = 0, seq = [], correct = 0, other = 0, side = 0, lastSides = [];
+    // sets in a fresh random order on every launch; each set once before any repeats (in memory only)
+    var order = [], round = 0, seq = [], correct = 0, other = 0, side = 0, lastSides = [];
     var filled = GIVEN, phase = 'in', pt = 0, fade = 0, allGlow = 0, cf = 1, cfOn = false;
     var wob = [-1, -1], glide = null, lay = null, shown = [-1, -1], shownB = [];
 
+    function nextSet() {
+      if (round % PATTERNS.length === 0) {
+        var prev = order.length ? order[order.length - 1] : -1, idx = [], q;
+        for (q = 0; q < PATTERNS.length; q++) { idx.push(q); }
+        order = Rand.shuffle(idx);
+        if (order[0] === prev) { q = order[0]; order[0] = order[order.length - 1]; order[order.length - 1] = q; }
+      }
+      return PATTERNS[order[round % PATTERNS.length]];
+    }
     function paintBody(b, type) { b.body.innerHTML = TYPES[type].svg; }
 
     function chooseSide() {
@@ -77,9 +88,9 @@
       wob[0] = wob[1] = -1; cf = 0; cfOn = true;
     }
     function build() {
-      var pat = PATTERNS[round % PATTERNS.length], k;
+      var pat = nextSet(), k;
       seq = [];
-      for (k = 0; k < N; k++) { seq.push((pat[k % pat.length] + round) % 4); }
+      for (k = 0; k < N; k++) { seq.push(pat[k % pat.length]); }
       filled = GIVEN; glide = null; allGlow = 0;
       for (k = 0; k < N; k++) { beads[k].glow = 0; paintBody(beads[k], seq[k]); }
       newChoices();

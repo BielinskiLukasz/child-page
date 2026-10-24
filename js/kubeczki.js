@@ -1,12 +1,24 @@
 // Activity "Kolorowe Kubeczki": drag six soft balls (2 per colour) into the cup of the same colour. No wrong answers:
 // a ball released anywhere else floats slowly back. Colours also differ by pattern (plain / dots / stripes).
 // One capped-dt rAF loop (works under prefers-reduced-motion, pauses when the tab is hidden, stops when idle);
-// fixed DOM of 3 cups + 6 balls. All state is in memory only.
+// fixed DOM of 3 cups + 6 balls. A random colour/pattern combo is picked per launch. All state is in memory only.
 (function () {
-  var COLORS = [
-    { id: 'pink', label: 'różowy', color: '#f7a8c9', glow: '#f58fbb', pat: 'plain' },
-    { id: 'yellow', label: 'żółty', color: '#ffd98a', glow: '#ffcf66', pat: 'dots' },
-    { id: 'blue', label: 'niebieski', color: '#a8d8f0', glow: '#8cc8ea', pat: 'stripes' }
+  // Predefined colour + pattern combinations; one is picked at random each time the activity opens.
+  // Each combo has three cups; pattern (plain / dots / stripes) is the non-colour cue and is always distinct.
+  function combo(rows) {
+    return rows.map(function (r, i) {
+      return { id: 'c' + i, label: r[0], color: r[1], glow: r[2], pat: r[3] };
+    });
+  }
+  var COMBOS = [
+    combo([['różowy', '#f7a8c9', '#f58fbb', 'plain'], ['żółty', '#ffd98a', '#ffcf66', 'dots'], ['niebieski', '#a8d8f0', '#8cc8ea', 'stripes']]),
+    combo([['zielony', '#b5e3a8', '#9bd68c', 'stripes'], ['pomarańczowy', '#ffc99a', '#ffb877', 'plain'], ['fioletowy', '#d3b8f0', '#c29ae9', 'dots']]),
+    combo([['czerwony', '#f4a3a3', '#ee8585', 'dots'], ['turkusowy', '#a3e3de', '#85d8d2', 'stripes'], ['żółty', '#ffe29a', '#ffd673', 'plain']]),
+    combo([['niebieski', '#a8c8f4', '#8ab4ee', 'plain'], ['różowy', '#f7b5d6', '#f39cc7', 'stripes'], ['zielony', '#c1e8a0', '#aadd7e', 'dots']]),
+    combo([['fioletowy', '#c9b3f2', '#b699ec', 'stripes'], ['żółty', '#ffdf8f', '#ffd266', 'dots'], ['zielony', '#a8e0bd', '#8ed6a8', 'plain']]),
+    combo([['pomarańczowy', '#ffbf94', '#ffaa70', 'stripes'], ['niebieski', '#9fd3f0', '#82c4ea', 'dots'], ['różowy', '#f5a9c4', '#f08fb2', 'plain']]),
+    combo([['turkusowy', '#98e0d6', '#7cd6c9', 'dots'], ['czerwony', '#f6a6a0', '#f18a82', 'plain'], ['fioletowy', '#d9b6ee', '#cb9ae6', 'stripes']]),
+    combo([['zielony', '#bfe8a6', '#a8dd86', 'plain'], ['niebieski', '#a6cdf2', '#88baec', 'stripes'], ['pomarańczowy', '#ffcba0', '#ffb87c', 'dots']])
   ];
   var GLOW_S = 2000, RESET_S = 4000;
   var SVGNS = 'viewBox="0 0 100 100" aria-hidden="true" focusable="false"';
@@ -51,6 +63,7 @@
     var B = 80, C = 110, fw = 0, fh = 0, rows = 1, selected = null;
     var raf = 0, last = 0, doneT = -1, doneActive = false, doneGlow = 0;
     var cups = [], items = [];
+    var COLORS = Rand.pickOne(COMBOS, 'kubeczki');
     var order = shuffled(6);   // order[k] = home slot of ball k
 
     COLORS.forEach(function (c, i) {

@@ -20,21 +20,11 @@
       cover: '<rect x="16" y="40" width="68" height="56" rx="16" fill="#d9b8e8"/><path d="M16 56H84M16 80H84" stroke="#b894cc" stroke-width="5"/>' +
         '<path d="M26 44q-6 24 0 48" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/>' }
   ];
-  // Animals differ in shape (ears), not only colour.
-  var ANIMALS = [
-    { label: 'królik', body: '#fbf7ff',
-      ears: '<ellipse cx="40" cy="20" rx="6" ry="16" fill="#fbf7ff"/><ellipse cx="60" cy="20" rx="6" ry="16" fill="#fbf7ff"/><ellipse cx="40" cy="22" rx="2.6" ry="10" fill="#f7c9d6"/><ellipse cx="60" cy="22" rx="2.6" ry="10" fill="#f7c9d6"/>' },
-    { label: 'kotek', body: '#f7d6b4',
-      ears: '<path d="M32 44L34 20l16 14zM68 44L66 20 50 34z" fill="#f7d6b4"/><path d="M36 38l1-9 7 5zM64 38l-1-9-7 5z" fill="#f7c9d6"/>' },
-    { label: 'miś', body: '#d9b99b',
-      ears: '<circle cx="33" cy="34" r="9" fill="#d9b99b"/><circle cx="67" cy="34" r="9" fill="#d9b99b"/><circle cx="33" cy="34" r="4" fill="#f0d8c4"/><circle cx="67" cy="34" r="4" fill="#f0d8c4"/>' }
-  ];
-
+  // Four random animals per launch (shared family, js/animals.js); three of them hide behind the places at a time
+  // and the fourth waits in turn, so every picked animal shows up while the game goes on.
   function animalSvg(a) {
-    return '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + a.ears +
-      '<ellipse cx="50" cy="88" rx="26" ry="16" fill="' + a.body + '"/><circle cx="50" cy="56" r="21" fill="' + a.body + '"/>' +
-      '<circle cx="42" cy="54" r="3" fill="#5b5675"/><circle cx="58" cy="54" r="3" fill="#5b5675"/>' +
-      '<ellipse cx="50" cy="62" rx="3.4" ry="2.4" fill="#e59aa8"/><path d="M44 67q6 5 12 0" fill="none" stroke="#5b5675" stroke-width="2" stroke-linecap="round"/></svg>';
+    return '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><g transform="translate(50 58) scale(1.3)">' +
+      '<ellipse cx="0" cy="24" rx="20" ry="12.3" fill="' + a.fur + '"/>' + window.Animals.head(a.id) + '</g></svg>';
   }
   var FLOWER = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M50 92V64" stroke="#7fbf8f" stroke-width="5" stroke-linecap="round"/>' +
     '<path d="M50 84q-14-2-16-14 13 1 16 14z" fill="#9fd4a8"/><g fill="#f7a8c9"><circle cx="50" cy="48" r="9"/><circle cx="38" cy="58" r="9"/><circle cx="62" cy="58" r="9"/><circle cx="41" cy="45" r="9"/><circle cx="59" cy="45" r="9"/></g>' +
@@ -42,12 +32,11 @@
 
   function smooth(t) { t = t < 0 ? 0 : t > 1 ? 1 : t; return t * t * (3 - 2 * t); }
   function reduced() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
-  // occupant per place: animal index 0..2 or -1 (flower); exactly one empty place.
+  // occupant per place: animal index 0..3 or -1 (flower); exactly one empty place and three of the four animals out.
   function arrangement(avoid) {
     var a;
     do {
-      var empty = Math.floor(Math.random() * 4), an = [0, 1, 2];
-      for (var j = 2; j > 0; j--) { var k = Math.floor(Math.random() * (j + 1)); var t = an[j]; an[j] = an[k]; an[k] = t; }
+      var empty = Math.floor(Math.random() * 4), an = window.Rand.pick([0, 1, 2, 3], 3);
       a = []; for (var i = 0; i < 4; i++) { a.push(i === empty ? -1 : an.pop()); }
     } while (avoid && a.every(function (v, i) { return v === avoid[i]; }));
     return a;
@@ -61,7 +50,7 @@
     container.appendChild(board);
     var field = board.querySelector('.hd-field');
 
-    var occ = arrangement(null), spots = [];
+    var ANIMALS = window.Animals.pick(4), occ = arrangement(null), spots = [];
     var phase = 'play', phaseT = 0, idleT = 0, glow = 0, fadeJob = null, raf = 0, last = 0;
 
     PLACES.forEach(function (pl, i) {

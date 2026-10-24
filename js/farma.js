@@ -1,7 +1,8 @@
 // Activity "Zwierzątka na Farmie": a calm pastel farm. Touching an animal makes it react slowly for ~2.5s
 // (ignored while it is reacting); touching the barn slowly opens the door, an animal peeks out, the door closes.
 // One rAF loop (capped dt, stops when the tab is hidden) drives idle breathing/blinking and reactions via
-// transforms, so everything works under prefers-reduced-motion. Fixed DOM: 1 backdrop, 1 barn, 4 animals.
+// transforms, so everything works under prefers-reduced-motion. Fixed DOM: 1 backdrop, 1 barn, 5 animals.
+// Five random animals per launch: the hand-drawn four below plus shared-family figures (js/animals.js); nothing is stored.
 (function () {
   var REACT = 2.6, BARN = 4.6, MAXDT = 0.05;
   var EYES = '<g class="fm-eyes"><circle cx="40" cy="EY" r="2.4" fill="#4a4560"/><circle cx="60" cy="EY" r="2.4" fill="#4a4560"/></g>';
@@ -33,8 +34,16 @@
       '<circle cx="50" cy="26" r="5" fill="#fbe7c8"/></g><defs><clipPath id="fm-clip"><rect x="34" y="52" width="32" height="44"/></clipPath></defs>'
   };
   var LABEL = { sheep: 'Owieczka', cow: 'Krowa', hen: 'Kura', cat: 'Kotek', barn: 'Stodoła' };
-  // left, top, width in % of the 4:3 board (buttons are square)
-  var POS = { barn: [3, 14, 32], cow: [38, 36, 30], cat: [79, 36, 18], sheep: [4, 58, 26], hen: [64, 66, 20] };
+  var HAND = ['sheep', 'cow', 'hen', 'cat'];
+  var SHARED = ['dog', 'pig', 'rabbit', 'mouse', 'frog']; // drawn as a head + body figure by Animals.head
+  // left, top, width in % of the 4:3 board (buttons are square); the barn stays put, the five animals fill the slots
+  var BARN_POS = [3, 14, 32];
+  var SLOTS = [[38, 36, 30], [79, 36, 18], [4, 58, 26], [64, 66, 20], [40, 74, 16]];
+
+  function figureSvg(id) {
+    return '<g class="fm-all"><g class="fm-body"><g transform="translate(50 50) scale(1.2)">' +
+      window.Animals.head(id, { body: true, eyesClass: 'fm-eyes' }) + '</g></g></g>';
+  }
   var BACKDROP = '<svg viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
     '<rect width="400" height="300" fill="#e8f4fb"/><circle cx="340" cy="46" r="24" fill="#fff0c4"/>' +
     '<ellipse cx="90" cy="215" rx="190" ry="90" fill="#cfe8c3"/><ellipse cx="320" cy="225" rx="200" ry="80" fill="#bfe0b4"/>' +
@@ -52,19 +61,22 @@
     container.appendChild(root);
     var board = root.firstChild;
 
-    var names = ['barn', 'cow', 'cat', 'sheep', 'hen'], A = {};
-    names.forEach(function (n) {
+    var picks = window.Rand.pick(HAND.concat(SHARED), 5); // random order = random slot
+    var names = ['barn'].concat(picks), A = {};
+    names.forEach(function (n, ni) {
+      var shared = SHARED.indexOf(n) >= 0, pos = ni === 0 ? BARN_POS : SLOTS[ni - 1];
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'fm-btn fm-' + n;
-      b.setAttribute('aria-label', LABEL[n]);
-      b.style.left = POS[n][0] + '%'; b.style.top = POS[n][1] + '%'; b.style.width = POS[n][2] + '%';
-      b.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + SVG[n] + '</svg>';
+      b.setAttribute('aria-label', shared ? window.Animals.byId(n).name : LABEL[n]);
+      b.style.left = pos[0] + '%'; b.style.top = pos[1] + '%'; b.style.width = pos[2] + '%';
+      b.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + (shared ? figureSvg(n) : SVG[n]) + '</svg>';
       board.appendChild(b);
       var a = { n: n, el: b, t: -1, ph: Math.random() * 6, blinkAt: 2 + Math.random() * 3, blink: 0,
         all: b.querySelector('.fm-all'), body: b.querySelector('.fm-body'), eyes: b.querySelector('.fm-eyes'), head: b.querySelector('.fm-head'), tail: b.querySelector('.fm-tail'),
         wl: b.querySelector('.fm-wl'), wr: b.querySelector('.fm-wr'), door: b.querySelector('.fm-door'), peek: b.querySelector('.fm-peek') };
       function origin(el, o) { if (el) { el.style.transformOrigin = o; } }
-      origin(a.all, '50px 95px'); origin(a.body, '50px 95px'); origin(a.eyes, '50px 45px');
+      origin(a.all, '50px 95px'); origin(a.body, '50px 95px');
+      origin(a.eyes, shared ? '0px ' + window.Animals.eyes(n)[0][1] + 'px' : '50px 45px'); // shared eyes sit in the scaled head space
       origin(a.head, '70px 40px'); origin(a.tail, '72px 78px'); origin(a.wl, '34px 46px'); origin(a.wr, '66px 46px');
       origin(a.door, '34px 74px');
       A[n] = a;
@@ -98,6 +110,7 @@
         }
         var w = Math.sin(p * Math.PI * 2 * 1.5);
         if (n === 'sheep') { set(a.all, 'rotate(' + (r * 4 * w) + 'deg)'); }
+        else if (SHARED.indexOf(n) >= 0) { set(a.all, 'rotate(' + (r * 4 * w) + 'deg) translateY(' + (-r * 2 * Math.abs(Math.sin(p * Math.PI * 3))) + 'px)'); }
         else if (n === 'cow') { set(a.head, 'rotate(' + (r * -12 * Math.sin(p * Math.PI * 2 * 0.75 + 0.0)) + 'deg)'); }
         else if (n === 'hen') {
           set(a.all, 'translateY(' + (-r * 3 * Math.abs(Math.sin(p * Math.PI * 3))) + 'px)');

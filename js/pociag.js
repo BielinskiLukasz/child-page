@@ -14,31 +14,19 @@
   function sm(u) { return u * u * (3 - 2 * u); }
   function wrap(x) { return x - Math.floor(x); }
 
-  function animalSvg(kind, cx) {
-    var fur = { bear: '#c99b72', rabbit: '#f3ecf7', cat: '#f2c48d' }[kind];
-    var ears = kind === 'rabbit'
-      ? '<ellipse cx="-8" cy="-26" rx="4.5" ry="12" fill="' + fur + '"/><ellipse cx="8" cy="-26" rx="4.5" ry="12" fill="' + fur + '"/>' +
-        '<ellipse cx="-8" cy="-26" rx="2" ry="8" fill="#f7b7cf"/><ellipse cx="8" cy="-26" rx="2" ry="8" fill="#f7b7cf"/>'
-      : kind === 'cat'
-        ? '<path d="M-15 -8l3-17 11 9z" fill="' + fur + '"/><path d="M15 -8l-3-17-11 9z" fill="' + fur + '"/>'
-        : '<circle cx="-13" cy="-13" r="6" fill="' + fur + '"/><circle cx="13" cy="-13" r="6" fill="' + fur + '"/>';
-    var nose = kind === 'bear'
-      ? '<ellipse cx="0" cy="5" rx="6" ry="4.5" fill="#f3dcc4"/><circle cx="0" cy="3.5" r="2" fill="#6b5a73"/>'
-      : '<circle cx="0" cy="4" r="2" fill="#e99bb5"/>';
-    return '<g class="tp-animal" data-cx="' + cx + '" transform="translate(' + cx + ' 50)">' + ears +
-      '<circle cx="0" cy="0" r="16" fill="' + fur + '"/><circle cx="-6" cy="-3" r="2" fill="#5b5675"/>' +
-      '<circle cx="6" cy="-3" r="2" fill="#5b5675"/>' + nose + '</g>';
+  function animalSvg(animal, cx) {
+    return '<g class="tp-animal" data-cx="' + cx + '" transform="translate(' + cx + ' 50)">' + window.Animals.head(animal.id) + '</g>';
   }
 
-  function trainSvg() {
+  function trainSvg(picks) {
     var s = '<svg viewBox="0 0 400 100" aria-hidden="true" focusable="false">';
-    var kinds = ['bear', 'rabbit', 'cat'], colors = ['#f7a8c9', '#a9d6f2', '#ffd98a'];
+    var colors = ['#f7a8c9', '#a9d6f2', '#ffd98a'];
     for (var i = 0; i < 3; i++) {
       var x = 4 + i * 100, cx = x + 46;
       s += '<rect x="' + (x + 90) + '" y="76" width="14" height="4" rx="2" fill="#8a84a8"/>' +
         '<rect x="' + x + '" y="18" width="92" height="62" rx="12" fill="' + colors[i] + '"/>' +
         '<rect x="' + x + '" y="62" width="92" height="6" fill="#fff" opacity=".45"/>' +
-        '<circle cx="' + cx + '" cy="50" r="21" fill="#fdfbff"/>' + animalSvg(kinds[i], cx) +
+        '<circle cx="' + cx + '" cy="50" r="21" fill="#fdfbff"/>' + animalSvg(picks[i], cx) +
         '<path d="M' + (cx - 21) + ' 50a21 21 0 0 1 42 0z" fill="none"/>';
     }
     // locomotive
@@ -71,6 +59,7 @@
   }
 
   function mount(container) {
+    var picks = window.Animals.pick(3); // a new random trio on every launch, nothing stored
     var scene = document.createElement('div');
     scene.className = 'tp';
     scene.setAttribute('role', 'group');
@@ -79,10 +68,8 @@
       '<div class="tp-sun"></div>' + hillsSvg() + '<div class="tp-ground"></div><div class="tp-track"></div>' +
       '<button class="tp-station" type="button" aria-label="Stacja – zatrzymaj pociąg na stacji">' + stationSvg() + '</button>' +
       '<div class="tp-puffs"></div>' +
-      '<div class="tp-train" role="button" tabindex="0" aria-label="Pociąg – ruszaj lub zatrzymaj">' + trainSvg() +
-      '<button class="tp-ab" type="button" data-i="0" aria-label="Miś w wagonie"></button>' +
-      '<button class="tp-ab" type="button" data-i="1" aria-label="Króliczek w wagonie"></button>' +
-      '<button class="tp-ab" type="button" data-i="2" aria-label="Kotek w wagonie"></button></div>';
+      '<div class="tp-train" role="button" tabindex="0" aria-label="Pociąg – ruszaj lub zatrzymaj">' + trainSvg(picks) +
+      picks.map(function (a, i) { return '<button class="tp-ab" type="button" data-i="' + i + '" aria-label="' + a.name + ' w wagonie"></button>'; }).join('') + '</div>';
     container.appendChild(scene);
 
     var train = scene.querySelector('.tp-train');

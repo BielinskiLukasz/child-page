@@ -670,3 +670,15 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .kl-hull { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; border-radius: 22px; }
 .kl-an { position: absolute; width: 56px; height: 56px; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; border-radius: 50%; }
 .kl-hull:focus-visible, .kl-an:focus-visible, .kl-station:focus-visible, .kl-tree:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }
+
+/* Balon (bn-) */
+.bn { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfeaf8, #e6f4fb 62%, #f6f1e4); }
+.bn-cloud { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; cursor: pointer; z-index: 2; will-change: transform; }
+.stage .bn-cloud svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.stage .bn-land { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 3; }
+.bn-ball { position: absolute; left: 0; top: 0; z-index: 4; pointer-events: none; transform-origin: 50% 20%; will-change: transform; }
+.stage .bn-ball > svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.bn-hull { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; border-radius: 40%; }
+.bn-an { position: absolute; width: 56px; height: 56px; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; border-radius: 50%; }
+.bn-hull:focus-visible, .bn-an:focus-visible, .bn-cloud:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }

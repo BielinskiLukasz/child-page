@@ -1,47 +1,36 @@
-// Activity "Puzzle": a simple picture is cut into 4 big pieces (2x2) scattered below (or beside) an outline.
+// Activity "Puzzle": a picture is cut into big pieces scattered in a tray next to (or below) an outline.
 // Drag a piece near its place and it glides in. No wrong answers: a piece released elsewhere drifts back to the tray.
-// When the picture is complete it glows ~3 s, then after ~4 s more it cross-fades to the next of 3 pictures.
-// One capped-dt rAF loop (works under prefers-reduced-motion, pauses when hidden, stops when idle); fixed DOM of
-// 4 slots + 4 pieces; nothing is stored.
+// Pictures come from js/puzzle-pictures.js in random order without repeats (reshuffled when all 25 are used); the grid
+// grows after every 5 completed puzzles: 2x2, 2x3, 3x3, 3x4, 4x4 (stays at 4x4). Progress lives only in the mounted
+// activity. A finished picture glows ~3 s, then after ~4 s more it cross-fades to the next one.
+// One capped-dt rAF loop (works under prefers-reduced-motion, pauses when hidden, stops when idle).
 (function () {
-  var GLOW_S = 3000, NEXT_S = 7000, FADE_S = 700;
+  var GLOW_S = 3000, NEXT_S = 7000, FADE_S = 700, PER_GRID = 5, GAP = 14, MIN_P = 56, MAX_P = 170;
   var SVGNS = 'focusable="false" aria-hidden="true"';
-  // Pictures are drawn on a 200x200 canvas; piece (c, r) shows the quarter starting at (c*100, r*100).
-  var PICTURES = [
-    '<rect width="200" height="200" fill="#cfeaf7"/><circle cx="160" cy="40" r="22" fill="#ffe08a"/>' +
-    '<ellipse cx="100" cy="205" rx="130" ry="50" fill="#b9e0a8"/><rect x="58" y="92" width="84" height="72" rx="6" fill="#f6dcc8"/>' +
-    '<path d="M48 98L100 50l52 48z" fill="#c9a0c0" stroke="#c9a0c0" stroke-width="8" stroke-linejoin="round"/>' +
-    '<rect x="86" y="120" width="28" height="44" rx="14" fill="#b99a86"/><rect x="66" y="108" width="16" height="16" rx="3" fill="#ffe9a8"/>' +
-    '<rect x="118" y="108" width="16" height="16" rx="3" fill="#ffe9a8"/>',
-    '<rect width="200" height="200" fill="#bfe3f2"/><ellipse cx="100" cy="215" rx="140" ry="30" fill="#f3e3b8"/>' +
-    '<ellipse cx="96" cy="100" rx="52" ry="34" fill="#ffb7a5"/><path d="M142 100l34-26v52z" fill="#ffb7a5"/>' +
-    '<circle cx="74" cy="92" r="6" fill="#5b5675"/><path d="M60 110q10 8 20 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>' +
-    '<circle cx="40" cy="50" r="8" fill="#fff" fill-opacity=".7"/><circle cx="58" cy="30" r="5" fill="#fff" fill-opacity=".7"/>' +
-    '<path d="M30 200q-10-30 0-50M166 200q10-34 0-56" fill="none" stroke="#7fbf8f" stroke-width="8" stroke-linecap="round"/>',
-    '<rect width="200" height="200" fill="#eaf5df"/><ellipse cx="100" cy="212" rx="140" ry="36" fill="#b9e0a8"/>' +
-    '<path d="M100 190V104" stroke="#7fbf8f" stroke-width="8" stroke-linecap="round"/>' +
-    '<path d="M100 160q-34-6-36-34 30 2 36 34zM100 150q34-6 36-34-30 2-36 34z" fill="#9fd4a8"/>' +
-    '<g fill="#f7a8c9"><circle cx="100" cy="62" r="22"/><circle cx="76" cy="84" r="22"/>' +
-    '<circle cx="124" cy="84" r="22"/><circle cx="82" cy="58" r="22"/><circle cx="118" cy="58" r="22"/></g>' +
-    '<circle cx="100" cy="76" r="16" fill="#ffe9a8"/><circle cx="30" cy="34" r="14" fill="#ffe08a"/>'
-  ];
-  // Piece corner radii: only the outer corner of the whole picture is rounded, so placed pieces look connected.
-  var RADII = ['22px 0 0 0', '0 22px 0 0', '0 0 0 22px', '0 0 22px 0'];
+  // Grid sizes as [short side, long side]: the long side runs along the long axis of the screen.
+  var GRIDS = [[2, 2], [2, 3], [3, 3], [3, 4], [4, 4]];
+  var PICTURES = window.PuzzlePictures || [];
 
-  function pieceSvg(pic, i) {
-    var c = i % 2, r = Math.floor(i / 2);
-    return '<svg viewBox="' + (c * 100) + ' ' + (r * 100) + ' 100 100" preserveAspectRatio="none" ' + SVGNS + '>' + PICTURES[pic] + '</svg>';
+  // Piece (c, r) of a cw x ch frame shows a unit square of a centred crop of the 200x200 picture.
+  function pieceSvg(pic, c, r, cw, ch) {
+    var rw = cw > ch ? 200 : 200 * cw / ch, rh = cw > ch ? 200 * ch / cw : 200;
+    var u = rw / cw, x0 = (200 - rw) / 2, y0 = (200 - rh) / 2;
+    return '<svg viewBox="' + (x0 + c * u) + ' ' + (y0 + r * u) + ' ' + u + ' ' + u + '" preserveAspectRatio="none" ' + SVGNS + '>' + PICTURES[pic] + '</svg>';
+  }
+  // Only the outer corners of the whole picture are rounded, so placed pieces look connected.
+  function radii(c, r, cw, ch) {
+    var q = '20px';
+    return [c === 0 && r === 0, c === cw - 1 && r === 0, c === cw - 1 && r === ch - 1, c === 0 && r === ch - 1]
+      .map(function (on) { return on ? q : '0'; }).join(' ');
   }
   function smooth(t) { t = t < 0 ? 0 : t > 1 ? 1 : t; return t * t * (3 - 2 * t); }
   function reduced() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
-  // Random assignment of tray cells where no piece starts at the cell matching its own index.
-  function derange() {
-    var a;
-    do {
-      a = [0, 1, 2, 3];
-      for (var j = 3; j > 0; j--) { var k = Math.floor(Math.random() * (j + 1)); var t = a[j]; a[j] = a[k]; a[k] = t; }
-    } while (a.some(function (v, i) { return v === i; }));
-    return a;
+  // Picture order: shuffled, each full cycle reshuffled so the last picture never opens the next cycle.
+  function makeOrder(prevLast) {
+    var ids = PICTURES.map(function (_, i) { return i; });
+    var o = window.Rand.shuffle(ids);
+    if (o.length > 1 && o[0] === prevLast) { var t = o[0]; o[0] = o[o.length - 1]; o[o.length - 1] = t; }
+    return o;
   }
 
   function mount(container) {
@@ -53,71 +42,114 @@
     var field = board.querySelector('.pz-field'), frame = board.querySelector('.pz-frame');
 
     var P = 100, fw = 0, fh = 0, portrait = true, fx = 0, fy = 0, selected = null;
-    var pic = 0, raf = 0, last = 0, doneT = -1, doneActive = false, glow = 0;
+    var order = makeOrder(-1), oi = 0, pic = order[0], done = 0;
+    var cw = 2, ch = 2, N = 4, raf = 0, last = 0, doneT = -1, doneActive = false, glow = 0;
     var fade = 1, fadeDir = 0; // fadeDir: -1 out, +1 in, 0 steady
-    var slots = [], pieces = [];
-    var cells = derange();
+    var slots = [], pieces = [], cells = [], trayPos = [];
 
-    for (var i = 0; i < 4; i++) {
-      (function (i) {
-        var s = document.createElement('button');
-        s.type = 'button'; s.className = 'pz-slot';
-        s.setAttribute('aria-label', 'Miejsce ' + (i + 1));
-        field.appendChild(s);
-        s.addEventListener('click', function () { onSlot(i); });
-        slots.push(s);
-      })(i);
+    // Builds slots and pieces for the current picture and grid; the frame is cw x ch cells (portrait: cw <= ch).
+    function build() {
+      slots.forEach(function (s) { if (s.parentNode) { s.parentNode.removeChild(s); } });
+      pieces.forEach(function (p) { if (p.el.parentNode) { p.el.parentNode.removeChild(p.el); } });
+      slots = []; pieces = []; selected = null;
+      var g = GRIDS[Math.min(GRIDS.length - 1, Math.floor(done / PER_GRID))];
+      cw = portrait ? g[0] : g[1]; ch = portrait ? g[1] : g[0]; N = cw * ch;
+      cells = window.Rand.shuffle(Array.apply(null, Array(N)).map(function (_, i) { return i; }));
+      for (var i = 0; i < N; i++) {
+        (function (i) {
+          var s = document.createElement('button');
+          s.type = 'button'; s.className = 'pz-slot';
+          s.setAttribute('aria-label', 'Miejsce ' + (i + 1));
+          field.appendChild(s);
+          s.addEventListener('click', function () { onSlot(i); });
+          slots.push(s);
+        })(i);
+      }
+      for (var k = 0; k < N; k++) {
+        (function (k) {
+          var c = k % cw, r = Math.floor(k / cw);
+          var el = document.createElement('button');
+          el.type = 'button'; el.className = 'pz-piece';
+          el.setAttribute('aria-label', 'Kawałek obrazka ' + (k + 1) + ' (Enter lub spacja, potem wybierz miejsce)');
+          el.setAttribute('aria-pressed', 'false');
+          el.style.borderRadius = radii(c, r, cw, ch);
+          el.innerHTML = pieceSvg(pic, c, r, cw, ch);
+          field.appendChild(el);
+          var it = { i: k, el: el, cell: cells[k], x: 0, y: 0, hx: 0, hy: 0, tx: 0, ty: 0, mode: 'idle', pid: null, dx: 0, dy: 0,
+            placed: false, fx: 0, fy: 0, gt: 0, gd: 1, gx: 0, gy: 0 };
+          pieces.push(it);
+          el.addEventListener('pointerdown', function (e) { down(it, e); });
+          el.addEventListener('pointermove', function (e) { move(it, e); });
+          el.addEventListener('pointerup', function (e) { up(it, e); });
+          el.addEventListener('pointercancel', function (e) { up(it, e); });
+          el.addEventListener('lostpointercapture', function (e) { up(it, e); });
+          el.addEventListener('click', function (e) { if (e.detail === 0) { select(it); } });
+        })(k);
+      }
     }
-    for (var k = 0; k < 4; k++) {
-      (function (k) {
-        var el = document.createElement('button');
-        el.type = 'button'; el.className = 'pz-piece';
-        el.setAttribute('aria-label', 'Kawałek obrazka ' + (k + 1) + ' (Enter lub spacja, potem wybierz miejsce)');
-        el.setAttribute('aria-pressed', 'false');
-        el.style.borderRadius = RADII[k];
-        el.innerHTML = pieceSvg(pic, k);
-        field.appendChild(el);
-        var it = { i: k, el: el, cell: cells[k], x: 0, y: 0, hx: 0, hy: 0, tx: 0, ty: 0, mode: 'idle', pid: null, dx: 0, dy: 0,
-          placed: false, fx: 0, fy: 0, gt: 0, gd: 1, gx: 0, gy: 0 };
-        pieces.push(it);
-        el.addEventListener('pointerdown', function (e) { down(it, e); });
-        el.addEventListener('pointermove', function (e) { move(it, e); });
-        el.addEventListener('pointerup', function (e) { up(it, e); });
-        el.addEventListener('pointercancel', function (e) { up(it, e); });
-        el.addEventListener('lostpointercapture', function (e) { up(it, e); });
-        el.addEventListener('click', function (e) { if (e.detail === 0) { select(it); } });
-      })(k);
+
+    // Largest piece size P (MIN_P..MAX_P) for which frame + tray fit; tray below (portrait) or beside (landscape) first.
+    function fit() {
+      for (var p = MAX_P; p >= MIN_P; p--) {
+        var fW = cw * p, fH = ch * p, tc, tr;
+        var below = function () {
+          tc = Math.max(1, Math.floor(fw / p)); tr = Math.ceil(N / tc);
+          return Math.max(fW, tc * p) <= fw && fH + GAP + tr * p <= fh ? { side: false, tc: tc, tr: tr, p: p } : null;
+        };
+        var beside = function () {
+          tr = Math.max(1, Math.floor(fh / p)); tc = Math.ceil(N / tr);
+          return fW + GAP + tc * p <= fw && Math.max(fH, tr * p) <= fh ? { side: true, tc: tc, tr: tr, p: p } : null;
+        };
+        var f = portrait ? (below() || beside()) : (beside() || below());
+        if (f) { return f; }
+      }
+      // Nothing fits at MIN_P: keep 56 px pieces and let the tray cells overlap.
+      var sd = !portrait;
+      var tcols = sd ? Math.max(1, Math.round(N / Math.max(1, Math.floor(fh / MIN_P)))) : Math.max(1, Math.floor(fw / MIN_P));
+      return { side: sd, tc: tcols, tr: Math.ceil(N / tcols), p: MIN_P };
     }
 
     function layout() {
       var r = field.getBoundingClientRect();
       fw = r.width; fh = r.height;
-      portrait = fh >= fw;
-      var gap;
-      if (portrait) {
-        P = Math.max(80, Math.min(170, fw / 2 * 0.94, (fh - 16) / 4));
-        gap = Math.min(16, Math.max(6, fh - 4 * P));
-        fx = (fw - 2 * P) / 2; fy = Math.max(0, (fh - 4 * P - gap) / 2);
+      var np = fh >= fw;
+      var flip = np !== portrait;
+      portrait = np;
+      if (flip && pieces.length && cw !== ch) { restartRound(); return; }
+      var f = fit();
+      P = f.p;
+      var fW = cw * P, fH = ch * P, tx0, ty0, tw, th;
+      if (f.side) {
+        fx = Math.max(0, (fw - fW - GAP - f.tc * P) / 2); fy = Math.max(0, (fh - fH) / 2);
+        tx0 = fx + fW + GAP; ty0 = 0; tw = Math.max(P, fw - tx0); th = fh;
       } else {
-        P = Math.max(80, Math.min(170, fh / 2 * 0.94, (fw - 24) / 4));
-        gap = Math.min(40, Math.max(12, fw - 4 * P));
-        fx = Math.max(0, (fw - 4 * P - gap) / 2); fy = (fh - 2 * P) / 2;
+        fx = Math.max(0, (fw - fW) / 2); fy = Math.max(0, (fh - fH - GAP - f.tr * P) / 2);
+        tx0 = 0; ty0 = fy + fH + GAP; tw = fw; th = Math.max(P, fh - ty0);
       }
-      var tx0 = portrait ? fx : fx + 2 * P + gap, ty0 = portrait ? fy + 2 * P + gap : fy;
+      // Tray cell step: full P when there is room, otherwise cells overlap a little.
+      var sx = f.tc > 1 ? Math.min(P, (tw - P) / (f.tc - 1)) : 0, sy = f.tr > 1 ? Math.min(P, (th - P) / (f.tr - 1)) : 0;
+      var ox = tx0 + (tw - (P + sx * (f.tc - 1))) / 2, oy = ty0 + (th - (P + sy * (f.tr - 1))) / 2;
+      if (f.side) { oy = Math.max(0, oy); } else { ox = Math.max(0, ox); }
       field.style.setProperty('--pz-p', P + 'px');
+      frame.style.width = fW + 'px'; frame.style.height = fH + 'px';
       frame.style.transform = 'translate(' + fx + 'px,' + fy + 'px)';
       slots.forEach(function (s, i) {
-        s.style.transform = 'translate(' + (fx + (i % 2) * P) + 'px,' + (fy + Math.floor(i / 2) * P) + 'px)';
+        s.style.transform = 'translate(' + (fx + (i % cw) * P) + 'px,' + (fy + Math.floor(i / cw) * P) + 'px)';
       });
       pieces.forEach(function (it) {
-        it.tx = fx + (it.i % 2 + 0.5) * P; it.ty = fy + (Math.floor(it.i / 2) + 0.5) * P;
-        it.hx = tx0 + (it.cell % 2 + 0.5) * P; it.hy = ty0 + (Math.floor(it.cell / 2) + 0.5) * P;
+        it.tx = fx + (it.i % cw + 0.5) * P; it.ty = fy + (Math.floor(it.i / cw) + 0.5) * P;
+        it.hx = ox + (it.cell % f.tc) * sx + P / 2; it.hy = oy + Math.floor(it.cell / f.tc) * sy + P / 2;
         if (it.mode === 'drag') { cancelDrag(it); }
         if (it.mode === 'glide') { glideTo(it, it.placed ? it.tx : it.hx, it.placed ? it.ty : it.hy, true); }
         else if (it.placed) { it.x = it.tx; it.y = it.ty; }
         else { it.x = it.hx; it.y = it.hy; }
         place(it);
       });
+    }
+    // Screen orientation flipped: a non-square grid shows a different crop, so the same picture restarts with fresh pieces.
+    function restartRound() {
+      doneActive = false; doneT = -1; glow = 0;
+      build(); layout(); paint(); start();
     }
     function place(it) { it.el.style.transform = 'translate(' + (it.x - P / 2) + 'px,' + (it.y - P / 2) + 'px)'; }
     function paint() {
@@ -183,12 +215,11 @@
       if (it.i === i) { snap(it); } else { sendHome(it); }
     }
     function nextPicture() {
-      pic = (pic + 1) % PICTURES.length;
-      cells = derange();
-      pieces.forEach(function (it) {
-        it.cell = cells[it.i]; it.placed = false; it.mode = 'idle'; it.el.style.zIndex = '';
-        it.el.innerHTML = pieceSvg(pic, it.i);
-      });
+      done++;
+      oi++;
+      if (oi >= order.length) { order = makeOrder(order[order.length - 1]); oi = 0; }
+      pic = order[oi];
+      build();
       layout();
     }
 
@@ -239,6 +270,8 @@
     window.addEventListener('resize', onResize);
     window.addEventListener('orientationchange', onResize);
     document.addEventListener('visibilitychange', onVis);
+    layout();
+    build();
     layout();
     paint();
 

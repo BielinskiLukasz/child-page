@@ -106,11 +106,7 @@
     }
     // Random order of the 4 animals along the bottom row.
     var order = [0, 1, 2, 3];
-    function shuffleRest() {
-      for (var i = order.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1)), t = order[i]; order[i] = order[j]; order[j] = t;
-      }
-    }
+    function shuffleRest() { order = Rand.shuffle(order); }
 
     function layout() {
       var r = field.getBoundingClientRect();

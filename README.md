@@ -5,7 +5,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
 ## Activities
-1. **Akwarium Artura** – a calm aquarium with fish. Touching the water drops food that the fish swim over to eat; touching a fish makes it blow soft bubbles.
+1. **Akwarium Artura** – a calm aquarium with fish. Touching the water drops food that the fish swim over to eat; touching a fish makes it blow soft bubbles. Every time it opens, a different 2–8 fish appear, each with its own shape and colour (no two alike).
 2. **Magiczny Ogród** – a meadow with a random weather (sunny, cloudy, rain or breeze) and day or night each time it is opened. Touching the lawn grows a flower or a mushroom from a seed; touching the cloud gently clears the garden.
 3. **Nocne Niebo** – glowing stars in a night sky. Touching them in turn connects the stars into a car, a bear, a house or a cat.
 4. **Dzień i Noc** – touching the sun slowly brings night with stars, touching the moon brings the day back, touching the sky sends a cloud drifting by, a flock of birds crosses the daytime sky, and at night a steady white satellite or a plane with a pulsing red light sometimes drifts past.

@@ -2,6 +2,7 @@
 // Touch the rocket -> it flies slowly along a smooth looping path; touch it again -> it slows to a hover (~2 s) and bobs.
 // Touch a planet -> the rocket curves over to it (damped spring, rotated pull), hovers beside it for ~3 s while the planet
 // glows softly, then resumes what it was doing. Touch a star -> one slow twinkle; touch the astronaut -> a slow wave.
+// Each launch picks (Rand) one of 6 animal astronauts, one of 6 planet colour sets and one of 4 star/planet arrangements.
 // All motion runs from one rAF loop (capped dt, paused when the tab is hidden) so it works under the global
 // prefers-reduced-motion rule that disables CSS animations.
 (function () {
@@ -15,16 +16,54 @@
   var K = 0.8, C = 1.8;         // spring stiffness and damping (about critical)
   var TWO_PI = Math.PI * 2, UP = -Math.PI / 2;
 
-  var STARS = [[0.07, 0.08], [0.3, 0.06], [0.5, 0.13], [0.72, 0.07], [0.93, 0.12], [0.38, 0.3], [0.12, 0.42], [0.9, 0.5],
-    [0.48, 0.46], [0.28, 0.62], [0.75, 0.83], [0.92, 0.72], [0.42, 0.86], [0.05, 0.26], [0.62, 0.3]];
-  var PLANETS = [[0.2, 0.2], [0.8, 0.32], [0.62, 0.68]];
-  var PCOL = [['#f7c9a0', '#e9b184'], ['#c9b8f2', '#b3a0e6'], ['#a8d8f0', '#8fc6e6']];
+  // 4 arrangements: 15 star spots + 3 planet spots as fractions of the sky (checked to keep stars clear of planets).
+  var LAYOUTS = [
+    { stars: [[0.07, 0.08], [0.30, 0.06], [0.50, 0.13], [0.72, 0.07], [0.93, 0.12], [0.38, 0.30], [0.14, 0.47], [0.90, 0.50], [0.48, 0.46], [0.28, 0.62], [0.75, 0.83], [0.92, 0.72], [0.42, 0.86], [0.06, 0.29], [0.59, 0.30]],
+      planets: [[0.2, 0.2], [0.8, 0.32], [0.62, 0.68]] },
+    { stars: [[0.06, 0.10], [0.28, 0.06], [0.50, 0.06], [0.70, 0.06], [0.94, 0.08], [0.08, 0.50], [0.38, 0.62], [0.30, 0.46], [0.70, 0.50], [0.94, 0.55], [0.06, 0.90], [0.30, 0.88], [0.57, 0.62], [0.90, 0.90], [0.70, 0.90]],
+      planets: [[0.2, 0.7], [0.5, 0.3], [0.82, 0.74]] },
+    { stars: [[0.10, 0.06], [0.35, 0.10], [0.62, 0.06], [0.90, 0.10], [0.06, 0.34], [0.30, 0.30], [0.50, 0.50], [0.68, 0.33], [0.94, 0.40], [0.10, 0.62], [0.30, 0.90], [0.52, 0.88], [0.90, 0.90], [0.50, 0.68], [0.70, 0.61]],
+      planets: [[0.78, 0.2], [0.2, 0.5], [0.76, 0.8]] },
+    { stars: [[0.06, 0.06], [0.30, 0.08], [0.50, 0.06], [0.70, 0.10], [0.94, 0.06], [0.06, 0.30], [0.51, 0.29], [0.94, 0.30], [0.30, 0.52], [0.70, 0.57], [0.06, 0.60], [0.94, 0.60], [0.30, 0.90], [0.50, 0.58], [0.70, 0.90]],
+      planets: [[0.3, 0.3], [0.7, 0.35], [0.5, 0.8]] }
+  ];
+  var PCOLS = [
+    [['#f7c9a0', '#e9b184'], ['#c9b8f2', '#b3a0e6'], ['#a8d8f0', '#8fc6e6']],
+    [['#f7a8c9', '#e68fb5'], ['#fff0a8', '#f0dc7c'], ['#b8e6c9', '#98d4ae']],
+    [['#b3a0e6', '#9a86d6'], ['#f7c9a0', '#e9b184'], ['#fff0a8', '#f0dc7c']],
+    [['#a8d8f0', '#8fc6e6'], ['#b8e6c9', '#98d4ae'], ['#f7a8c9', '#e68fb5']],
+    [['#f9b8a6', '#ec9c88'], ['#c9b8f2', '#b3a0e6'], ['#b8e6c9', '#98d4ae']],
+    [['#fff0a8', '#f0dc7c'], ['#a8d8f0', '#8fc6e6'], ['#f7a8c9', '#e68fb5']]
+  ];
+  // astronauts: fur colour, muzzle colour, ears kind and ear colour (drawn locally, 6 animals)
+  var ASTROS = [
+    { fur: '#c99b72', mz: '#f3dcc4', ears: 'round', ec: '#c99b72' },
+    { fur: '#f2ece6', mz: '#f7c9d4', ears: 'long', ec: '#f2ece6' },
+    { fur: '#e8a66a', mz: '#fbe6d0', ears: 'point', ec: '#e8a66a' },
+    { fur: '#d9b48a', mz: '#f6e6d2', ears: 'flop', ec: '#8f6a4a' },
+    { fur: '#8fd09a', mz: '#d9f2de', ears: 'frog', ec: '#8fd09a' },
+    { fur: '#f7f4f0', mz: '#ffffff', ears: 'round', ec: '#4a4660', patch: true }
+  ];
 
   function sm(u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }
   function wrapPi(a) { a = (a + Math.PI) % TWO_PI; if (a < 0) { a += TWO_PI; } return a - Math.PI; }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
-  function rocketSvg() {
+  function astroSvg(a) {
+    var e = '', f = a.fur, ec = a.ec;
+    if (a.ears === 'round') { e = '<circle cx="95" cy="40" r="5" fill="' + ec + '"/><circle cx="113" cy="40" r="5" fill="' + ec + '"/>'; }
+    else if (a.ears === 'long') { e = '<ellipse cx="97" cy="36" rx="3.6" ry="7" fill="' + ec + '"/><ellipse cx="111" cy="36" rx="3.6" ry="7" fill="' + ec + '"/><ellipse cx="97" cy="37" rx="1.6" ry="4.5" fill="' + a.mz + '"/><ellipse cx="111" cy="37" rx="1.6" ry="4.5" fill="' + a.mz + '"/>'; }
+    else if (a.ears === 'point') { e = '<path d="M91 46L93 34L102 41z" fill="' + ec + '"/><path d="M117 46L115 34L106 41z" fill="' + ec + '"/>'; }
+    else if (a.ears === 'flop') { e = '<ellipse cx="91" cy="48" rx="4.5" ry="8" fill="' + ec + '"/><ellipse cx="117" cy="48" rx="4.5" ry="8" fill="' + ec + '"/>'; }
+    else { e = '<circle cx="96" cy="40" r="5.5" fill="' + ec + '"/><circle cx="112" cy="40" r="5.5" fill="' + ec + '"/><circle cx="96" cy="40" r="2.6" fill="#fff"/><circle cx="112" cy="40" r="2.6" fill="#fff"/><circle cx="96" cy="40" r="1.3" fill="#5b5675"/><circle cx="112" cy="40" r="1.3" fill="#5b5675"/>'; }
+    var eyes = a.ears === 'frog' ? '' : '<circle cx="99" cy="49" r="1.8" fill="#5b5675"/><circle cx="109" cy="49" r="1.8" fill="#5b5675"/>';
+    var patch = a.patch ? '<ellipse cx="99" cy="49" rx="3.4" ry="4" fill="#4a4660"/><ellipse cx="109" cy="49" rx="3.4" ry="4" fill="#4a4660"/><circle cx="99" cy="49" r="1.4" fill="#fff"/><circle cx="109" cy="49" r="1.4" fill="#fff"/>' : '';
+    return '<g class="rq-ast">' + e + '<circle cx="104" cy="51" r="12" fill="' + f + '"/><ellipse cx="104" cy="56" rx="5.5" ry="4" fill="' + a.mz + '"/>' +
+      eyes + patch + '<circle cx="104" cy="54.5" r="1.6" fill="#6b5a73"/>' +
+      '<g class="rq-paw"><circle cx="0" cy="0" r="4.5" fill="' + f + '"/></g></g>';
+  }
+
+  function rocketSvg(a) {
     return '<svg viewBox="0 0 200 100" aria-hidden="true" focusable="false">' +
       '<g class="rq-flame"><path d="M44 50Q20 32 6 50Q20 68 44 50z" fill="#ffd98a"/><path d="M44 50Q28 41 18 50Q28 59 44 50z" fill="#fff4cf"/></g>' +
       '<path d="M70 28L50 6Q62 4 78 22z" fill="#a8d8f0"/><path d="M70 72L50 94Q62 96 78 78z" fill="#a8d8f0"/>' +
@@ -32,19 +71,14 @@
       '<path d="M140 25Q166 32 180 50Q166 68 140 75Q150 50 140 25z" fill="#f7a8c9"/>' +
       '<rect x="48" y="40" width="10" height="20" rx="5" fill="#c9b8f2"/>' +
       '<circle cx="104" cy="50" r="19" fill="#cfeaf7" stroke="#a8d8f0" stroke-width="4"/>' +
-      '<g class="rq-ast"><circle cx="95" cy="40" r="5" fill="#c99b72"/><circle cx="113" cy="40" r="5" fill="#c99b72"/>' +
-      '<circle cx="104" cy="51" r="12" fill="#c99b72"/><ellipse cx="104" cy="56" rx="5.5" ry="4" fill="#f3dcc4"/>' +
-      '<circle cx="99" cy="49" r="1.8" fill="#5b5675"/><circle cx="109" cy="49" r="1.8" fill="#5b5675"/>' +
-      '<circle cx="104" cy="54.5" r="1.6" fill="#6b5a73"/>' +
-      '<g class="rq-paw"><circle cx="0" cy="0" r="4.5" fill="#c99b72"/></g></g></svg>';
+      astroSvg(a) + '</svg>';
   }
 
   function starSvg() {
     return '<svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M20 3l4.6 11.6L37 15.6l-9.6 7.8L30.4 36 20 29l-10.4 7 3-12.6L3 15.6l12.4-1z" fill="#fff4cf" stroke="#fff4cf" stroke-width="3" stroke-linejoin="round"/></svg>';
   }
 
-  function planetSvg(i) {
-    var c = PCOL[i];
+  function planetSvg(c) {
     return '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' +
       '<circle cx="50" cy="50" r="44" fill="' + c[0] + '"/>' +
       '<circle cx="24" cy="36" r="8" fill="' + c[1] + '"/><circle cx="78" cy="66" r="10" fill="' + c[1] + '"/><circle cx="66" cy="22" r="5" fill="' + c[1] + '"/>' +
@@ -54,6 +88,10 @@
   }
 
   function mount(container) {
+    var L = Rand.pickOne(LAYOUTS, 'rakieta-layout');
+    var PCOL = Rand.pickOne(PCOLS, 'rakieta-colours');
+    var ASTRO = Rand.pickOne(ASTROS, 'rakieta-astro');
+    var STARS = L.stars, PLANETS = L.planets;
     var scene = document.createElement('div');
     scene.className = 'rq';
     scene.setAttribute('role', 'group');
@@ -64,12 +102,12 @@
       html += '<button class="rq-star" type="button" data-i="' + i + '" aria-label="Gwiazdka ' + (i + 1) + ' – zamigocze">' + starSvg() + '</button>';
     }
     for (i = 0; i < PLANETS.length; i++) {
-      html += '<button class="rq-planet" type="button" data-i="' + i + '" aria-label="Planeta ' + (i + 1) + ' – rakieta poleci do niej"><span class="rq-halo"></span>' + planetSvg(i) + '</button>';
+      html += '<button class="rq-planet" type="button" data-i="' + i + '" aria-label="Planeta ' + (i + 1) + ' – rakieta poleci do niej"><span class="rq-halo"></span>' + planetSvg(PCOL[i]) + '</button>';
     }
     html += '<div class="rq-puffs"></div>' +
-      '<div class="rq-rocket">' + rocketSvg() +
+      '<div class="rq-rocket">' + rocketSvg(ASTRO) +
       '<button class="rq-rbtn" type="button" aria-label="Rakieta – leć lub zawisnij"></button>' +
-      '<button class="rq-abtn" type="button" aria-label="Miś astronauta – pomachaj"></button></div>';
+      '<button class="rq-abtn" type="button" aria-label="Astronauta – pomachaj"></button></div>';
     scene.innerHTML = html;
     container.appendChild(scene);
 

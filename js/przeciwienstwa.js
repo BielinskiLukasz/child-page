@@ -1,4 +1,5 @@
-// Activity "Przeciwieństwa": four big objects (door, cup, balloon, lamp). Touching one slowly turns it into its opposite
+// Activity "Przeciwieństwa": four big objects, drawn at random each launch from a pool of 12 pairs (door, cup, balloon,
+// lamp, ball, pencil, thermometer, sky, flower, tree, dots, cloud). Touching one slowly turns it into its opposite
 // (open, full, high, on) and touching it again turns it back. A small sparkle fades after each change; when all four are
 // in their second state the scene glows softly. All changes are reversible; nothing is scored or stored.
 // Fades run from one capped-dt rAF loop (not CSS transitions), so they still work under prefers-reduced-motion.
@@ -70,6 +71,114 @@
         s.querySelector('.pw-cone').setAttribute('opacity', (0.85 * e).toFixed(3));
         s.querySelector('.pw-bulb').setAttribute('opacity', e.toFixed(3));
         s.querySelector('.pw-rays').setAttribute('opacity', e.toFixed(3));
+      } },
+    { name: 'Piłka', off: 'duża', on: 'mała', bg: '#fde3e3',
+      build: function () {
+        return '<path d="M8 90q42-8 84 0v8H8z" fill="#cfeab4"/>' +
+          '<g class="pw-ball"><circle cx="50" cy="56" r="34" fill="#f28b82"/><path d="M26 42q8-12 22-14" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="5" stroke-linecap="round"/></g>' + sparkSvg();
+      },
+      paint: function (s, e) {
+        // r goes 34 -> 12, resting on the ground line (y 90)
+        var r = 34 - 22 * e;
+        var b = s.querySelector('.pw-ball');
+        b.setAttribute('transform', 'translate(50 ' + (90 - r).toFixed(2) + ') scale(' + (r / 34).toFixed(3) + ') translate(-50 -56)');
+      } },
+    { name: 'Ołówek', off: 'długi', on: 'krótki', bg: '#fff3cf',
+      build: function () {
+        return '<rect x="10" y="40" width="14" height="20" rx="4" fill="#f7a8c9"/><rect x="22" y="40" width="6" height="20" fill="#c9c3dc"/>' +
+          '<rect class="pw-body" x="28" y="40" width="58" height="20" fill="#ffd166"/>' +
+          '<g class="pw-tip"><path d="M86 40l12 10-12 10z" fill="#f3d9a8"/><path d="M93 45l5 5-5 5z" fill="#6b6590"/></g>' + sparkSvg();
+      },
+      paint: function (s, e) {
+        var w = 58 - 30 * e;
+        s.querySelector('.pw-body').setAttribute('width', w.toFixed(2));
+        s.querySelector('.pw-tip').setAttribute('transform', 'translate(' + (w - 58).toFixed(2) + ' 0)');
+      } },
+    { name: 'Termometr', off: 'zimny', on: 'gorący', bg: '#e4ecfb',
+      build: function () {
+        return '<rect x="42" y="8" width="16" height="70" rx="8" fill="#fbf7ff" stroke="#d6cdef" stroke-width="3"/>' +
+          '<circle cx="50" cy="82" r="13" fill="#fbf7ff" stroke="#d6cdef" stroke-width="3"/>' +
+          '<circle class="pw-merc-b" cx="50" cy="82" r="8" fill="#8ecae6"/>' +
+          '<rect class="pw-merc" x="46" y="66" width="8" height="14" rx="4" fill="#8ecae6"/>' + sparkSvg();
+      },
+      paint: function (s, e) {
+        var top = 66 - 46 * e;
+        var col = 'rgb(' + Math.round(142 + 100 * e) + ',' + Math.round(202 - 63 * e) + ',' + Math.round(230 - 100 * e) + ')';
+        var m = s.querySelector('.pw-merc');
+        m.setAttribute('y', top.toFixed(2));
+        m.setAttribute('height', (80 - top).toFixed(2));
+        m.setAttribute('fill', col);
+        s.querySelector('.pw-merc-b').setAttribute('fill', col);
+      } },
+    { name: 'Niebo', off: 'dzień', on: 'noc', bg: '#dceefb',
+      build: function () {
+        return '<rect class="pw-sky" x="8" y="8" width="84" height="84" rx="14" fill="#cfe8fb"/>' +
+          '<g class="pw-stars" opacity="0" fill="#ffe9a8"><circle cx="24" cy="26" r="2.5"/><circle cx="70" cy="22" r="2"/><circle cx="78" cy="56" r="2.5"/><circle cx="30" cy="70" r="2"/></g>' +
+          '<g class="pw-sun"><circle cx="50" cy="50" r="17" fill="#ffd166"/><path class="pw-rays" d="M50 22v-6M50 78v6M22 50h-6M78 50h6M30 30l-4-4M70 70l4 4M70 30l4-4M30 70l-4 4" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/></g>' +
+          '<g class="pw-moon" opacity="0"><path d="M58 30a22 22 0 1 0 12 38a18 18 0 1 1-12-38z" fill="#fff2b8"/></g>' + sparkSvg();
+      },
+      paint: function (s, e) {
+        var c = 'rgb(' + Math.round(207 - 164 * e) + ',' + Math.round(232 - 185 * e) + ',' + Math.round(251 - 149 * e) + ')';
+        s.querySelector('.pw-sky').setAttribute('fill', c);
+        s.querySelector('.pw-sun').setAttribute('opacity', (1 - e).toFixed(3));
+        s.querySelector('.pw-moon').setAttribute('opacity', e.toFixed(3));
+        s.querySelector('.pw-stars').setAttribute('opacity', e.toFixed(3));
+      } },
+    { name: 'Kwiat', off: 'zamknięty', on: 'otwarty', bg: '#f3e6fa',
+      build: function () {
+        var petals = '';
+        for (var i = 0; i < 6; i++) {
+          petals += '<ellipse cx="50" cy="20" rx="9" ry="14" fill="#f7a8c9" transform="rotate(' + (i * 60) + ' 50 38)"/>';
+        }
+        return '<path d="M50 96V50" stroke="#7fc77f" stroke-width="5" stroke-linecap="round"/>' +
+          '<path d="M50 80q-18-2-22-14q14-2 22 14z" fill="#9bd89b"/>' +
+          '<g class="pw-petals">' + petals + '</g>' +
+          '<circle cx="50" cy="38" r="9" fill="#ffd166"/>' + sparkSvg();
+      },
+      paint: function (s, e) {
+        var k = 0.3 + 0.7 * e;
+        s.querySelector('.pw-petals').setAttribute('transform',
+          'translate(50 38) scale(' + k.toFixed(3) + ') translate(-50 -38)');
+      } },
+    { name: 'Drzewo', off: 'gruby', on: 'cienki', bg: '#e3f1d9',
+      build: function () {
+        return '<path d="M8 94q42-8 84 0v6H8z" fill="#cfeab4"/>' +
+          '<rect class="pw-trunk" x="35" y="46" width="30" height="48" fill="#c9a98a"/>' +
+          '<circle cx="50" cy="32" r="22" fill="#7fc77f"/><circle cx="36" cy="40" r="14" fill="#9bd89b"/><circle cx="64" cy="40" r="14" fill="#9bd89b"/>' + sparkSvg();
+      },
+      paint: function (s, e) {
+        var w = 30 - 20 * e;
+        var t = s.querySelector('.pw-trunk');
+        t.setAttribute('width', w.toFixed(2));
+        t.setAttribute('x', (50 - w / 2).toFixed(2));
+      } },
+    { name: 'Kropki', off: 'mało', on: 'dużo', bg: '#fde9d3',
+      build: function () {
+        var d = '', i, cols = ['#f28b82', '#ffd166', '#7fc77f', '#8ecae6', '#c9a0e6', '#f7a8c9'];
+        for (i = 0; i < 6; i++) {
+          d += '<circle class="pw-dot" cx="' + (24 + (i % 3) * 26) + '" cy="' + (36 + Math.floor(i / 3) * 30) + '" r="10" fill="' + cols[i] + '"/>';
+        }
+        return d + sparkSvg();
+      },
+      paint: function (s, e) {
+        var dots = s.querySelectorAll('.pw-dot');
+        for (var i = 0; i < dots.length; i++) {
+          // first dot always visible; the others fade in one after another
+          var v = i === 0 ? 1 : Math.max(0, Math.min(1, e * 6 - (i - 1)));
+          dots[i].setAttribute('opacity', v.toFixed(3));
+        }
+      } },
+    { name: 'Chmura', off: 'sucho', on: 'mokro', bg: '#e1e8f5',
+      build: function () {
+        return '<g class="pw-sun"><circle cx="72" cy="26" r="13" fill="#ffd166"/></g>' +
+          '<g class="pw-drops" opacity="0" fill="#8ecae6"><path d="M30 66q-5 8 0 11t5-11z"/><path d="M50 72q-5 8 0 11t5-11z"/><path d="M70 66q-5 8 0 11t5-11z"/></g>' +
+          '<path d="M24 58a14 14 0 0 1 4-27a18 18 0 0 1 34-4a16 16 0 0 1 14 31z" fill="#fbf7ff" stroke="#c9c3dc" stroke-width="3" stroke-linejoin="round"/>' + sparkSvg();
+      },
+      paint: function (s, e) {
+        s.querySelector('.pw-sun').setAttribute('opacity', (1 - e).toFixed(3));
+        var d = s.querySelector('.pw-drops');
+        d.setAttribute('opacity', e.toFixed(3));
+        d.setAttribute('transform', 'translate(0 ' + (6 * e - 6).toFixed(2) + ')');
       } }
   ];
 
@@ -93,7 +202,8 @@
     var glow = 0, glowT = 0;
     var raf = 0, last = 0;
 
-    OBJECTS.forEach(function (o) {
+    // Four different pairs per launch (unique, random); nothing is stored.
+    Rand.pick(OBJECTS, 4).forEach(function (o) {
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'pw-btn';

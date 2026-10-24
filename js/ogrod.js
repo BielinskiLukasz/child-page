@@ -49,12 +49,44 @@
 
   function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
 
+  // Weather x time of day: 4 x 2 = 8 combinations, one chosen per launch (never stored, never the same twice in a row).
+  var WEATHERS = ['sunny', 'cloudy', 'rain', 'breeze'];
+  var COMBOS = [];
+  WEATHERS.forEach(function (w) { ['day', 'night'].forEach(function (t) { COMBOS.push({ w: w, t: t }); }); });
+
+  // Decorative weather layer (pointer-events: none in CSS); the look is fully defined by static CSS per combo class.
+  function weatherHtml(c) {
+    var h = '<div class="g-wx">';
+    if (c.t === 'night') {
+      for (var s = 0; s < 14; s++) {
+        h += '<i class="g-star" style="left:' + (4 + (s * 37) % 92) + '%;top:' + (3 + (s * 23) % 40) + '%;animation-delay:-' + (s % 5) + 's"></i>';
+      }
+    }
+    if (c.w === 'sunny' || c.w === 'breeze') { h += '<i class="g-orb"></i>'; }
+    if (c.w === 'cloudy' || c.w === 'rain') {
+      h += '<i class="g-bank g-bank1"></i><i class="g-bank g-bank2"></i>';
+    }
+    if (c.w === 'rain') {
+      for (var d = 0; d < 26; d++) {
+        h += '<i class="g-drop" style="left:' + ((d * 4 + (d % 3) * 1.3) % 100).toFixed(1) + '%;animation-delay:-' + ((d * 0.37) % 1.1).toFixed(2) + 's"></i>';
+      }
+    }
+    if (c.w === 'breeze') {
+      for (var k = 0; k < 4; k++) {
+        h += '<i class="g-wind" style="top:' + (14 + k * 11) + '%;animation-delay:-' + (k * 1.7) + 's"></i>';
+      }
+    }
+    return h + '</div>';
+  }
+
   function mount(container) {
     var garden = document.createElement('div');
-    garden.className = 'garden';
+    var combo = window.Rand ? window.Rand.pickOne(COMBOS, 'ogrod-weather') : pick(COMBOS);
+    // Classes are set before the garden is attached, so the first visible frame already has its weather.
+    garden.className = 'garden wx-' + combo.w + ' tod-' + combo.t;
     garden.setAttribute('role', 'group');
     garden.setAttribute('aria-label', 'Ogród z kwiatami');
-    garden.innerHTML = '<div class="g-sky"></div><div class="g-lawn" role="button" tabindex="0" aria-label="Trawnik – posadź roślinę"></div><div class="g-plants"></div>' +
+    garden.innerHTML = '<div class="g-sky"></div>' + weatherHtml(combo) + '<div class="g-lawn" role="button" tabindex="0" aria-label="Trawnik – posadź roślinę"></div><div class="g-plants"></div>' +
       '<div class="g-cloud" role="button" tabindex="0" aria-label="Chmurka">' + cloudSvg() + '</div>';
     container.appendChild(garden);
     var lawn = garden.querySelector('.g-lawn');

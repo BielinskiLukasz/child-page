@@ -5,11 +5,11 @@
   var MAX_CLOUDS = 7, AMBIENT = 3, TRANSITION_MS = 3500, REDUCED_MS = 1200;
   var CLOUD_SVG = '<svg viewBox="0 0 120 60" aria-hidden="true" focusable="false"><g fill="#fff"><circle cx="35" cy="38" r="20"/>' +
     '<circle cx="60" cy="28" r="26"/><circle cx="88" cy="38" r="20"/><rect x="35" y="38" width="53" height="20" rx="10"/></g></svg>';
-  var BIRD_MIN = 45, BIRD_MAX = 75, BIRD_SECONDS = 20, LOOP_SECONDS = 2.6;
+  var BIRD_SECONDS = 20, LOOP_SECONDS = 2.6;
   var BIRD_SVG = '<svg viewBox="-30 -20 60 40" aria-hidden="true" focusable="false"><g fill="#7a7396">' +
     '<g class="dn-wing"><path d="M0 0Q-14 -16 -28 -6Q-14 -6 0 4z"/><path d="M0 0Q14 -16 28 -6Q14 -6 0 4z"/></g>' +
     '<ellipse cx="0" cy="3" rx="9" ry="5"/><circle cx="8" cy="0" r="4"/><path d="M11 -1l6 2-6 1z" fill="#ffd98a"/></g></svg>';
-  // Night flyers: now and then a white satellite or a blinking red airplane drifts across the stars.
+  // Night flyers: now and then a steady white satellite or an airplane (grey dot pulsing red) drifts across the stars.
   // New stars slowly appear while the activity stays open: one every 15-30 s, from 1 px up to their target size, capped at STAR_CAP in total.
   var STAR_ADD_MIN = 15, STAR_ADD_MAX = 30, STAR_GROW_SECONDS = 8, STAR_CAP = 160;
   var FLY_MIN = 20, FLY_MAX = 45, SAT_SECONDS = 18, PLANE_SECONDS = 12, BLINK_SECONDS = 0.7;
@@ -98,48 +98,79 @@
         n++;
       }
     }
-    // Bird: at most one, only by day, roughly once a minute; flies slowly across and is removed when it leaves the screen.
-    var bird = null, birdWait = BIRD_MIN + Math.random() * (BIRD_MAX - BIRD_MIN);
-    function removeBird() {
-      if (bird && bird.node.parentNode) { bird.node.parentNode.removeChild(bird.node); }
-      bird = null;
+    // Birds: a small flock (7-9, chosen on every launch) only by day. Each flies slowly across in a lane that keeps clear of the sun/moon
+    // button; when one leaves the screen another follows shortly after, so at least 5 are visible at the day peak.
+    var flockSize = 7 + Math.floor(Math.random() * 3), birds = [], respawn = [], flockOn = false;
+    function removeBird(b) {
+      var i = birds.indexOf(b);
+      if (i >= 0) { birds.splice(i, 1); }
+      if (b.node.parentNode) { b.node.parentNode.removeChild(b.node); }
     }
-    function spawnBird() {
+    function spawnBird(u) {
       var node = document.createElement('button');
       node.type = 'button';
       node.className = 'dn-bird';
       node.setAttribute('aria-label', 'Ptaszek');
       node.innerHTML = BIRD_SVG;
       scene.appendChild(node);
-      var ltr = Math.random() < 0.5;
-      bird = { node: node, wing: node.querySelector('.dn-wing'), u: 0, ltr: ltr, y: 0.08 + Math.random() * 0.25, ph: 0, loop: -1 };
+      var b = { node: node, wing: node.querySelector('.dn-wing'), u: u, ltr: Math.random() < 0.5, lane: Math.random(), secs: BIRD_SECONDS * (0.85 + Math.random() * 0.4),
+        ph: Math.random() * 6.28, loop: -1 };
+      birds.push(b);
+      placeBird(b, 0);
     }
-    function placeBird(dt) {
-      var w = scene.clientWidth, h = scene.clientHeight, bw = bird.node.offsetWidth || 50;
-      bird.u += dt / BIRD_SECONDS;
-      bird.ph += dt * 2.4 * Math.PI; // slow, gentle flapping
-      var x = -bw + bird.u * (w + 2 * bw), y = bird.y * h + Math.sin(bird.u * 5) * h * 0.02, R = Math.min(w, h) * 0.07;
-      if (!bird.ltr) { x = w - x; }
-      if (bird.loop >= 0) { // gentle slow loop after a touch: smooth circle added to the flight path
-        bird.loop += dt / LOOP_SECONDS;
-        if (bird.loop >= 1) { bird.loop = -1; } else {
-          var a = bird.loop * 2 * Math.PI, e = Math.sin(bird.loop * Math.PI);
-          x += (bird.ltr ? 1 : -1) * R * Math.sin(a) * e; y -= R * (1 - Math.cos(a)) * 0.5 * e;
+    // Free vertical lanes: above the sun/moon box and below it. Returns the y (px) for lane 0..1 and the direction a touch-loop may move (away from the body).
+    function laneY(b, w, h, bh) {
+      var size = Math.min(Math.max(150, Math.min(w, h) * 0.38), 320), top = h * 0.42 - size / 2, bottom = h * 0.42 + size / 2;
+      var R = Math.min(w, h) * 0.07, m = h * 0.02 + 4;
+      var t0 = m + R, t1 = top - bh - m, b0 = bottom + m, b1 = h - bh - m - R;
+      var lt = Math.max(t1 - t0, 0), lb = Math.max(b1 - b0, 0), tot = lt + lb;
+      if (tot <= 0) { return { y: Math.max(t0, 0), dir: 0 }; }
+      var d = b.lane * tot;
+      return d < lt ? { y: t0 + d, dir: -1 } : { y: b0 + (d - lt), dir: 1 };
+    }
+    function placeBird(b, dt) {
+      var w = scene.clientWidth, h = scene.clientHeight, bw = b.node.offsetWidth || 56, bh = Math.max(b.node.offsetHeight || 56, 56);
+      b.u += dt / b.secs;
+      b.ph += dt * 2.4 * Math.PI; // slow, gentle flapping
+      var ly = laneY(b, w, h, bh), x = -bw + b.u * (w + 2 * bw), y = ly.y + Math.sin(b.u * 5 + b.lane * 6) * h * 0.02, R = Math.min(w, h) * 0.07;
+      if (!b.ltr) { x = w - x - bw; }
+      if (b.loop >= 0) { // gentle slow loop after a touch: smooth circle, moving only away from the sun/moon
+        b.loop += dt / LOOP_SECONDS;
+        if (b.loop >= 1) { b.loop = -1; } else {
+          var a = b.loop * 2 * Math.PI, e = Math.sin(b.loop * Math.PI);
+          x += (b.ltr ? 1 : -1) * R * Math.sin(a) * e; y += (ly.dir || -1) * R * (1 - Math.cos(a)) * 0.5 * e;
         }
       }
-      var f = 0.55 + 0.45 * Math.cos(bird.ph);
-      bird.wing.setAttribute('transform', 'scale(1 ' + f.toFixed(3) + ')');
-      bird.node.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + (bird.ltr ? 1 : -1) + ',1)';
+      var f = 0.55 + 0.45 * Math.cos(b.ph);
+      b.wing.setAttribute('transform', 'scale(1 ' + f.toFixed(3) + ')');
+      b.node.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + (b.ltr ? 1 : -1) + ',1)';
+    }
+    function clearFlock() {
+      birds.slice().forEach(removeBird);
+      respawn.length = 0;
+      flockOn = false;
     }
     function birdTick(dt) {
-      if (bird) {
-        if (progress >= 0.5 || bird.u >= 1) { removeBird(); } else { placeBird(dt); }
-      } else if (progress < 0.05 && target === 0) {
-        birdWait -= dt;
-        if (birdWait <= 0) { birdWait = BIRD_MIN + Math.random() * (BIRD_MAX - BIRD_MIN); spawnBird(); placeBird(0); }
+      if (progress >= 0.5) { if (birds.length || flockOn) { clearFlock(); } return; }
+      if (!flockOn) {
+        if (!(progress < 0.05 && target === 0)) { return; }
+        flockOn = true; // day peak reached: the flock appears already spread across the sky
+        for (var i = 0; i < flockSize; i++) { spawnBird((i + Math.random() * 0.6) / flockSize * 0.9); }
+        return;
       }
+      birds.slice().forEach(function (b) {
+        if (b.u >= 1) { removeBird(b); respawn.push(Math.random() * 1.5); } else { placeBird(b, dt); }
+      });
+      respawn = respawn.map(function (t) { return t - dt; }).filter(function (t) {
+        if (t > 0 || birds.length >= flockSize) { return t > 0; }
+        spawnBird(0);
+        return false;
+      });
     }
-    function touchBird() { if (bird && bird.loop < 0) { bird.loop = 0; } }
+    function touchBird(node) {
+      var b = birds.filter(function (x) { return x.node === node; })[0];
+      if (b && b.loop < 0) { b.loop = 0; }
+    }
     // Slowly revealed stars: each starts at 1 px and eases to its target size (JS-driven, so it works under prefers-reduced-motion).
     var starCount = 100, starWait = STAR_ADD_MIN + Math.random() * (STAR_ADD_MAX - STAR_ADD_MIN), growing = [];
     function addStar() {
@@ -177,7 +208,8 @@
       f.node.style.left = x.toFixed(2) + '%';
       f.node.style.top = (f.y + f.u * f.slope).toFixed(2) + '%';
       if (f.plane) {
-        f.node.style.opacity = (f.t % BLINK_SECONDS) < BLINK_SECONDS * 0.5 ? 1 : 0.25;
+        // grey dot with a red pulse, same 0.7 s period as before; driven here (not by a CSS keyframe) so it also runs under prefers-reduced-motion
+        f.node.style.setProperty('--pulse', (0.5 - 0.5 * Math.cos(2 * Math.PI * f.t / BLINK_SECONDS)).toFixed(3));
       }
     }
     function flyerTick(dt) {
@@ -217,7 +249,8 @@
 
     function onDown(e) {
       e.preventDefault();
-      if (e.target.closest('.dn-bird')) { touchBird(); return; }
+      var bn = e.target.closest('.dn-bird');
+      if (bn) { touchBird(bn); return; }
       if (busy) { return; }
       if (e.target.closest('.dn-body')) { toggle(); return; }
       var h = Math.max(scene.clientHeight, 1);
@@ -234,7 +267,8 @@
     function onClick(e) {
       // keyboard activation (Enter/Space) fires click with detail 0; pointer input is handled in onDown
       if (e.detail !== 0) { return; }
-      if (e.target.closest('.dn-bird')) { touchBird(); return; }
+      var bn = e.target.closest('.dn-bird');
+      if (bn) { touchBird(bn); return; }
       if (busy || !e.target.closest('.dn-body')) { return; }
       toggle();
     }

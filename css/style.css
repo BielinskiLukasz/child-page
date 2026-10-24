@@ -530,8 +530,8 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   background: linear-gradient(#cde7fa, #eaf5fc 62%, #f4eefb); }
 .sa-sun { position: absolute; top: 7%; right: 8%; width: clamp(44px, 9vw, 80px); aspect-ratio: 1; border-radius: 50%; background: #fff1bd; box-shadow: 0 0 40px 16px rgba(255, 241, 189, .6); }
 .stage .sa-hills { position: absolute; left: 0; bottom: 0; width: 100%; height: 50%; display: block; }
-.sa-ground { position: absolute; left: 0; right: 0; top: calc(var(--ry) - 14px); bottom: 0; background: linear-gradient(#a8d9a0, #bfe6b4); }
-.sa-runway { position: absolute; left: 0; right: 0; top: calc(var(--ry) - 2px); height: 30px; background: #b3adc9; border-radius: 6px; }
+.sa-ground { position: absolute; left: 0; right: 0; top: calc(var(--ry) - 14px); bottom: 0; background: linear-gradient(var(--g1, #a8d9a0), var(--g2, #bfe6b4)); }
+.sa-runway { position: absolute; left: 0; right: 0; top: calc(var(--ry) - 2px); height: 30px; background: var(--rw, #b3adc9); border-radius: 6px; }
 .sa-dash { position: absolute; left: 4%; right: 4%; top: 13px; height: 4px; border-radius: 2px;
   background: repeating-linear-gradient(90deg, #fdfbff 0 28px, transparent 28px 56px); }
 .sa-cloud { position: absolute; left: 0; top: 0; width: var(--cw); aspect-ratio: 16 / 9; min-width: 96px; min-height: 56px; padding: 0; border: 0; background: none; cursor: pointer; will-change: transform; }
@@ -540,6 +540,18 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .stage .sa-plane svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .sa-pbtn { position: absolute; left: 49%; top: 18%; width: 24%; height: 48%; min-width: 56px; min-height: 56px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; transform: translate(-6%, -6%); }
 .sa-plane:focus-visible, .sa-cloud:focus-visible, .sa-pbtn:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; border-radius: 14px; }
+.sa-apt { position: absolute; right: 4%; bottom: calc(100% - var(--ry) + 2px); width: clamp(70px, 16vw, 130px); height: auto; pointer-events: none; }
+/* weather: decoration only, thin and translucent, below the clouds and the plane */
+.sa-wx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.sa-drop { position: absolute; width: 3px; height: 18px; border-radius: 2px; background: #7fa3c9; opacity: .5; animation: sa-fall linear infinite; }
+.sa-flake { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: #fff; opacity: .9; animation: sa-fall linear infinite; }
+@keyframes sa-fall { from { transform: translateY(-12vh); } to { transform: translateY(112vh); } }
+.sa-w-cloudy { background: linear-gradient(#c3cfdd, #dfe5ee 62%, #ece8f3); }
+.sa-w-rain { background: linear-gradient(#b3c2d6, #d0d9e6 62%, #e3e4f0); }
+.sa-w-snow { background: linear-gradient(#d4e1f1, #e9f0f9 62%, #f1eef8); }
+.sa-w-cloudy .sa-sun, .sa-w-rain .sa-sun, .sa-w-snow .sa-sun { opacity: .3; }
+.sa-w-cloudy .sa-cloud svg g { fill: #f3f5fa; }
+.sa-w-rain .sa-cloud svg g { fill: #e4e8f1; }
 .sa-puffs { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
 .sa-puff { position: absolute; left: 0; top: 0; border-radius: 50%; background: #fff; opacity: 0; will-change: transform, opacity; }
 .tk { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;

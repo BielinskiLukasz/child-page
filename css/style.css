@@ -649,3 +649,23 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .pd-bub.pd-on { pointer-events: auto; }
 .pd-bub span { display: block; width: 24px; height: 24px; margin: 16px; border-radius: 50%; background: rgba(255, 255, 255, .45); border: 2px solid rgba(255, 255, 255, .9); }
 .pd-hull:focus-visible, .pd-win:focus-visible, .pd-sand:focus-visible, .pd-fish:focus-visible, .pd-bub:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }
+
+/* Kolejka Linowa (kl-) */
+.kl { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#d3ecf8, #e9f5fb 60%, #f6f1e4); }
+.kl-clouds { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.kl-cloud { position: absolute; left: 0; top: 0; will-change: transform; }
+.stage .kl-cloud svg { width: 100%; height: 100%; display: block; }
+.stage .kl-land, .stage .kl-cable { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.stage .kl-land { z-index: 2; }
+.stage .kl-cable { z-index: 7; overflow: visible; }
+.kl-station { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; cursor: pointer; z-index: 5; }
+.stage .kl-station svg { width: 100%; height: 100%; display: block; }
+.kl-tree { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; cursor: pointer; z-index: 6; }
+.kl-tsw { display: block; width: 100%; height: 100%; transform-origin: 50% 100%; }
+.stage .kl-tsw svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.kl-car { position: absolute; left: 0; top: 0; z-index: 8; pointer-events: none; transform-origin: 50% 0; will-change: transform; }
+.stage .kl-car > svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.kl-hull { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; border-radius: 22px; }
+.kl-an { position: absolute; width: 56px; height: 56px; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; border-radius: 50%; }
+.kl-hull:focus-visible, .kl-an:focus-visible, .kl-station:focus-visible, .kl-tree:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }

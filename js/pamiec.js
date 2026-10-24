@@ -1,8 +1,10 @@
-// Activity "Pamięć": a gentle memory game with 3 pairs of large picture cards (6 cards, 2x3 portrait / 3x2 landscape).
+// Activity "Pamięć": a gentle memory game of large picture cards. Game 1 deals 6 cards (3 pairs) and every completed game
+// adds one pair (6, 8 ... 20 cards, max 10 pairs, then it repeats at 20); pairs are drawn at random from a pool of 14
+// pictures each game and progress lives in memory only (resets on every launch).
 // Touch a card to turn it over (~0.6 s). Two matching cards glow and stay open; two different cards turn back after
 // ~1.5 s with no shake, red or message. When all pairs are found the cards glow ~3 s, then ~4 s later they turn back
-// and shuffle gently for a new round with a different picture set (3 sets cycle). Under prefers-reduced-motion cards
-// cross-fade instead of turning. One capped-dt rAF loop (pauses when hidden, stops when idle); fixed DOM of 6 buttons.
+// and shuffle gently for the next game. Under prefers-reduced-motion cards cross-fade instead of turning.
+// One capped-dt rAF loop (pauses when hidden, stops when idle); the card buttons are rebuilt for every game.
 (function () {
   var FLIP_S = 0.6, BACK_AFTER_S = 1.5, GLOW_S = 3, NEXT_AT_S = 7, SHUFFLE_S = 0.8;
   var P = {
@@ -19,10 +21,19 @@
     cloud: { label: 'chmurka', svg: '<g fill="#cfe6f7"><circle cx="34" cy="58" r="18"/><circle cx="54" cy="46" r="22"/><circle cx="72" cy="60" r="16"/><rect x="18" y="58" width="68" height="18" rx="9"/></g>' },
     heart: { label: 'serduszko', svg: '<path d="M50 86C16 60 12 36 30 26C42 20 48 28 50 36C52 28 58 20 70 26C88 36 84 60 50 86Z" fill="#f7b0c4"/>' },
     star: { label: 'gwiazdka', svg: '<path d="M50 10L61 38L91 38L67 56L76 87L50 69L24 87L33 56L9 38L39 38Z" fill="#ffe08a" stroke="#ffe08a" stroke-width="4" stroke-linejoin="round"/>' },
+    sun: { label: 'słoneczko', svg: '<g stroke="#ffd36a" stroke-width="6" stroke-linecap="round"><path d="M50 8V20M50 80V92M8 50H20M80 50H92M20 20L28 28M72 72L80 80M80 20L72 28M28 72L20 80"/></g><circle cx="50" cy="50" r="22" fill="#ffe08a"/>' },
+    moon: { label: 'księżyc', svg: '<path d="M64 14A38 38 0 1 0 86 62A32 32 0 0 1 64 14Z" fill="#e9dfa8"/><circle cx="26" cy="22" r="3" fill="#e9dfa8"/><circle cx="84" cy="30" r="2.5" fill="#e9dfa8"/>' },
+    apple: { label: 'jabłko', svg: '<path d="M50 30Q70 18 82 38Q90 64 66 84Q58 90 50 86Q42 90 34 84Q10 64 18 38Q30 18 50 30Z" fill="#f4a09c"/>' +
+      '<path d="M50 30Q50 18 58 10" stroke="#8a6a4a" stroke-width="4" stroke-linecap="round" fill="none"/><ellipse cx="62" cy="18" rx="9" ry="5" fill="#9fd4a8"/>' },
+    balloon: { label: 'balonik', svg: '<ellipse cx="50" cy="40" rx="26" ry="30" fill="#a9c8f2"/><path d="M44 70L56 70L50 78Z" fill="#a9c8f2"/>' +
+      '<path d="M50 78Q42 86 50 92" stroke="#8d86a8" stroke-width="3" stroke-linecap="round" fill="none"/><ellipse cx="40" cy="28" rx="6" ry="10" fill="#fff" fill-opacity=".45"/>' },
+    boat: { label: 'łódka', svg: '<path d="M50 14V62" stroke="#8a6a4a" stroke-width="4" stroke-linecap="round"/><path d="M54 18L84 56H54Z" fill="#f7a8c9"/><path d="M46 28L22 56H46Z" fill="#ffe9a8"/>' +
+      '<path d="M12 64H88Q82 84 64 84H36Q18 84 12 64Z" fill="#a8dcd0"/>' },
     house: { label: 'domek', svg: '<rect x="20" y="44" width="60" height="44" rx="5" fill="#f6dcc8"/><path d="M12 48L50 14L88 48Z" fill="#c9a0c0" stroke="#c9a0c0" stroke-width="5" stroke-linejoin="round"/>' +
       '<rect x="42" y="62" width="16" height="26" rx="8" fill="#b99a86"/>' }
   };
-  var SETS = [['cat', 'fish', 'flower'], ['bird', 'pear', 'cloud'], ['heart', 'star', 'house']];
+  var POOL = Object.keys(P); // 14 unique pictures
+  var START_PAIRS = 3, MAX_PAIRS = 10;
   var BACK = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="3" y="3" width="94" height="94" rx="18" fill="#c9b8f2"/>' +
     '<rect x="10" y="10" width="80" height="80" rx="12" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>' +
     '<g fill="#fff" fill-opacity=".7"><circle cx="50" cy="50" r="9"/><circle cx="30" cy="30" r="4"/><circle cx="70" cy="30" r="4"/><circle cx="30" cy="70" r="4"/><circle cx="70" cy="70" r="4"/></g></svg>';
@@ -32,11 +43,6 @@
   }
   function smooth(t) { t = t < 0 ? 0 : t > 1 ? 1 : t; return t * t * (3 - 2 * t); }
   function reduced() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
-  function shuffled(a) {
-    a = a.slice();
-    for (var j = a.length - 1; j > 0; j--) { var k = Math.floor(Math.random() * (j + 1)); var t = a[j]; a[j] = a[k]; a[k] = t; }
-    return a;
-  }
 
   function mount(container) {
     container.style.display = 'block';
@@ -46,32 +52,29 @@
     container.appendChild(board);
     var field = board.querySelector('.pm-field');
 
-    var setIdx = 0, deck = [], cards = [], sel = [];
+    var round = 0, deck = [], cards = [], sel = [];
     var phase = 'play', phaseT = 0, backT = 0, glow = 0, shuf = null, raf = 0, last = 0;
     var C = 120, pos = [];
 
-    for (var i = 0; i < 6; i++) {
-      (function (i) {
+    function deal() {
+      var n = Math.min(MAX_PAIRS, START_PAIRS + round);
+      var keys = Rand.pick(POOL, n), d = [];
+      keys.forEach(function (k) { d.push(k, k); });
+      deck = Rand.shuffle(d);
+      cards.forEach(function (c) { if (c.el.parentNode) { c.el.parentNode.removeChild(c.el); } });
+      cards = deck.map(function (key, i) {
         var el = document.createElement('button');
         el.type = 'button'; el.className = 'pm-card';
+        el.innerHTML = '<span class="pm-back">' + BACK + '</span><span class="pm-front">' + front(key) + '</span>';
+        el.setAttribute('aria-label', 'Karta (zakryta)');
         el.setAttribute('aria-pressed', 'false');
-        el.innerHTML = '<span class="pm-back">' + BACK + '</span><span class="pm-front"></span>';
         field.appendChild(el);
-        var c = { i: i, el: el, backEl: el.firstChild, frontEl: el.lastChild, f: 0, t: 0, matched: false, g: 0, key: '', op: 1 };
-        cards.push(c);
+        var c = { i: i, el: el, backEl: el.firstChild, frontEl: el.lastChild, f: 0, t: 0, matched: false, g: 0, key: key, op: 1 };
         el.addEventListener('click', function () { touch(c); });
-      })(i);
-    }
-    function deal() {
-      var keys = SETS[setIdx];
-      deck = shuffled([keys[0], keys[0], keys[1], keys[1], keys[2], keys[2]]);
-      cards.forEach(function (c, i) {
-        c.key = deck[i]; c.f = 0; c.t = 0; c.matched = false; c.g = 0;
-        c.frontEl.innerHTML = front(c.key);
-        c.el.setAttribute('aria-label', 'Karta (zakryta)');
-        c.el.setAttribute('aria-pressed', 'false');
+        return c;
       });
       sel = [];
+      layout();
     }
 
     function touch(c) {
@@ -139,7 +142,7 @@
       } else if (phase === 'shuffle') {
         busy = true; shuf.t += dt;
         var u = shuf.t / SHUFFLE_S;
-        if (u >= 0.5 && !shuf.done) { shuf.done = true; setIdx = (setIdx + 1) % SETS.length; deal(); }
+        if (u >= 0.5 && !shuf.done) { shuf.done = true; round++; deal(); }
         var op = u >= 1 ? 1 : u < 0.5 ? 1 - u * 1.6 : 0.2 + (u - 0.5) * 1.6;
         cards.forEach(function (c) { c.op = op; });
         if (u >= 1) { phase = 'play'; shuf = null; }
@@ -157,12 +160,18 @@
 
     function layout() {
       var r = field.getBoundingClientRect(), fw = r.width, fh = r.height;
-      var portrait = fh >= fw, cols = portrait ? 2 : 3, rows = portrait ? 3 : 2;
-      C = Math.max(72, Math.min(170, fw / cols * 0.92, fh / rows * 0.92));
+      var n = cards.length, cols = 1, rows = n, best = 0;
+      for (var k = 1; k <= n; k++) {
+        var rr = Math.ceil(n / k), sz = Math.min(fw / k, fh / rr);
+        if (sz > best + 0.5) { best = sz; cols = k; rows = rr; }
+      }
+      C = Math.max(56, Math.min(170, best * 0.92));
       field.style.setProperty('--pm-c', C + 'px');
       var gx = (fw - cols * C) / (cols + 1), gy = (fh - rows * C) / (rows + 1);
       pos = cards.map(function (c, i) {
-        return [gx + (i % cols) * (C + gx) + C / 2, gy + Math.floor(i / cols) * (C + gy) + C / 2];
+        var row = Math.floor(i / cols), inRow = row === rows - 1 ? n - row * cols : cols;
+        var off = (cols - inRow) * (C + gx) / 2;
+        return [off + gx + (i % cols) * (C + gx) + C / 2, gy + row * (C + gy) + C / 2];
       });
       cards.forEach(paintCard);
     }
@@ -172,7 +181,6 @@
     window.addEventListener('orientationchange', onResize);
     document.addEventListener('visibilitychange', onVis);
     deal();
-    layout();
 
     return function cleanup() {
       if (raf) { cancelAnimationFrame(raf); raf = 0; }

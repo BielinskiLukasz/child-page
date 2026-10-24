@@ -3,15 +3,26 @@
 // spring so a new touch redirects it smoothly); drag the ball and it settles on the nearest spot. When it arrives the
 // bunny does a small gentle reaction (looks in, hops, peeks under, waves) for ~2 s. No text, nothing happens by
 // itself. One capped-dt rAF loop (works under prefers-reduced-motion, where the ball cross-fades instead of gliding;
-// pauses when hidden, stops when idle); fixed DOM; nothing is stored.
+// pauses when hidden, stops when idle); fixed DOM; nothing is stored. Each launch picks one of six predefined layouts
+// (box position, which side "next to the box" is on, wall/table colours, and where the ball starts), never the same as
+// the previous launch (Rand.pickOne).
 (function () {
   var W = 400, H = 300;                     // scene units
-  var SPOTS = [
-    { id: 'in', x: 200, y: 128, label: 'w pudełku' },
-    { id: 'on', x: 200, y: 56, label: 'na pudełku' },
-    { id: 'under', x: 200, y: 240, label: 'pod stołem' },
-    { id: 'next', x: 320, y: 156, label: 'obok pudełka' }
+  var LAYOUTS = [   // cx: box centre x, side: +1/-1 = "next to the box" spot on the right/left, start: spot the ball starts on
+    { cx: 200, side: 1, start: 'in', wall: '#e9f3fb', top: '#e8c9a8', leg: '#d9b8a0', floor: '#cfe8c4' },
+    { cx: 200, side: -1, start: 'on', wall: '#fbf1e1', top: '#e3c2d6', leg: '#cfa9be', floor: '#d8e8c0' },
+    { cx: 150, side: 1, start: 'next', wall: '#eaf6ee', top: '#d9c3a1', leg: '#c2a888', floor: '#cfe0f0' },
+    { cx: 250, side: -1, start: 'under', wall: '#f3ecfa', top: '#c8dcea', leg: '#aac4d8', floor: '#e6dcc4' },
+    { cx: 175, side: 1, start: 'under', wall: '#fdf0ee', top: '#d6e6b8', leg: '#b9cf94', floor: '#f0dccb' },
+    { cx: 225, side: -1, start: 'in', wall: '#e8f1f8', top: '#f0d6b0', leg: '#dcb98a', floor: '#d3ecd0' }
   ];
+  var LABELS = { in: 'w pudełku', on: 'na pudełku', under: 'pod stołem', next: 'obok pudełka' };
+  function spotsFor(L) {
+    return [
+      { id: 'in', x: L.cx, y: 128 }, { id: 'on', x: L.cx, y: 56 },
+      { id: 'under', x: L.cx, y: 240 }, { id: 'next', x: L.cx + L.side * 120, y: 156 }
+    ];
+  }
   var OMEGA = 3.4, REACT_S = 2, FADE_S = 0.15;
   var STROKE = '#8f7fd1';
   var SYMBOLS = {
@@ -21,12 +32,15 @@
     next: '<rect x="7" y="16" width="13" height="13" rx="3"/><circle cx="31" cy="23" r="4" fill="' + STROKE + '"/>'
   };
 
-  var SCENE = '<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">' +
-    '<rect width="400" height="300" fill="#e9f3fb"/><rect y="280" width="400" height="20" fill="#cfe8c4"/>' +
-    '<rect x="75" y="200" width="12" height="80" rx="4" fill="#d9b8a0"/><rect x="323" y="200" width="12" height="80" rx="4" fill="#d9b8a0"/>' +
-    '<rect x="70" y="190" width="280" height="12" rx="6" fill="#e8c9a8"/>' +
-    '<rect x="125" y="90" width="150" height="100" rx="8" fill="#c9a98a"/><rect x="133" y="96" width="134" height="76" rx="6" fill="#a98b6c"/>' +
-    '<rect x="125" y="165" width="150" height="25" rx="8" fill="#e8c9a8"/><rect x="125" y="84" width="150" height="10" rx="5" fill="#d9b185"/></svg>';
+  function sceneFor(L) {
+    var bx = L.cx - 75;
+    return '<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">' +
+      '<rect width="400" height="300" fill="' + L.wall + '"/><rect y="280" width="400" height="20" fill="' + L.floor + '"/>' +
+      '<rect x="55" y="200" width="12" height="80" rx="4" fill="' + L.leg + '"/><rect x="333" y="200" width="12" height="80" rx="4" fill="' + L.leg + '"/>' +
+      '<rect x="40" y="190" width="320" height="12" rx="6" fill="' + L.top + '"/>' +
+      '<rect x="' + bx + '" y="90" width="150" height="100" rx="8" fill="#c9a98a"/><rect x="' + (bx + 8) + '" y="96" width="134" height="76" rx="6" fill="#a98b6c"/>' +
+      '<rect x="' + bx + '" y="165" width="150" height="25" rx="8" fill="#e8c9a8"/><rect x="' + bx + '" y="84" width="150" height="10" rx="5" fill="#d9b185"/></svg>';
+  }
   var BALL = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="46" fill="#f7a8c9"/>' +
     '<path d="M8 44Q50 64 92 44" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="7"/>' +
     '<path d="M24 24a34 34 0 0 1 22-12" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="6" stroke-linecap="round"/></svg>';
@@ -42,9 +56,11 @@
 
   function mount(container) {
     container.style.display = 'block';
+    var L = window.Rand ? window.Rand.pickOne(LAYOUTS, 'pilka') : LAYOUTS[0];
+    var SPOTS = spotsFor(L);
     var root = document.createElement('div');
     root.className = 'pk';
-    root.innerHTML = '<div class="pk-field"><div class="pk-board">' + SCENE + '</div></div>';
+    root.innerHTML = '<div class="pk-field"><div class="pk-board">' + sceneFor(L) + '</div></div>';
     container.appendChild(root);
     var field = root.querySelector('.pk-field'), board = root.querySelector('.pk-board');
 
@@ -52,7 +68,7 @@
     var spotEls = SPOTS.map(function (sp, i) {
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'pk-spot';
-      b.setAttribute('aria-label', 'Miejsce: ' + sp.label);
+      b.setAttribute('aria-label', 'Miejsce: ' + LABELS[sp.id]);
       b.style.cssText = pct(sp.x, sp.y);
       b.innerHTML = '<svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><g fill="none" stroke="' + STROKE + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' +
         '<circle cx="20" cy="20" r="18" stroke-dasharray="3 5" opacity=".8"/>' + SYMBOLS[sp.id] + '</g></svg>';
@@ -62,7 +78,7 @@
     });
     var bunny = document.createElement('div');
     bunny.className = 'pk-bunny';
-    bunny.style.cssText = pct(34, 240);
+    bunny.style.cssText = pct(L.cx >= 200 ? 34 : 366, 240);
     bunny.innerHTML = BUNNY;
     board.appendChild(bunny);
     var bunnyAll = bunny.querySelector('.pk-all'), bunnyHead = bunny.querySelector('.pk-head'), bunnyArm = bunny.querySelector('.pk-arm');
@@ -73,7 +89,9 @@
     ballEl.innerHTML = BALL;
     board.appendChild(ballEl);
 
-    var spot = 0, x = SPOTS[0].x, y = SPOTS[0].y, vx = 0, vy = 0, tx = x, ty = y, moving = false;
+    var spot = 0;
+    SPOTS.forEach(function (sp, i) { if (sp.id === L.start) { spot = i; } });
+    var x = SPOTS[spot].x, y = SPOTS[spot].y, vx = 0, vy = 0, tx = x, ty = y, moving = false;
     var dragPid = null, react = null, fade = null, op = 1, raf = 0, last = 0;
 
     function paintBall() {

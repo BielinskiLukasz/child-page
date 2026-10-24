@@ -74,5 +74,8 @@ A gear icon on the main menu opens a parent gate (a simple sum) and then Setting
 ## Menu activities
 In Settings (behind the same gate) a parent can enable or disable each activity and reorder them with up/down buttons; "Przywróć domyślne" restores all of them in the original order. At least one activity always stays enabled, and disabled activities cannot be opened by any route (a stored or typed `#hash` shows the menu).
 
+## Randomisation helper
+`js/random.js` (loaded before the activities) exposes `window.Rand` for activity variety, kept in memory only (nothing stored, nothing scored): `Rand.shuffle(list)` returns a new shuffled copy; `Rand.pick(list, n)` returns `n` unique items (the whole pool shuffled if `n` exceeds it); `Rand.pickOne(list, key)` returns one item that differs from the previous result for the same `key` in this page session when the pool has 2+ entries. An empty pool gives `[]` / `undefined`.
+
 ## License
 See `LICENSE`.

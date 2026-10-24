@@ -14,18 +14,35 @@
   function sm(u) { return u * u * (3 - 2 * u); }
   function mod(a, b) { return a - Math.floor(a / b) * b; }
 
-  function tractorSvg() {
+  // Driver animals (drawn locally, 6): head fragment centred at (38,40) in the cab window; arm = wave colour.
+  function ears(c, dx, dy, r) {
+    return '<circle cx="' + (38 - dx) + '" cy="' + dy + '" r="' + r + '" fill="' + c + '"/><circle cx="' + (38 + dx) + '" cy="' + dy + '" r="' + r + '" fill="' + c + '"/>';
+  }
+  function eyes() { return '<circle cx="34" cy="38" r="1.7" fill="#5b5675"/><circle cx="42" cy="38" r="1.7" fill="#5b5675"/>'; }
+  var DRIVERS = [
+    { arm: '#c99b72', svg: ears('#c99b72', 7, 33, 4) + '<circle cx="38" cy="40" r="10" fill="#c99b72"/>' + eyes() +
+      '<ellipse cx="38" cy="44" rx="4" ry="3" fill="#f3dcc4"/><circle cx="38" cy="43" r="1.4" fill="#6b6585"/>' },
+    { arm: '#f2e6ef', svg: '<ellipse cx="32" cy="29" rx="3" ry="8" fill="#f2e6ef"/><ellipse cx="44" cy="29" rx="3" ry="8" fill="#f2e6ef"/>' +
+      '<circle cx="38" cy="40" r="10" fill="#f2e6ef"/>' + eyes() + '<circle cx="38" cy="43" r="1.6" fill="#f3a8b8"/>' },
+    { arm: '#f0b27a', svg: '<path d="M28 36l1-10 7 6zM48 36l-1-10-7 6z" fill="#f0b27a"/><circle cx="38" cy="40" r="10" fill="#f0b27a"/>' + eyes() +
+      '<path d="M36 43l2 2 2-2z" fill="#e58aa0"/><path d="M26 42h6M44 42h6" stroke="#8a7a96" stroke-width="1"/>' },
+    { arm: '#f6b9c8', svg: ears('#f6b9c8', 8, 32, 4) + '<circle cx="38" cy="40" r="10" fill="#f6b9c8"/>' + eyes() +
+      '<ellipse cx="38" cy="44" rx="5" ry="3.5" fill="#f08fa8"/><circle cx="36.3" cy="44" r="1" fill="#8a4a60"/><circle cx="39.7" cy="44" r="1" fill="#8a4a60"/>' },
+    { arm: '#b99572', svg: '<ellipse cx="29" cy="36" rx="3.5" ry="7" fill="#8f6f50" transform="rotate(15 29 36)"/><ellipse cx="47" cy="36" rx="3.5" ry="7" fill="#8f6f50" transform="rotate(-15 47 36)"/>' +
+      '<circle cx="38" cy="40" r="10" fill="#b99572"/>' + eyes() + '<ellipse cx="38" cy="44" rx="4" ry="3" fill="#ecd9c3"/><circle cx="38" cy="43" r="1.5" fill="#4d4764"/>' },
+    { arm: '#cfc9d6', svg: ears('#cfc9d6', 8, 32, 5.5) + ears('#f3c6d2', 8, 32, 3) + '<circle cx="38" cy="40" r="10" fill="#cfc9d6"/>' + eyes() +
+      '<circle cx="38" cy="44" r="1.6" fill="#e58aa0"/>' }
+  ];
+
+  function tractorSvg(d) {
     return '<svg viewBox="0 0 120 84" aria-hidden="true" focusable="false">' +
       '<rect x="60" y="32" width="54" height="26" rx="9" fill="#9ed8c6"/>' +
       '<rect x="62" y="48" width="50" height="5" fill="#fff" opacity=".45"/>' +
       '<rect x="102" y="20" width="6" height="14" rx="3" fill="#7a748f"/>' +
       '<circle cx="112" cy="44" r="4" fill="#ffe9a8"/>' +
       '<rect x="14" y="16" width="48" height="44" rx="10" fill="#8cccb8"/>' +
-      '<rect x="20" y="22" width="36" height="30" rx="8" fill="#fdfbff"/>' +
-      '<circle cx="38" cy="40" r="10" fill="#c99b72"/><circle cx="31" cy="33" r="4" fill="#c99b72"/><circle cx="45" cy="33" r="4" fill="#c99b72"/>' +
-      '<circle cx="34" cy="38" r="1.7" fill="#5b5675"/><circle cx="42" cy="38" r="1.7" fill="#5b5675"/>' +
-      '<ellipse cx="38" cy="44" rx="4" ry="3" fill="#f3dcc4"/><circle cx="38" cy="43" r="1.4" fill="#6b6585"/>' +
-      '<g class="tk-wave" transform="rotate(0 50 50)"><ellipse cx="50" cy="46" rx="3.5" ry="6" fill="#c99b72"/></g>' +
+      '<rect x="20" y="22" width="36" height="30" rx="8" fill="#fdfbff"/>' + d.svg +
+      '<g class="tk-wave" transform="rotate(0 50 50)"><ellipse cx="50" cy="46" rx="3.5" ry="6" fill="' + d.arm + '"/></g>' +
       '<g class="tk-wheel" data-cx="32" data-cy="64"><circle cx="32" cy="64" r="19" fill="#6b6585"/><circle cx="32" cy="64" r="10" fill="#cfc9e6"/><path d="M32 52v24M20 64h24" stroke="#6b6585" stroke-width="3"/></g>' +
       '<g class="tk-wheel" data-cx="94" data-cy="70"><circle cx="94" cy="70" r="13" fill="#6b6585"/><circle cx="94" cy="70" r="7" fill="#cfc9e6"/><path d="M94 63v14M87 70h14" stroke="#6b6585" stroke-width="2.5"/></g>' +
       '</svg>';
@@ -42,10 +59,18 @@
 
   var KINDS = [
     '<circle cx="20" cy="14" r="7" fill="#f7a8c9"/><circle cx="20" cy="14" r="3" fill="#ffe08a"/>',
-    '<circle cx="20" cy="14" r="7" fill="#ffd98a"/><circle cx="20" cy="14" r="3" fill="#f3b0a0"/>',
-    '<path d="M13 12q7-9 14 0q-2 12-7 14q-5-2-7-14z" fill="#f3b27a"/><path d="M20 10l-4-6M20 10l4-6M20 10v-8" stroke="#8fc98a" stroke-width="2.5" stroke-linecap="round"/>'
+    '<circle cx="20" cy="14" r="7" fill="#ffd98a"/><circle cx="20" cy="14" r="3" fill="#f3b0a0"/>'
   ];
+  var CAR_TOP = 30; // y of the carrot's stem anchor: the root hangs from here and grows downward
   function plantSvg(k) {
+    if (k % 3 === 2) {
+      // carrot: green stem + leaves stay fixed; the orange root (.tk-car) scales down from the anchor line
+      return '<svg viewBox="0 0 40 60" aria-hidden="true" focusable="false">' +
+        '<g class="tk-hd"><path d="M20 ' + CAR_TOP + 'V20" stroke="#7fbf7a" stroke-width="3.5" stroke-linecap="round"/>' +
+        '<path d="M20 22l-5-9M20 22l5-9M20 22v-12" stroke="#8fc98a" stroke-width="2.8" stroke-linecap="round"/></g>' +
+        '<g class="tk-car"><path d="M12 ' + CAR_TOP + 'q8-4 16 0q-2 16-8 28q-6-12-8-28z" fill="#f3a35c"/>' +
+        '<path d="M15 38h4M21 44h4" stroke="#e08a40" stroke-width="1.6" stroke-linecap="round"/></g></svg>';
+    }
     return '<svg viewBox="0 0 40 60" aria-hidden="true" focusable="false">' +
       '<path d="M20 58V24" stroke="#7fbf7a" stroke-width="3.5" stroke-linecap="round"/>' +
       '<ellipse cx="13" cy="44" rx="7" ry="3.5" fill="#8fd08a" transform="rotate(-25 13 44)"/>' +
@@ -67,7 +92,7 @@
         html += '<div class="tk-pl" aria-hidden="true"><div class="tk-pi">' + plantSvg(k + r) + '</div></div>';
       }
     }
-    html += '</div><div class="tk-tr" role="button" tabindex="0" aria-label="Traktor – ruszaj lub zatrzymaj">' + tractorSvg() +
+    html += '</div><div class="tk-tr" role="button" tabindex="0" aria-label="Traktor – ruszaj lub zatrzymaj">' + tractorSvg(Rand.pickOne(DRIVERS, 'traktor')) +
       '<button class="tk-dr" type="button" aria-label="Zwierzak za kierownicą – pomacha"></button></div>';
     scene.innerHTML = html;
     container.appendChild(scene);
@@ -80,7 +105,7 @@
     var furrows = [].slice.call(scene.querySelectorAll('.tk-furrows i'));
     var layer = scene.querySelector('.tk-plants');
     var plants = [].slice.call(scene.querySelectorAll('.tk-pl')).map(function (n, i) {
-      return { n: n, pi: n.firstChild, hd: n.querySelector('.tk-hd'), row: Math.floor(i / SLOTS), k: i % SLOTS, age: -1, wig: -1 };
+      return { n: n, pi: n.firstChild, hd: n.querySelector('.tk-hd'), car: n.querySelector('.tk-car'), row: Math.floor(i / SLOTS), k: i % SLOTS, age: -1, wig: -1 };
     });
 
     var W = 0, H = 0, tw = 0, th = 0, rh = 0, ps = 0, V = 1, Ltot = 1;
@@ -221,10 +246,16 @@
 
     function paintPlant(p) {
       var g = sm(Math.min(1, p.age / GROW_S));
-      var sc = 0.3 + 0.7 * g;
+      var sc = p.car ? 1 : 0.3 + 0.7 * g;
       var rot = 0;
       if (p.wig >= 0) { var k = p.wig / WIG_S; rot = Math.sin(k * Math.PI * 2) * 10 * (1 - k); }
       p.pi.style.transform = 'scale(' + sc.toFixed(3) + ') rotate(' + rot.toFixed(2) + 'deg)';
+      if (p.car) {
+        // stem anchor stays put; the root extends downward from it (set from JS, not a keyframe)
+        p.hd.setAttribute('opacity', Math.max(0, Math.min(1, g / 0.2)).toFixed(3));
+        p.car.setAttribute('transform', 'translate(0 ' + CAR_TOP + ') scale(1 ' + Math.max(0.02, g).toFixed(3) + ') translate(0 -' + CAR_TOP + ')');
+        return;
+      }
       p.hd.setAttribute('opacity', Math.max(0, Math.min(1, (g - 0.25) / 0.6)).toFixed(3));
     }
 

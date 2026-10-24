@@ -2,7 +2,22 @@
 // Everything lives on one canvas, so no DOM nodes are created per particle.
 (function () {
   var MAX_FOOD = 10, MAX_BUBBLES = 30, FOOD_FALL = 28, FOOD_REST_MS = 6000, FOOD_MAX_MS = 25000;
-  var COLORS = ['#ffb7a5', '#ffd98a', '#f7a8c9'];
+  var COLORS = ['#ffb7a5', '#ffd98a', '#f7a8c9', '#a8d8f0', '#b9e4b0', '#cbb8f0', '#ffc78f', '#f2f0a0', '#8fd9d0'];
+  var SHAPES = ['oval', 'round', 'slim', 'diamond', 'flat']; // body outlines, drawn in draw()
+  var MIN_FISH = 2, MAX_FISH = 8;
+
+  // 2..8 fish, each with a shape+colour combination that no other fish on screen shares.
+  function makeFish(W, H) {
+    var n = MIN_FISH + Math.floor(Math.random() * (MAX_FISH - MIN_FISH + 1));
+    var combos = [];
+    SHAPES.forEach(function (sh) { COLORS.forEach(function (c) { combos.push({ shape: sh, color: c }); }); });
+    return window.Rand.pick(combos, n).map(function (c, i) {
+      var left = Math.random() < 0.5;
+      return { x: W * (0.1 + 0.8 * Math.random()), y: H * (0.15 + 0.55 * Math.random()), a: left ? Math.PI : 0,
+        wander: 0, wanderT: i * 0.3, size: 26 + Math.floor(Math.random() * 3) * 4, color: c.color, shape: c.shape,
+        nudge: 0, nudgeT: 0, target: null };
+    });
+  }
 
   function mount(container) {
     var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -25,10 +40,7 @@
     }
     resize();
 
-    for (var i = 0; i < 3; i++) {
-      fish.push({ x: W * (0.2 + 0.3 * i), y: H * (0.25 + 0.2 * i), a: i % 2 ? Math.PI : 0,
-        wander: 0, wanderT: 0, size: 26 + i * 4, color: COLORS[i], nudge: 0, nudgeT: 0, target: null });
-    }
+    fish = makeFish(W, H);
 
     function wrap(a) { while (a > Math.PI) { a -= 2 * Math.PI; } while (a < -Math.PI) { a += 2 * Math.PI; } return a; }
     function clamp(v, lo, hi) { return Math.min(Math.max(v, lo), hi); }
@@ -138,7 +150,13 @@
         ctx.rotate(left ? Math.PI - f.a : f.a);
         var s = f.size, wag = reduced ? 0 : Math.sin(time * 3 + f.size) * s * 0.12;
         ctx.fillStyle = f.color;
-        ctx.beginPath(); ctx.ellipse(0, 0, s, s * 0.62, 0, 0, 7); ctx.fill();
+        ctx.beginPath();
+        if (f.shape === 'round') { ctx.ellipse(0, 0, s * 0.85, s * 0.85, 0, 0, 7); }
+        else if (f.shape === 'slim') { ctx.ellipse(0, 0, s * 1.05, s * 0.38, 0, 0, 7); }
+        else if (f.shape === 'flat') { ctx.ellipse(0, 0, s * 0.8, s * 0.8, 0, 0, 7); ctx.moveTo(-s * 0.3, -s * 0.6); ctx.lineTo(0, -s * 1.1); ctx.lineTo(s * 0.3, -s * 0.6); ctx.moveTo(-s * 0.3, s * 0.6); ctx.lineTo(0, s * 1.1); ctx.lineTo(s * 0.3, s * 0.6); }
+        else if (f.shape === 'diamond') { ctx.moveTo(s, 0); ctx.lineTo(0, -s * 0.7); ctx.lineTo(-s * 0.85, 0); ctx.lineTo(0, s * 0.7); ctx.closePath(); }
+        else { ctx.ellipse(0, 0, s, s * 0.62, 0, 0, 7); }
+        ctx.fill();
         ctx.beginPath(); ctx.moveTo(-s * 0.8, 0); ctx.lineTo(-s * 1.5, -s * 0.5 + wag); ctx.lineTo(-s * 1.5, s * 0.5 + wag); ctx.closePath(); ctx.fill();
         ctx.fillStyle = '#5b5675'; ctx.beginPath(); ctx.arc(s * 0.5, -s * 0.12, s * 0.09, 0, 7); ctx.fill();
         ctx.restore();

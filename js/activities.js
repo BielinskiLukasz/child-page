@@ -86,6 +86,8 @@
       icon: svg('<rect x="2" y="38" width="60" height="24" fill="#a8d8f0"/><path d="M2 44q8-6 15 0t15 0t15 0t15 0" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><path d="M30 8v32" stroke="#a8946f" stroke-width="3"/><path d="M33 10l15 26H33z" fill="#fdfbff"/><path d="M27 18L14 36h13z" fill="#ffe9a8"/><path d="M10 38h44q-3 12-14 12H24q-11 0-14-12z" fill="#f2a98f"/>', '#dff1fb') },
     { id: 'podwodna', name: 'Łódź Podwodna',
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#a8d8f0"/><path d="M2 52h60v8q0 2-2 2H4q-2 0-2-2z" fill="#f6e3b4"/><path d="M50 52q-6-8 0-16" fill="none" stroke="#8cc99a" stroke-width="4" stroke-linecap="round"/><rect x="28" y="16" width="16" height="10" rx="4" fill="#ffd98a"/><rect x="10" y="22" width="44" height="22" rx="11" fill="#ffe27a"/><circle cx="32" cy="33" r="7" fill="#e3f4fb" stroke="#f4c554" stroke-width="2.5"/><circle cx="32" cy="34" r="3.5" fill="#c99b72"/><circle cx="52" cy="14" r="3" fill="#fff" fill-opacity=".8"/><circle cx="47" cy="22" r="2" fill="#fff" fill-opacity=".8"/>', '#cfeaf7') },
+    { id: 'kolejka', name: 'Kolejka Linowa',
+      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#dff1fb"/><path d="M2 58V50L40 14l22 26v18z" fill="#c9c3e6"/><path d="M40 14l-7 8q3 3 7 0q4 3 7 0z" fill="#fbf9ff"/><path d="M6 36L52 18" stroke="#6f6a8c" stroke-width="2.5" stroke-linecap="round"/><rect x="22" y="31" width="18" height="14" rx="4" fill="#f7a8c9"/><path d="M31 27v4" stroke="#5b5675" stroke-width="2"/><circle cx="27" cy="37" r="3" fill="#fdfbff"/><circle cx="35" cy="37" r="3" fill="#fdfbff"/>', '#dff1fb') },
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

@@ -12,7 +12,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 5. **Ogród Motyli** – a garden of swaying flowers. Touching a flower makes the butterfly fly slowly to it along a smooth curve.
 6. **Malowanie Światłem** – a dark canvas. Touching and dragging paints soft glowing colours that drift and fade away after a few seconds.
 7. **Mały Pociąg** – a little train with animals in its wagons. Touching the train starts or stops it, touching the station stops it there, and touching an animal makes it nod.
-8. **Bańki Mydlane** – touching the screen blows a big soft bubble that floats up; touching a bubble splits it into smaller ones.
+8. **Bańki Mydlane** – touching the screen blows a big soft bubble that floats up; touching a bubble splits it into smaller ones. A different painted background (one of 6) is chosen at random each time the activity is opened.
 9. **Dobranoc** – a house at dusk. Touching a window dims or relights it and touching an animal tucks it in or wakes it; when all lights are off and all animals sleep, stars and a sleeping moon appear.
 10. **Deszczyk i Tęcza** – touching a cloud makes it rain gently and the puddles ripple; each cloud rains on its own, and after a while of rain (faster when several clouds rain together) a soft rainbow appears and fades out again.
 11. **Kolorowe Kształty** – nine soft shapes to drag onto their matching outlines (two 3×3 grids: stacked in portrait, side by side in landscape). There are no wrong answers: a shape dropped elsewhere simply drifts back.

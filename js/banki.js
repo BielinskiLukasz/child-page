@@ -2,6 +2,16 @@
 // Bubbles are pooled DOM divs driven by one rAF loop (JS motion, so it survives prefers-reduced-motion).
 (function () {
   var MAX = 25, MIN_R = 14, BIG_R = [46, 62], FADE_IN = 0.8, FADE_OUT = 1.6, SPLIT_MS = 700, GUARD_PAD = 12;
+  // Drawn background scenes (pure CSS gradients, so they fill any portrait/landscape size without stretching).
+  // All are mid/deep tones so the pale bubbles with their white highlight stay clearly visible on each.
+  var BACKS = [
+    'radial-gradient(ellipse 60% 22% at 50% 100%, #3f9a6a 0 99%, transparent 100%), linear-gradient(#4a9fd8, #8fd0ee)', // sunny hills
+    'radial-gradient(circle at 80% 18%, #ffe9a8 0 7%, rgba(255,233,168,0) 8%), linear-gradient(#3b3f8f, #7a5bb0 60%, #e58fa5)', // dusk
+    'radial-gradient(ellipse 70% 18% at 30% 100%, #d8b36a 0 99%, transparent 100%), linear-gradient(#2a8fa8, #4fc3c9 75%)', // beach sea
+    'radial-gradient(circle at 20% 22%, #fff 0 2%, rgba(255,255,255,0) 2.5%), radial-gradient(circle at 70% 40%, #fff 0 1.5%, rgba(255,255,255,0) 2%), linear-gradient(#1f2a6b, #3b4fa0)', // starry night
+    'radial-gradient(ellipse 80% 20% at 70% 100%, #2f7d4f 0 99%, transparent 100%), linear-gradient(#e0828f, #f2b27a)', // sunrise meadow
+    'radial-gradient(circle at 15% 85%, #3fb58c 0 10%, rgba(63,181,140,0) 11%), linear-gradient(#1e6f8f, #2a9d8f)' // underwater
+  ];
   var TINTS = [[255, 183, 213], [183, 222, 255], [200, 255, 226], [226, 205, 255], [255, 236, 186]];
 
   function mount(container) {
@@ -9,6 +19,7 @@
     scene.className = 'bm';
     scene.setAttribute('role', 'img');
     scene.setAttribute('aria-label', 'Bańki mydlane unoszące się w powietrzu');
+    scene.style.background = window.Rand.pickOne(BACKS, 'banki-bg'); // new scene on every launch, never stored
     container.appendChild(scene);
     var W = 0, H = 0, raf = 0, last = 0, lastTrail = 0, bubbles = [], pool = [], dead = false;
 

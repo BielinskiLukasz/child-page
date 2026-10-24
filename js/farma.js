@@ -35,7 +35,7 @@
   };
   var LABEL = { sheep: 'Owieczka', cow: 'Krowa', hen: 'Kura', cat: 'Kotek', barn: 'Stodoła' };
   var HAND = ['sheep', 'cow', 'hen', 'cat'];
-  var SHARED = ['dog', 'pig', 'rabbit', 'mouse', 'frog']; // drawn as a head + body figure by Animals.head
+  var SHARED = ['dog', 'pig', 'rabbit', 'mouse', 'frog', 'bear', 'fox']; // drawn as a head + body figure by Animals.head
   // left, top, width in % of the 4:3 board (buttons are square); the barn stays put, the five animals fill the slots
   var BARN_POS = [3, 14, 32];
   var SLOTS = [[38, 36, 30], [79, 36, 18], [4, 58, 26], [64, 66, 20], [40, 74, 16]];

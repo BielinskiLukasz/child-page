@@ -256,7 +256,7 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .kr-field { position: absolute; --kr-s: 64px;
   top: calc(var(--safe-t) + 64px); right: calc(var(--safe-r) + 12px);
   bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
-.kr-deco { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+.stage .kr-deco { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
 .stage .kr-bead { position: absolute; left: 0; top: 0; width: var(--kr-s); height: var(--kr-s); min-width: 56px; min-height: 56px;
   padding: 0; border: 0; background: none; cursor: grab; touch-action: none; will-change: transform; z-index: 1; }
 .stage .kr-bead svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
@@ -303,6 +303,7 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .stage .um-item { position: absolute; left: 0; top: 0; width: var(--um-s); height: var(--um-s); min-width: 56px; min-height: 56px; z-index: 10;
   padding: 0; border: 0; background: none; cursor: grab; touch-action: none; will-change: transform; -webkit-tap-highlight-color: transparent; }
 .stage .um-item svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.stage .um-item[data-id='boots'].um-worn svg { transform: scale(1.4); }
 .um-hit:focus-visible, .um-item:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; border-radius: 20px; }
 .um-selected { outline: 4px solid #8f7fd1; outline-offset: 3px; border-radius: 20px; }
 
@@ -490,7 +491,7 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .pm-field { position: absolute; --pm-c: 120px;
   top: calc(var(--safe-t) + 64px); right: calc(var(--safe-r) + 12px);
   bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
-.stage .pm-card { position: absolute; left: 0; top: 0; width: var(--pm-c); height: var(--pm-c); min-width: 72px; min-height: 72px;
+.stage .pm-card { position: absolute; left: 0; top: 0; width: var(--pm-c); height: var(--pm-c); min-width: 56px; min-height: 56px;
   padding: 0; border: 0; background: none; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; will-change: transform; }
 .pm-card > span { position: absolute; inset: 0; display: block; pointer-events: none; }
 .stage .pm-card svg { width: 100%; height: 100%; display: block; overflow: visible; }
@@ -518,7 +519,7 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
 .rk-board { position: relative; outline: none; border-radius: 24px; background: rgba(255, 255, 255, .6); touch-action: none; }
 .rk-board:focus-visible { box-shadow: 0 0 0 4px #8f7fd1; }
-.rk-guide, .rk-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.stage .rk-guide, .stage .rk-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 .rk-pen { position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; box-sizing: border-box;
   border: 3px solid #8f7fd1; background: rgba(255, 233, 168, .55); pointer-events: none; --rk-ang: 0deg; }
 .rk-pen.rk-start::after { content: ''; position: absolute; left: 50%; top: 50%; width: 0; height: 0; margin: -7px 0 0 -4px;
@@ -530,8 +531,8 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   background: linear-gradient(#cde7fa, #eaf5fc 62%, #f4eefb); }
 .sa-sun { position: absolute; top: 7%; right: 8%; width: clamp(44px, 9vw, 80px); aspect-ratio: 1; border-radius: 50%; background: #fff1bd; box-shadow: 0 0 40px 16px rgba(255, 241, 189, .6); }
 .stage .sa-hills { position: absolute; left: 0; bottom: 0; width: 100%; height: 50%; display: block; }
-.sa-ground { position: absolute; left: 0; right: 0; top: calc(var(--ry) - 14px); bottom: 0; background: linear-gradient(#a8d9a0, #bfe6b4); }
-.sa-runway { position: absolute; left: 0; right: 0; top: calc(var(--ry) - 2px); height: 30px; background: #b3adc9; border-radius: 6px; }
+.sa-ground { position: absolute; left: 0; right: 0; top: calc(var(--ry) - 14px); bottom: 0; background: linear-gradient(var(--g1, #a8d9a0), var(--g2, #bfe6b4)); }
+.sa-runway { position: absolute; left: 0; right: 0; top: calc(var(--ry) - 2px); height: 30px; background: var(--rw, #b3adc9); border-radius: 6px; }
 .sa-dash { position: absolute; left: 4%; right: 4%; top: 13px; height: 4px; border-radius: 2px;
   background: repeating-linear-gradient(90deg, #fdfbff 0 28px, transparent 28px 56px); }
 .sa-cloud { position: absolute; left: 0; top: 0; width: var(--cw); aspect-ratio: 16 / 9; min-width: 96px; min-height: 56px; padding: 0; border: 0; background: none; cursor: pointer; will-change: transform; }
@@ -540,6 +541,18 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .stage .sa-plane svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .sa-pbtn { position: absolute; left: 49%; top: 18%; width: 24%; height: 48%; min-width: 56px; min-height: 56px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; transform: translate(-6%, -6%); }
 .sa-plane:focus-visible, .sa-cloud:focus-visible, .sa-pbtn:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; border-radius: 14px; }
+.sa-apt { position: absolute; right: 4%; bottom: calc(100% - var(--ry) + 2px); width: clamp(70px, 16vw, 130px); height: auto; pointer-events: none; }
+/* weather: decoration only, thin and translucent, below the clouds and the plane */
+.sa-wx { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.sa-drop { position: absolute; width: 3px; height: 18px; border-radius: 2px; background: #7fa3c9; opacity: .5; animation: sa-fall linear infinite; }
+.sa-flake { position: absolute; width: 9px; height: 9px; border-radius: 50%; background: #fff; opacity: .9; animation: sa-fall linear infinite; }
+@keyframes sa-fall { from { transform: translateY(-12vh); } to { transform: translateY(112vh); } }
+.sa-w-cloudy { background: linear-gradient(#c3cfdd, #dfe5ee 62%, #ece8f3); }
+.sa-w-rain { background: linear-gradient(#b3c2d6, #d0d9e6 62%, #e3e4f0); }
+.sa-w-snow { background: linear-gradient(#d4e1f1, #e9f0f9 62%, #f1eef8); }
+.sa-w-cloudy .sa-sun, .sa-w-rain .sa-sun, .sa-w-snow .sa-sun { opacity: .3; }
+.sa-w-cloudy .sa-cloud svg g { fill: #f3f5fa; }
+.sa-w-rain .sa-cloud svg g { fill: #e4e8f1; }
 .sa-puffs { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
 .sa-puff { position: absolute; left: 0; top: 0; border-radius: 50%; background: #fff; opacity: 0; will-change: transform, opacity; }
 .tk { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
@@ -613,3 +626,27 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .ld-ring { position: absolute; left: 0; top: 0; width: 80px; height: 28px; border-radius: 50%; border: 3px solid rgba(255, 255, 255, .9);
   opacity: 0; pointer-events: none; z-index: 3; will-change: transform, opacity; }
 .ld-hull:focus-visible, .ld-an:focus-visible, .ld-jetty:focus-visible, .ld-dk:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }
+
+/* Łódź Podwodna (pd-) */
+.pd { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#d3ecf8, #b5ddf0 55%, #a3cfe8); }
+.pd-sand { position: absolute; left: 0; right: 0; bottom: 0; height: var(--sh); padding: 0; border: 0; cursor: pointer; z-index: 1;
+  border-radius: 40px 40px 0 0 / 20px 20px 0 0;
+  background: radial-gradient(circle at 18% 55%, #ead39b 0 5px, transparent 6px), radial-gradient(circle at 62% 70%, #ead39b 0 4px, transparent 5px),
+    radial-gradient(circle at 84% 45%, #ead39b 0 6px, transparent 7px), #f6e3b4; }
+.pd-weed { position: absolute; z-index: 2; pointer-events: none; transform-origin: 50% 100%; animation: pd-sway 6s ease-in-out infinite; }
+.pd-wd1 { animation-delay: -2s; } .pd-wd2 { animation-delay: -4s; }
+.stage .pd-weed svg { width: 100%; height: 100%; display: block; overflow: visible; }
+@keyframes pd-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.pd-sub { position: absolute; left: 0; top: 0; z-index: 3; will-change: transform; pointer-events: none; }
+.stage .pd-sub > svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.pd-hull { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; }
+.pd-win { position: absolute; padding: 0; border: 4px solid #f4c554; border-radius: 50%; background: #e3f4fb; cursor: pointer; overflow: hidden; pointer-events: auto; }
+.stage .pd-win svg { width: 100%; height: 100%; display: block; }
+.pd-fish { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; cursor: pointer; z-index: 4; will-change: transform; }
+.stage .pd-fish svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.pd-bub { position: absolute; left: 0; top: 0; width: 56px; height: 56px; padding: 0; border: 0; background: none; cursor: pointer; z-index: 5;
+  opacity: 0; pointer-events: none; will-change: transform, opacity; }
+.pd-bub.pd-on { pointer-events: auto; }
+.pd-bub span { display: block; width: 24px; height: 24px; margin: 16px; border-radius: 50%; background: rgba(255, 255, 255, .45); border: 2px solid rgba(255, 255, 255, .9); }
+.pd-hull:focus-visible, .pd-win:focus-visible, .pd-sand:focus-visible, .pd-fish:focus-visible, .pd-bub:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }

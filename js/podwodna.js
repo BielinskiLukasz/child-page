@@ -94,7 +94,7 @@
     var W = 0, H = 0, bw = 0, bh = 0, L = 1, sandH = 56, FS = 56, WS = 56, cruiseTop = 0, restTop = 0, spanX = 1;
     var f = 0, v = 0, yk = 0, clock = 0, spawnT = 0.4, bubSeq = 0;
     var ramp = { v0: 0, vt: 0, t: RAMP_S, dur: RAMP_S };
-    var glide = null;          // {f0, v0, f1, pc1, y0, y1, t, T}
+    var glide = null;          // {f0, v0, f1, pc1, fwd, cur, y0, y1, t, T}
     var waveT = -1;
     var first = true;
     var raf = 0, last = 0;
@@ -135,20 +135,20 @@
       fish.forEach(function (o) { o.el.style.width = FS.toFixed(1) + 'px'; o.el.style.height = FS.toFixed(1) + 'px'; });
       if (first) { f = (0.06 * W + bw) / L; first = false; }
       else if (stationary) { f = fOfPc(clamp(pc, 0, 1)); }
-      if (glide) { glide.f1 = fOfPc(glide.pc1); }
+      if (glide) { glide.f1 = fOfPc(glide.pc1) + glide.fwd; }
     }
 
     function subLeft() { return f * L - bw; }
 
-    function startGlide(f1, pc1, y1, T) {
-      glide = { f0: f, v0: v, f1: f1, pc1: pc1, y0: yk, y1: y1, t: 0, T: T };
+    function startGlide(f1, pc1, fwd, y1, T) {
+      glide = { f0: f, v0: v, f1: f1, pc1: pc1, fwd: fwd, cur: f, y0: yk, y1: y1, t: 0, T: T };
     }
 
     function onSub() {
       var resting = (!glide && yk >= 1) || (glide && glide.y1 === 1);
       if (resting) {                                   // lift off the sand
         var pc = clamp((f * L - bw) / Math.max(1, W - bw), 0, 1);
-        startGlide(f, pc, 0, 2.2);
+        startGlide(f, pc, 0, 0, 2.2);
         ramp = { v0: 0, vt: 0, t: RAMP_S, dur: RAMP_S };
         return;
       }
@@ -162,9 +162,10 @@
       var x = e && typeof e.clientX === 'number' && e.detail !== 0 ? e.clientX - scene.getBoundingClientRect().left : W / 2;
       var left = clamp(x - bw / 2, 0, Math.max(0, W - bw));
       var pc = left / Math.max(1, W - bw);
-      var f1 = fOfPc(pc);
+      var fwd = fOfPc(pc) < f ? 1 : 0;                 // never backwards: loop round past the right edge
+      var f1 = fOfPc(pc) + fwd;
       var T = clamp(2.5 + Math.abs(f1 - f) * L / W * 3, 2.5, 6);
-      startGlide(f1, pc, 1, T);
+      startGlide(f1, pc, fwd, 1, T);
       ramp = { v0: 0, vt: 0, t: RAMP_S, dur: RAMP_S };
     }
 
@@ -202,10 +203,11 @@
         g.t += dt;
         var u = Math.min(1, g.t / g.T), u2 = u * u, u3 = u2 * u;
         var fNew = (2 * u3 - 3 * u2 + 1) * g.f0 + (u3 - 2 * u2 + u) * g.T * g.v0 + (3 * u2 - 2 * u3) * g.f1;
-        v = dt > 0 ? (fNew - f) / dt : v;
-        f = fNew;
+        v = dt > 0 ? (fNew - g.cur) / dt : v;
+        g.cur = fNew;
+        f = wrap(fNew);
         yk = g.y0 + (g.y1 - g.y0) * sm(u);
-        if (u >= 1) { f = g.f1; yk = g.y1; v = 0; glide = null; ramp = { v0: 0, vt: 0, t: RAMP_S, dur: RAMP_S }; }
+        if (u >= 1) { f = wrap(g.f1); yk = g.y1; v = 0; glide = null; ramp = { v0: 0, vt: 0, t: RAMP_S, dur: RAMP_S }; }
       } else {
         ramp.t = Math.min(ramp.dur, ramp.t + dt);
         v = ramp.v0 + (ramp.vt - ramp.v0) * sm(ramp.t / ramp.dur);

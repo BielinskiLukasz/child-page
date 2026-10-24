@@ -1,7 +1,7 @@
 // Activity "Duże i Małe": drag big animals to the big house and small animals to the small house. No wrong answers:
 // an animal released anywhere else floats back. One rAF loop (works under prefers-reduced-motion, pauses when the
 // tab is hidden, stops when idle); fixed DOM of 2 houses + 4 animals (a big and a small version of 2 animal types).
-// Rounds cycle through 4 animal types, two per round. Layout is computed in px from the field size.
+// Each launch shuffles the animal pool: round r shows pool[2r], pool[2r+1] (wrapping), and two different house colours are picked. Layout is computed in px from the field size.
 (function () {
   var ATTR = 'viewBox="0 0 100 100" aria-hidden="true" focusable="false"';
   var TYPES = [
@@ -16,9 +16,29 @@
         '<circle cx="50" cy="58" r="34" fill="#ffc9a0"/><circle cx="38" cy="54" r="4" fill="#5b5675"/><circle cx="62" cy="54" r="4" fill="#5b5675"/><path d="M45 64 h10 l-5 6 z" fill="#f7a8c9"/><path d="M12 62 h14 M12 70 h14 M74 62 h14 M74 70 h14" stroke="#b79a82" stroke-width="2" stroke-linecap="round"/>' },
     { id: 'duck', label: 'kaczuszka', glow: '#ffe28a',
       art: '<circle cx="50" cy="52" r="38" fill="#ffe28a"/><path d="M22 62 q-12-4-10-14 q10 2 14 10z" fill="#ffd25e"/><path d="M78 62 q12-4 10-14 q-10 2-14 10z" fill="#ffd25e"/>' +
-        '<ellipse cx="50" cy="62" rx="15" ry="9" fill="#ffb27a"/><circle cx="38" cy="45" r="4" fill="#5b5675"/><circle cx="62" cy="45" r="4" fill="#5b5675"/>' }
+        '<ellipse cx="50" cy="62" rx="15" ry="9" fill="#ffb27a"/><circle cx="38" cy="45" r="4" fill="#5b5675"/><circle cx="62" cy="45" r="4" fill="#5b5675"/>' },
+    { id: 'pig', label: 'świnka', glow: '#f7b0c4',
+      art: '<path d="M18 34 L22 12 L42 26 Z" fill="#f7b6c8"/><path d="M82 34 L78 12 L58 26 Z" fill="#f7b6c8"/>' +
+        '<circle cx="50" cy="56" r="36" fill="#f9c6d4"/><ellipse cx="50" cy="66" rx="16" ry="12" fill="#f29fb8"/><circle cx="44" cy="66" r="2.6" fill="#b45a78"/><circle cx="56" cy="66" r="2.6" fill="#b45a78"/><circle cx="37" cy="48" r="4" fill="#5b5675"/><circle cx="63" cy="48" r="4" fill="#5b5675"/>' },
+    { id: 'mouse', label: 'myszka', glow: '#d3d0e6',
+      art: '<circle cx="22" cy="28" r="16" fill="#cfcbe3"/><circle cx="78" cy="28" r="16" fill="#cfcbe3"/><circle cx="22" cy="28" r="9" fill="#f7c4d8"/><circle cx="78" cy="28" r="9" fill="#f7c4d8"/>' +
+        '<ellipse cx="50" cy="60" rx="32" ry="30" fill="#e2dff0"/><circle cx="39" cy="55" r="3.8" fill="#5b5675"/><circle cx="61" cy="55" r="3.8" fill="#5b5675"/><ellipse cx="50" cy="68" rx="5" ry="3.5" fill="#f7a8c9"/><path d="M14 66 h14 M14 74 h14 M72 66 h14 M72 74 h14" stroke="#a7a2c4" stroke-width="2" stroke-linecap="round"/>' },
+    { id: 'frog', label: 'żabka', glow: '#b6e3a0',
+      art: '<circle cx="28" cy="30" r="15" fill="#a8dc92"/><circle cx="72" cy="30" r="15" fill="#a8dc92"/><circle cx="28" cy="30" r="8" fill="#fff"/><circle cx="72" cy="30" r="8" fill="#fff"/><circle cx="28" cy="30" r="4" fill="#5b5675"/><circle cx="72" cy="30" r="4" fill="#5b5675"/>' +
+        '<ellipse cx="50" cy="64" rx="38" ry="30" fill="#a8dc92"/><path d="M30 70 q20 16 40 0" fill="none" stroke="#5b8a52" stroke-width="3.5" stroke-linecap="round"/><circle cx="44" cy="56" r="2" fill="#5b8a52"/><circle cx="56" cy="56" r="2" fill="#5b8a52"/>' },
+    { id: 'dog', label: 'piesek', glow: '#e6c9a8',
+      art: '<ellipse cx="20" cy="46" rx="12" ry="26" fill="#a98467" transform="rotate(12 20 46)"/><ellipse cx="80" cy="46" rx="12" ry="26" fill="#a98467" transform="rotate(-12 80 46)"/>' +
+        '<circle cx="50" cy="54" r="34" fill="#e6c9a8"/><ellipse cx="50" cy="66" rx="15" ry="11" fill="#f6e4d2"/><ellipse cx="50" cy="61" rx="6" ry="4" fill="#5b5675"/><circle cx="38" cy="48" r="4" fill="#5b5675"/><circle cx="62" cy="48" r="4" fill="#5b5675"/>' }
   ];
-  var ROUND_SETS = [[0, 1], [2, 3], [1, 2], [3, 0]];
+  // Wall / roof / door colour sets; each launch picks two different ones for the big and the small house.
+  var HOUSE_COLOURS = [
+    { wall: '#f6c9b0', roof: '#d9b99b', door: '#fbe7c8', glow: '#ffd9a8' },
+    { wall: '#cfe3f7', roof: '#b9b3e0', door: '#f4f0ff', glow: '#c9d8ff' },
+    { wall: '#cdeccf', roof: '#9fcf9f', door: '#f1fbe9', glow: '#bfe8b8' },
+    { wall: '#fbe6a2', roof: '#e8c46a', door: '#fff6d8', glow: '#ffe9a0' },
+    { wall: '#f4c6dc', roof: '#d99ab8', door: '#fff0f7', glow: '#f7bcd6' },
+    { wall: '#d9cbf2', roof: '#b09ae0', door: '#f6f0ff', glow: '#d6c6ff' }
+  ];
   var GLOW_S = 2000, NEXT_S = 4000, FADE_MS = 700;
 
   function animalSvg(t) { return '<svg ' + ATTR + '>' + TYPES[t].art + '</svg>'; }
@@ -42,9 +62,11 @@
     var fw = 0, fh = 0, B = 96, Sm = 48, selected = null, round = 0;
     var raf = 0, last = 0, doneT = -1, doneGlow = 0, fade = 1, fadeDir = 0, phase = 'play';
 
+    var hc = window.Rand.pick(HOUSE_COLOURS, 2), pool = window.Rand.shuffle(TYPES.map(function (t, i) { return i; }));
+    function hs(c) { return houseSvg(c.wall, c.roof, c.door); }
     var houses = [
-      { size: 'big', label: 'Duży domek', svg: houseSvg('#f6c9b0', '#d9b99b', '#fbe7c8'), cx: 0, base: 0, w: 0, glow: '#ffd9a8' },
-      { size: 'small', label: 'Mały domek', svg: houseSvg('#cfe3f7', '#b9b3e0', '#f4f0ff'), cx: 0, base: 0, w: 0, glow: '#c9d8ff' }
+      { size: 'big', label: 'Duży domek', svg: hs(hc[0]), cx: 0, base: 0, w: 0, glow: hc[0].glow },
+      { size: 'small', label: 'Mały domek', svg: hs(hc[1]), cx: 0, base: 0, w: 0, glow: hc[1].glow }
     ];
     houses.forEach(function (h) {
       var el = document.createElement('button');
@@ -72,7 +94,7 @@
     });
 
     function setRound() {
-      var set = ROUND_SETS[round % ROUND_SETS.length];
+      var n = pool.length, set = [pool[(2 * round) % n], pool[(2 * round + 1) % n]];
       items.forEach(function (it) {
         it.type = set[it.k % 2];
         it.el.innerHTML = animalSvg(it.type);

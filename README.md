@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirty-six gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirty-seven gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -41,6 +41,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 34. **Autobusik** – a little bus drives slowly round a village road with three bus stops, each with a waiting animal. Touching the bus starts it or slows it to a halt; touching a stop makes it brake there (only the last touched stop counts), open its doors and let the animal hop in. Touching an animal in a window makes it step out at the stop or, while moving, wave.
 35. **Rakieta** – a small rocket with an animal astronaut drifts through a starry night sky with three friendly planets. Touching the rocket makes it fly slowly along a smooth loop or slow down and hover; touching a planet makes it curve over, hover beside it while the planet glows softly, and then carry on. Touching a star makes it twinkle once, touching the astronaut makes them wave. Every launch is different: one of 6 animal astronauts, one of 6 planet colour sets and one of 4 star-and-planet arrangements.
 36. **Mała Łódka** – a small sailboat with a bear and a rabbit aboard floats slowly along a calm river with soft waves, a little jetty and three ducks. Touching the boat makes it sail or slow to a halt; touching the jetty makes it glide in and moor there (it never goes backwards). Touching a duck makes it nod and a soft ripple ring spread, touching an animal aboard makes it wave.
+37. **Łódź Podwodna** – a yellow submarine with a bear in its round window hovers in a pastel sea with sand, three clumps of seaweed and four slow fish. Touching the submarine makes it swim slowly across the screen or slow down to a hover; touching the sand makes it glide down and rest there (touch it to lift off). Touching a fish sends it once round the submarine, touching a bubble pops it softly, touching the bear makes it wave.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

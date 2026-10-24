@@ -155,7 +155,7 @@
       ducks.forEach(function (d) {
         d.x = W * DUCK_POS[d.i][0]; d.y = H * DUCK_POS[d.i][1];
         d.el.style.width = DS.toFixed(1) + 'px';
-        d.el.style.height = (DS * 56 / 64 + 0).toFixed(1) + 'px';
+        d.el.style.height = DS.toFixed(1) + 'px';
       });
       if (moored && v === 0) { f = fm; }
       else if (brake) { brake = null; ramp = { v0: v, vt: V, t: 0, dur: RAMP_S }; }   // jetty moved: re-plan from the current speed, no snap
@@ -243,7 +243,7 @@
           if (d.nod >= NOD_S) { d.nod = -1; }
           else { var n = Math.sin(d.nod / NOD_S * Math.PI); rot = Math.sin(n * Math.PI * 0.5) * 12; dy += n * 4; }
         }
-        d.el.style.transform = 'translate(' + (d.x - DS / 2).toFixed(1) + 'px,' + (d.y - DS * 0.44 + dy).toFixed(1) + 'px) rotate(' + rot.toFixed(1) + 'deg)';
+        d.el.style.transform = 'translate(' + (d.x - DS / 2).toFixed(1) + 'px,' + (d.y - DS * 0.5 + dy).toFixed(1) + 'px) rotate(' + rot.toFixed(1) + 'deg)';
       });
       rings.forEach(function (r) {
         if (r.t < 0) { return; }

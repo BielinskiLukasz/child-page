@@ -67,12 +67,14 @@
       html += '<button class="rq-planet" type="button" data-i="' + i + '" aria-label="Planeta ' + (i + 1) + ' – rakieta poleci do niej"><span class="rq-halo"></span>' + planetSvg(i) + '</button>';
     }
     html += '<div class="rq-puffs"></div>' +
-      '<div class="rq-rocket" role="button" tabindex="0" aria-label="Rakieta – leć lub zawisnij">' + rocketSvg() +
+      '<div class="rq-rocket">' + rocketSvg() +
+      '<button class="rq-rbtn" type="button" aria-label="Rakieta – leć lub zawisnij"></button>' +
       '<button class="rq-abtn" type="button" aria-label="Miś astronauta – pomachaj"></button></div>';
     scene.innerHTML = html;
     container.appendChild(scene);
 
     var rocket = scene.querySelector('.rq-rocket');
+    var rbtn = scene.querySelector('.rq-rbtn');
     var abtn = scene.querySelector('.rq-abtn');
     var flame = scene.querySelector('.rq-flame');
     var paw = scene.querySelector('.rq-paw');
@@ -298,12 +300,10 @@
       node.addEventListener('click', kk);
       offs.push(function () { node.removeEventListener('pointerdown', h); node.removeEventListener('click', kk); });
     }
-    bindTap(rocket, onRocket, false);
+    bindTap(rbtn, onRocket, false);
     bindTap(abtn, onAstronaut, true);
     stars.forEach(function (s, k) { bindTap(s, function () { onStar(k); }, true); });
     planets.forEach(function (p, k) { bindTap(p, function () { onPlanet(k); }, true); });
-    var onKey = function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target === rocket) { e.preventDefault(); onRocket(); } };
-    rocket.addEventListener('keydown', onKey);
     window.addEventListener('resize', layout);
     window.addEventListener('orientationchange', layout);
     document.addEventListener('visibilitychange', onVis);
@@ -316,7 +316,6 @@
     return function () {
       if (raf) { cancelAnimationFrame(raf); raf = 0; }
       offs.forEach(function (o) { o(); });
-      rocket.removeEventListener('keydown', onKey);
       window.removeEventListener('resize', layout);
       window.removeEventListener('orientationchange', layout);
       document.removeEventListener('visibilitychange', onVis);

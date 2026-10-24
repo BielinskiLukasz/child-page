@@ -14,28 +14,15 @@
   var MAX_DT = 0.05;
   var VB_W = 340, VB_H = 110;  // bus viewBox
   var WIN_X = [58, 140, 222];  // window centres in viewBox units (spacing 82/340 of the bus width)
-  var KINDS = ['bear', 'rabbit', 'cat'];
-  var NAMES = ['Miś', 'Króliczek', 'Kotek'];
   var STOP_X = [0.2, 0.5, 0.8];
 
   function sm(u) { return u * u * (3 - 2 * u); }
   function wrap(x) { return x - Math.floor(x); }
   function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
 
-  function animalSvg(kind) {
-    var fur = { bear: '#c99b72', rabbit: '#f3ecf7', cat: '#f2c48d' }[kind];
-    var ears = kind === 'rabbit'
-      ? '<ellipse cx="-8" cy="-26" rx="4.5" ry="12" fill="' + fur + '"/><ellipse cx="8" cy="-26" rx="4.5" ry="12" fill="' + fur + '"/>' +
-        '<ellipse cx="-8" cy="-26" rx="2" ry="8" fill="#f7b7cf"/><ellipse cx="8" cy="-26" rx="2" ry="8" fill="#f7b7cf"/>'
-      : kind === 'cat'
-        ? '<path d="M-15 -8l3-17 11 9z" fill="' + fur + '"/><path d="M15 -8l-3-17-11 9z" fill="' + fur + '"/>'
-        : '<circle cx="-13" cy="-13" r="6" fill="' + fur + '"/><circle cx="13" cy="-13" r="6" fill="' + fur + '"/>';
-    var nose = kind === 'bear'
-      ? '<ellipse cx="0" cy="5" rx="6" ry="4.5" fill="#f3dcc4"/><circle cx="0" cy="3.5" r="2" fill="#6b5a73"/>'
-      : '<circle cx="0" cy="4" r="2" fill="#e99bb5"/>';
-    return '<svg viewBox="-28 -22 56 56" aria-hidden="true" focusable="false"><g transform="translate(0 6)">' + ears +
-      '<circle cx="0" cy="0" r="16" fill="' + fur + '"/><circle cx="-6" cy="-3" r="2" fill="#5b5675"/>' +
-      '<circle cx="6" cy="-3" r="2" fill="#5b5675"/>' + nose + '</g></svg>';
+  function animalSvg(animal) {
+    return '<svg viewBox="-28 -22 56 56" aria-hidden="true" focusable="false"><g transform="translate(0 6)">' +
+      window.Animals.head(animal.id) + '</g></svg>';
   }
 
   function busSvg() {
@@ -91,8 +78,9 @@
       stops += '<button class="ab-stop" type="button" data-i="' + i + '" aria-label="Przystanek ' + (i + 1) + ' – zatrzymaj autobusik tutaj">' + stopSvg() + '</button>';
     }
     var animalsHtml = '';
+    var picks = window.Animals.pick(3); // one random animal per stop, new on every launch, nothing stored
     for (var k = 0; k < 3; k++) {
-      animalsHtml += '<button class="ab-an" type="button" data-i="' + k + '" aria-label="' + NAMES[k] + '">' + animalSvg(KINDS[k]) + '</button>';
+      animalsHtml += '<button class="ab-an" type="button" data-i="' + k + '" aria-label="' + picks[k].name + '">' + animalSvg(picks[k]) + '</button>';
     }
     scene.innerHTML = deco + '<div class="ab-sidewalk"></div><div class="ab-road"><div class="ab-dash"></div></div>' + stops +
       '<div class="ab-bus" role="button" tabindex="0" aria-label="Autobusik – ruszaj lub zatrzymaj">' + busSvg() + '</div>' + animalsHtml;

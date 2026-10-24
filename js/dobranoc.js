@@ -6,10 +6,11 @@
   // Positions in the 400x300 board, as the centre of each button.
   var WINDOWS = [[140, 165], [260, 165], [140, 235], [260, 235]];
   var WIN = 64, ANI = 72;
-  var ANIMALS = [
-    { name: 'Kotek', x: 52, y: 238, body: '#f7c9a0', ear: 'cat', blanket: '#b9b3e0' },
-    { name: 'Króliczek', x: 200, y: 240, body: '#fbf7ff', ear: 'rabbit', blanket: '#f7a8c9' },
-    { name: 'Miś', x: 348, y: 238, body: '#d9b99b', ear: 'bear', blanket: '#a9c9ef' }
+  // Three random animals per launch (shared family, js/animals.js); slots and blankets are fixed.
+  var SLOTS = [
+    { x: 52, y: 238, blanket: '#b9b3e0' },
+    { x: 200, y: 240, blanket: '#f7a8c9' },
+    { x: 348, y: 238, blanket: '#a9c9ef' }
   ];
   var STARS = [[40, 40, 2.2], [90, 90, 1.6], [150, 30, 2], [215, 70, 1.6], [270, 28, 2.2], [310, 100, 1.6], [360, 130, 2],
     [25, 130, 1.6], [70, 175, 1.4], [235, 15, 1.4]];
@@ -26,21 +27,18 @@
       '<path d="M170 275v-42a30 30 0 0 1 60 0v42z" fill="#b99a86"/></svg>';
   }
 
-  function animalSvg(a) {
-    var ears = a.ear === 'rabbit'
-      ? '<ellipse cx="25" cy="14" rx="6" ry="14" fill="' + a.body + '"/><ellipse cx="45" cy="14" rx="6" ry="14" fill="' + a.body + '"/>' +
-        '<ellipse cx="25" cy="15" rx="2.6" ry="9" fill="#f7c9d6"/><ellipse cx="45" cy="15" rx="2.6" ry="9" fill="#f7c9d6"/>'
-      : a.ear === 'cat'
-        ? '<path d="M17 30L19 8l14 14zM53 30L51 8 37 22z" fill="' + a.body + '"/>'
-        : '<circle cx="18" cy="20" r="8" fill="' + a.body + '"/><circle cx="52" cy="20" r="8" fill="' + a.body + '"/>';
+  function animalSvg(a, blanket) {
+    var A = window.Animals, ec = A.eyeColor(a.id), pos = A.eyes(a.id), open = '', shut = '';
+    pos.forEach(function (p) {
+      open += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="2" fill="' + ec + '"/>';
+      shut += '<path d="M' + (p[0] - 3.2) + ' ' + p[1] + 'q3.2 3 6.4 0"/>';
+    });
     return '<svg viewBox="0 0 70 70" aria-hidden="true" focusable="false">' +
-      '<ellipse cx="35" cy="54" rx="22" ry="15" fill="' + a.body + '"/>' + ears +
-      '<circle cx="35" cy="34" r="19" fill="' + a.body + '"/>' +
-      '<g class="db-open" fill="#5b5675"><circle cx="28" cy="33" r="3"/><circle cx="42" cy="33" r="3"/></g>' +
-      '<g class="db-shut" fill="none" stroke="#5b5675" stroke-width="2" stroke-linecap="round" opacity="0">' +
-      '<path d="M24.5 33q3.5 3 7 0"/><path d="M38.5 33q3.5 3 7 0"/></g>' +
-      '<ellipse cx="35" cy="41" rx="3" ry="2" fill="#e59aa8"/>' +
-      '<g class="db-blanket" opacity="0"><path d="M10 50q25-10 50 0v12q0 6-6 6H16q-6 0-6-6z" fill="' + a.blanket + '"/>' +
+      '<ellipse cx="35" cy="54" rx="22" ry="15" fill="' + a.fur + '"/>' +
+      '<g transform="translate(35 38)">' + A.head(a.id, { noEyes: true }) +
+      '<g class="db-open">' + open + '</g>' +
+      '<g class="db-shut" fill="none" stroke="' + ec + '" stroke-width="1.6" stroke-linecap="round" opacity="0">' + shut + '</g></g>' +
+      '<g class="db-blanket" opacity="0"><path d="M10 50q25-10 50 0v12q0 6-6 6H16q-6 0-6-6z" fill="' + blanket + '"/>' +
       '<path d="M10 56q25-8 50 0" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2"/></g></svg>';
   }
 
@@ -99,12 +97,14 @@
       items.push(it);
       board.appendChild(btn);
     });
-    ANIMALS.forEach(function (a) {
+    var picks = window.Animals.pick(SLOTS.length);
+    SLOTS.forEach(function (slot, si) {
+      var a = picks[si];
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'db-btn db-ani';
-      btn.innerHTML = animalSvg(a);
-      place(btn, a.x, a.y, ANI);
+      btn.innerHTML = animalSvg(a, slot.blanket);
+      place(btn, slot.x, slot.y, ANI);
       var open = btn.querySelector('.db-open'), shut = btn.querySelector('.db-shut'), blanket = btn.querySelector('.db-blanket');
       var it = { v: 0, t: 0, btn: btn, speed: 1 / SLEEP_S, kind: 'sleep',
         paint: function () {

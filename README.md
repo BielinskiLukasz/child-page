@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens thirty-nine gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens forty gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -44,6 +44,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 37. **Łódź Podwodna** – a yellow submarine with a bear in its round window hovers in a pastel sea with sand, three clumps of seaweed and four slow fish. Touching the submarine makes it swim slowly across the screen or slow down to a hover; touching the sand makes it glide down and rest there (touch it to lift off). Touching a fish sends it once round the submarine, touching a bubble pops it softly, touching the bear makes it wave.
 38. **Kolejka Linowa** – a small gondola with a bear and a rabbit glides slowly along a cable between a valley station and a peak station on a pastel mountain with three pine trees and drifting clouds. Touching the gondola starts or stops it (it sways gently when stopped on the cable and pauses 3 seconds at each station), touching a station sends it there and opens its door, touching an animal makes it wave, touching a tree makes it sway.
 39. **Balon** – a hot-air balloon with a bear and a rabbit in the basket rests on a meadow under a pastel sky with four clouds. Touching the balloon makes it rise slowly while drifting gently sideways (a soft glow pulses under it while it climbs); touching it in the air lets it float back down to the meadow. Touching a cloud makes it drift aside and return over about 8 seconds, touching an animal makes it wave.
+40. **Karuzela** – a pastel merry-go-round with a striped roof, bunting and four random animals on it. Touching it sets it turning slowly in place (one turn takes 18 s) and touching it again slows it to a stop; dragging around it turns it along with the finger before it coasts to rest; touching an animal makes it hop or wave without stopping the ride.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

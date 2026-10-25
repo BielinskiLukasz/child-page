@@ -90,6 +90,8 @@
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#dff1fb"/><path d="M2 58V50L40 14l22 26v18z" fill="#c9c3e6"/><path d="M40 14l-7 8q3 3 7 0q4 3 7 0z" fill="#fbf9ff"/><path d="M6 36L52 18" stroke="#6f6a8c" stroke-width="2.5" stroke-linecap="round"/><rect x="22" y="31" width="18" height="14" rx="4" fill="#f7a8c9"/><path d="M31 27v4" stroke="#5b5675" stroke-width="2"/><circle cx="27" cy="37" r="3" fill="#fdfbff"/><circle cx="35" cy="37" r="3" fill="#fdfbff"/>', '#dff1fb') },
     { id: 'balon', name: 'Balon',
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><path d="M2 54q14-8 30-2t30-2v10q0 2-2 2H4q-2 0-2-2z" fill="#b6e0aa"/><ellipse cx="14" cy="14" rx="9" ry="5" fill="#fff"/><ellipse cx="52" cy="26" rx="8" ry="4.5" fill="#fff"/><path d="M32 6c-12 0-18 9-17 17c1 7 9 12 12 16h10c3-4 11-9 12-16c1-8-5-17-17-17z" fill="#f7a8c9"/><path d="M32 6c-7 5-9 24-5 33h10c4-9 2-28-5-33z" fill="#fff3b0"/><path d="M27 39l-3 7M37 39l3 7" stroke="#a79bb8" stroke-width="1.5"/><rect x="24" y="46" width="16" height="9" rx="3" fill="#d9b48f"/>', '#cfeaf8') },
+    { id: 'karuzela', name: 'Karuzela',
+      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#e9e0f7"/><ellipse cx="32" cy="48" rx="24" ry="7" fill="#f3d3e4"/><rect x="30" y="20" width="4" height="28" rx="2" fill="#ffd98a"/><path d="M32 8L10 22q11 5 22 0t22 0z" fill="#f7a8c9"/><path d="M32 8L21 22q5 3 11 0z" fill="#fdfbff"/><circle cx="18" cy="40" r="6" fill="#d2a67f"/><circle cx="46" cy="40" r="6" fill="#f3ecf7"/><circle cx="32" cy="44" r="6" fill="#c8e0a8"/>', '#e9e0f7') },
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

@@ -11,8 +11,8 @@
   var BW = 440, BH = 300;
   var GY = 262;                         // ground line
   var FOOT_X = 56, TOP_X = 96, TOP_Y = 96;
-  var QS = [112, 142];                  // queue spots next to the ladder while the slide is busy
-  var HOME = [175, 235, 295];
+  var QS = [116, 176];                  // queue spots next to the ladder while the slide is busy
+  var HOME = [149, 209, 269];
   var P0 = [96, 96], P1 = [235, 175], P2 = [335, 252];   // slide curve (quadratic Bezier), ends on the mat
   var CLIMB_T = 3, TOP_T = 1, SLIDE_T = 4, LAND_T = 0.9, REST_T = 3, WAVE_T = 1.6, BOUNCE_T = 0.7;
   var WALK = 55;                        // walking speed, units per second

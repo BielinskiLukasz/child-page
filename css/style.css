@@ -683,6 +683,19 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .bn-an { position: absolute; width: 56px; height: 56px; padding: 0; border: 0; background: none; cursor: pointer; pointer-events: auto; border-radius: 50%; }
 .bn-hull:focus-visible, .bn-an:focus-visible, .bn-cloud:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }
 
+/* Karuzela (kz-) */
+.kz { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#dff0fb, #f1f0fb 60%, #f6f1e4); }
+.stage .kz-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.stage .kz-flags, .stage .kz-base, .stage .kz-top { position: absolute; display: block; pointer-events: none; overflow: visible; }
+.stage .kz-base { z-index: 1; }
+.stage .kz-top { z-index: 4; }
+.stage .kz-flags { z-index: 1; }
+.kz-hull { position: absolute; z-index: 2; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 40%; }
+.kz-seat { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%; will-change: transform; }
+.kz-fig { display: block; width: 100%; height: 100%; pointer-events: none; }
+.stage .kz-fig svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.kz-hull:focus-visible, .kz-seat:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 12px; }
 /* Zjeżdżalnia (zj-) */
 .zj { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: manipulation;
   user-select: none; -webkit-user-select: none; background: linear-gradient(#cfeaf8, #f3f7e6); }

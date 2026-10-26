@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens forty-two gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens forty-three gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -47,6 +47,7 @@ A calm, silent Polish-language web app for three-year-old Artur. A main menu wit
 40. **Karuzela** – a pastel merry-go-round with a striped roof, bunting and four random animals on it. Touching it sets it turning slowly in place (one turn takes 18 s) and touching it again slows it to a stop; dragging around it turns it along with the finger before it coasts to rest; touching an animal makes it hop or wave without stopping the ride.
 41. **Zjeżdżalnia** – a pastel playground with a ladder, a slide, a soft mat, a bench and three different animals (picked at random on every launch) waiting by the ladder. Touching a waiting animal makes it climb the ladder (about 3 seconds), pause at the top and slide down slowly onto the mat with a small gentle squash, then walk back and rest for about 3 seconds; animals touched meanwhile queue and take turns, only one is on the slide at a time. Touching an animal that is climbing, sliding or walking makes it wave without changing its path, touching the mat makes it bounce gently once.
 42. **Huśtawka** – a pastel garden with a big tree, grass and a swing hanging from its branch with a random animal sitting on it. Touching the swing or the animal gives one gentle push (the animal also waves); the swing then swings like a slow pendulum (one swing takes 3.6 seconds), a few pushes in a row make it swing a little higher (at most 35 degrees) and without pushes it slowly settles back to rest within about 15 seconds. While it swings high, up to six leaves at a time drift slowly down from the tree and disappear. Touching the tree makes it sway gently once.
+43. **Latawiec** – a pastel sky with a hill, a random animal holding the kite string, a kite with a ribbon tail of 5 bows and three clouds. Touching or dragging in the sky makes the kite follow the finger with a soft lag (crossing the screen takes at least 3 seconds) and the tail waves along its earlier path; when the finger is lifted the kite drifts on and settles into a slow figure-eight within about 4 seconds. When the kite touches a cloud the cloud puffs gently aside; touching the animal makes it wave. The kite always stays fully on screen.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 

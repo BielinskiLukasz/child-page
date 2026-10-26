@@ -29,12 +29,12 @@
         '<circle cx="' + cx + '" cy="50" r="21" fill="#fdfbff"/>' + animalSvg(picks[i], cx) +
         '<path d="M' + (cx - 21) + ' 50a21 21 0 0 1 42 0z" fill="none"/>';
     }
-    // locomotive
-    s += '<rect x="304" y="30" width="60" height="50" rx="10" fill="#9ed8c6"/>' +
-      '<rect x="340" y="14" width="46" height="66" rx="10" fill="#8cccb8"/>' +
-      '<rect x="346" y="22" width="30" height="26" rx="8" fill="#fdfbff"/>' +
-      '<rect x="318" y="8" width="16" height="26" rx="5" fill="#7a748f"/><rect x="314" y="4" width="24" height="8" rx="4" fill="#5b5675"/>' +
-      '<circle cx="330" cy="58" r="7" fill="#ffe9a8"/><rect x="304" y="62" width="82" height="6" fill="#fff" opacity=".45"/>';
+    // locomotive: the train travels to the right, so the cab sits at the back (next to the carriages) and the boiler, chimney and headlight at the front
+    s += '<rect x="326" y="30" width="60" height="50" rx="10" fill="#9ed8c6"/>' +
+      '<rect x="304" y="14" width="46" height="66" rx="10" fill="#8cccb8"/>' +
+      '<rect x="314" y="22" width="30" height="26" rx="8" fill="#fdfbff"/>' +
+      '<rect x="356" y="8" width="16" height="26" rx="5" fill="#7a748f"/><rect x="352" y="4" width="24" height="8" rx="4" fill="#5b5675"/>' +
+      '<circle cx="360" cy="58" r="7" fill="#ffe9a8"/><rect x="304" y="62" width="82" height="6" fill="#fff" opacity=".45"/>';
     // wheels (spokes rotate from JS)
     [30, 130, 230, 322, 362].forEach(function (wx) {
       s += '<g class="tp-wheel" data-cx="' + wx + '"><circle cx="' + wx + '" cy="86" r="11" fill="#6b6585"/>' +
@@ -140,7 +140,7 @@
       var n = document.createElement('div');
       n.className = 'tp-puff';
       puffLayer.appendChild(n);
-      puffs.push({ n: n, t: 0, x: f * L - tw + tw * 0.83, y: trackY - th * 0.9 + th * 0.02, dx: 6 + Math.random() * 6 });
+      puffs.push({ n: n, t: 0, x: f * L - tw + tw * 0.91, y: trackY - th * 0.9 + th * 0.02, dx: 6 + Math.random() * 6 });
     }
 
     function frame(now) {

@@ -118,9 +118,7 @@ No levels or difficulty changes; the four paths differ in shape only. The cycle 
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no analytics events**; see [Analytics status](README.md#analytics-status) and open PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172).
-
-Not implemented (for planning only): meaningful signals would be `activity_start` / `activity_end` (active time) and `level_complete` per path reached (the goal reached is a natural per-path completion, but as the cycle repeats forever an overall completion rate would not apply). An `interaction` count (drag starts) could show engagement. No personal data is needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 

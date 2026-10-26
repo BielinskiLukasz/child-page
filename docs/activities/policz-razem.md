@@ -126,9 +126,7 @@ Difficulty is the number of objects: round `n` shows `n` objects (1 to 10). The 
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no analytics events** and no metrics are collected; see [Analytics status](README.md#analytics-status). The usage-metrics work is in open pull request [#172](https://github.com/BielinskiLukasz/child-page/pull/172).
-
-Not implemented (for planning only): events that would be meaningful here are `activity_start`, `activity_end` and an `interaction` count (touches on objects), which together give active time and engagement. A per-round completion could be modelled with `level_start` / `level_complete` (round number), but because the activity loops endlessly an overall completion rate would not be meaningful; prefer active time and interactions. No personal data would be needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`). `js/app.js` records the activity start and end and the module counts touches inside the stage; `js/policz-razem.js` calls `levelStart(n)` when a round starts (n = number of objects) and `levelComplete(count)` plus `complete(count)` when the last object is counted. Recorded: starts, active time, replays, quick exits, touches, completions (a completion is a counted round), exits before completion and the highest count reached. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -138,7 +136,7 @@ Not implemented (for planning only): events that would be meaningful here are `a
 - **Animation:** a single `requestAnimationFrame` loop (`frame`) with capped `dt`. It stops when idle (`busy` false), pauses while `document.hidden` and is restarted by `wake()` on touch or on `visibilitychange`.
 - **Events:** `click` on each object button; `visibilitychange` on `document`.
 - **Randomization:** `Rand.pickOne` from [`js/random.js`](../../js/random.js).
-- **Persistence and analytics:** none.
+- **Persistence:** none. **Analytics:** `Analytics.levelStart` / `levelComplete` / `complete`.
 - **Cleanup:** the returned function removes the `visibilitychange` listener, cancels the pending frame and removes the root element.
 
 ## 15. Responsive layout and coordinate system

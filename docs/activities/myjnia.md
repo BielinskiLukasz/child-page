@@ -128,9 +128,7 @@ None. The only recurring structure is the V V A pattern; nothing becomes harder,
 
 ## 13. Analytics and metrics
 
-Nothing is emitted on `main`; see [README.md](README.md#analytics-status). None of `activity_start`, `activity_end`, `activity_complete`, `activity_restart`, `interaction`, `level_start`, `level_complete` is emitted for this activity, and no metric is supported. On-device metrics are proposed in open PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172).
-
-Not implemented, planning note only: active time and the number of items washed (a cleaned item could be an `activity_complete`) would be meaningful; for this open-ended scrubbing activity a completion rate would not be useful, and interaction counts could be limited to scrub starts. No personal data would be needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -141,7 +139,7 @@ Not implemented, planning note only: active time and the number of items washed 
 - **Events:** `pointerdown/move/up/cancel`, `lostpointercapture`, `keydown`, `focus`, `blur` on the box; `resize`, `orientationchange`, `visibilitychange`.
 - **Animation:** one `frame()` loop (dt capped at 0.05 s) that stops when idle; paused while hidden. The coverage check runs every 0.12 s only when the mask changed.
 - **Randomization:** `Rand.pickOne` and the local weighted `pickAnimal()`.
-- **Dependencies:** [`js/random.js`](../../js/random.js). **Persistence:** none. **Analytics:** none.
+- **Dependencies:** [`js/random.js`](../../js/random.js). **Persistence:** none. **Analytics:** none from the activity itself (reported by `js/app.js`).
 - **Cleanup:** cancels the frame and removes the window/document listeners and the board.
 
 ## 15. Responsive layout and coordinate system

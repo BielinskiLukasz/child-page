@@ -131,9 +131,7 @@ No external files. All pictures are inline SVG strings in the `P` object (100 x 
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no** analytics events; see [Analytics status](README.md#analytics-status). No metric is supported.
-
-*Not implemented, for planning only:* `level_start` / `level_complete` (the game number or pair count, which is not personal data), `activity_complete` per finished game, active time and a count of card flips (`interaction`). The highest level reached (largest card count) and exit-before-completion would be natural metrics for this activity. No data that could identify a child should be collected.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`). `js/app.js` records the activity start and end and the module counts touches inside the stage; `js/pamiec.js` calls `levelStart(n)` when a deck is dealt (n = number of cards) and `levelComplete(n)` plus `complete(n)` when all pairs are found. Recorded: starts, active time, replays, quick exits, touches, completions (a completion is all pairs found), exits before completion and the highest card count reached. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -142,7 +140,7 @@ On `main` this activity emits **no** analytics events; see [Analytics status](RE
 - **Rendering:** each card is a `<button class="pm-card">` with two spans (back and front, each an SVG). The buttons are rebuilt for every game in `deal()`. Position and flip are applied as `transform: translate(...) scaleX(...)`; the picture is swapped at the half-way point; under reduced motion front and back cross-fade by opacity instead.
 - **Animation:** one rAF loop (`frame`, `dt` capped at 50 ms) that continues only while something is changing and is cancelled when the tab is hidden, restarted by `start()` and `visibilitychange`.
 - **Randomization:** [`js/random.js`](../../js/random.js) (`Rand.pick`, `Rand.shuffle`).
-- **Persistence/analytics:** none.
+- **Persistence:** none. **Analytics:** `Analytics.levelStart` / `levelComplete` / `complete`.
 - **Cleanup:** cancels the frame and removes the `resize`, `orientationchange`, `visibilitychange` listeners and the board.
 
 ## 15. Responsive layout and coordinate system
@@ -189,7 +187,7 @@ On `main` this activity emits **no** analytics events; see [Analytics status](RE
 
 **Confirmed**
 
-- No automated tests; no analytics on `main`.
+- No automated tests. Analytics is covered in section 13.
 - Pictures can repeat across consecutive games; there is no hint or reduced-difficulty option.
 - All face-down cards share one `aria-label`.
 

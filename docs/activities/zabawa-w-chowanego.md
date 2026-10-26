@@ -125,9 +125,7 @@ No progression, levels or difficulty. Behaviour is identical for every round and
 
 ## 13. Analytics and metrics
 
-Nothing is emitted on `main`; see [README.md](README.md#analytics-status). All seven event types (`activity_start`, `activity_end`, `activity_complete`, `activity_restart`, `interaction`, `level_start`, `level_complete`) are **not implemented** for this activity, and none of the metrics are supported. Usage metrics are proposed in PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172) (open).
-
-Not implemented, planning note only: for this open-ended activity the meaningful signals would be active time and the number of place openings (`interaction`), plus the number of rearrangements as a round count. A completion rate would be artificial because there is no end state. No personal data would be needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -138,7 +136,7 @@ Not implemented, planning note only: for this open-ended activity the meaningful
 - **Phases:** `play` -> (all opened) `glow` (2 s) -> `close` (all targets 0; when nothing moves, start a fade job that applies `arrangement(old)` at 50%) -> `play`.
 - **Events:** `click` on each button; `resize`, `orientationchange` and `visibilitychange` on window/document.
 - **Dependencies:** `window.Animals` (`pick`, `head`) and `window.Rand` (`pick`).
-- **Persistence:** none. **Analytics:** none.
+- **Persistence:** none. **Analytics:** none from the activity itself (reported by `js/app.js`).
 - **Cleanup:** cancels the animation frame, removes the three listeners and removes the board.
 
 ## 15. Responsive layout and coordinate system

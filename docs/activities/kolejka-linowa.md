@@ -122,13 +122,7 @@ No formal completion state. Feedback is visual only: smooth speed changes, the d
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no analytics events** (see [Analytics status](README.md#analytics-status)); PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172) is open and not merged.
-
-| Event | Emitted today |
-|---|---|
-| `activity_start`, `activity_end`, `activity_complete`, `activity_restart`, `interaction`, `level_start`, `level_complete` | No |
-
-All metrics are **not supported**. Not implemented, for planning only: active time and `interaction` counts (gondola, station, animal, tree), with no completion rate (arriving at a station is not a completion). No identifying data should be collected.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -184,7 +178,7 @@ Manual checklist (not yet performed):
 
 **Confirmed**
 
-- No automated tests; no analytics on `main`.
+- No automated tests. Analytics is covered in section 13.
 - The motion ignores the reduced-motion preference by design.
 - The two animals are drawn locally rather than from `js/animals.js`.
 

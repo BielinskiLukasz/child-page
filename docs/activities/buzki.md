@@ -128,9 +128,7 @@ There is no formal completion state. The feedback for each touch is the visual r
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no** analytics events; see [Analytics status](README.md#analytics-status). No metric is supported.
-
-*Not implemented, for planning only:* because the activity is open-ended, the useful signals would be active time and a count of interactions (optionally by zone: face, eyes, cheeks, mouth). A completion rate and `level_*` events do not apply. No data that could identify a child should be collected.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -187,7 +185,7 @@ On `main` this activity emits **no** analytics events; see [Analytics status](RE
 
 **Confirmed**
 
-- No automated tests; no analytics on `main`.
+- No automated tests. Analytics is covered in section 13.
 - The animal companion is not prevented from repeating between launches.
 - Taps during a running change are dropped rather than queued.
 

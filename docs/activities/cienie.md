@@ -139,9 +139,7 @@ No progression: every round has three animals with a fixed layout and no change 
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no** analytics events; see [Analytics status](README.md#analytics-status). None of `activity_start`, `activity_end`, `activity_complete`, `activity_restart`, `interaction`, `level_start`, `level_complete` is emitted, and no metric (starts, active time, completions, completion rate, replays, exit-before-completion, highest level, interactions) is supported.
-
-*Not implemented, for planning only:* meaningful signals would be active time in the activity, a count of completed rounds (`activity_complete` per round), and an anonymous interaction count (successful placements). A completion rate would be of limited value because the activity loops without an end. `level_*` events do not apply (no levels). No data that could identify a child should be collected.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -201,7 +199,7 @@ On `main` this activity emits **no** analytics events; see [Analytics status](RE
 **Confirmed**
 
 - No automated tests.
-- No analytics on `main` (see section 13).
+- Analytics is covered in section 13.
 - The keyboard flow is the only non-pointer path; there is no arrow-key dragging.
 
 **Requires verification**

@@ -114,9 +114,7 @@ None. Every round has eight beads and the same rules; nothing persists between s
 
 ## 13. Analytics and metrics
 
-Nothing is emitted on `main`; see [README.md](README.md#analytics-status). None of `activity_start`, `activity_end`, `activity_complete`, `activity_restart`, `interaction`, `level_start`, `level_complete` is emitted for this activity, and no metric is supported. Open PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172) proposes on-device usage metrics.
-
-Not implemented, planning note only: useful signals would be active time and interaction count (bead threaded), and the number of completed necklaces as a round count. A completion rate would be artificial because the activity repeats indefinitely. No personal data would be needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -126,7 +124,7 @@ Not implemented, planning note only: useful signals would be active time and int
 - **Events:** `pointerdown/move/up/cancel` and `lostpointercapture` per bead; `click` for keyboard; `resize`, `orientationchange`, `visibilitychange`.
 - **Animation:** one `frame()` loop (dt capped at 50 ms) using smoothstep glides; it keeps running only while something is moving or glowing and is restarted by `start()`. It is paused when the tab is hidden.
 - **Completion logic:** `string.length === N` and all beads idle starts `doneT`; at `GLOW_MS + WAIT_MS` the beads are released with a new order.
-- **Dependencies:** none (no `Rand`, no `Animals`). **Persistence:** none. **Analytics:** none.
+- **Dependencies:** none (no `Rand`, no `Animals`). **Persistence:** none. **Analytics:** none from the activity itself (reported by `js/app.js`).
 - **Cleanup:** cancels the frame, removes the three window/document listeners, removes the board.
 
 ## 15. Responsive layout and coordinate system

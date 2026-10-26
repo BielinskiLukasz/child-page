@@ -134,9 +134,7 @@ If `window.PuzzlePictures` is missing, `PICTURES` falls back to an empty array; 
 
 ## 13. Analytics and metrics
 
-Nothing is emitted on `main`; see [README.md](README.md#analytics-status). None of `activity_start`, `activity_end`, `activity_complete`, `activity_restart`, `interaction`, `level_start`, `level_complete` is emitted for this activity, and no metric is supported. On-device metrics are proposed in open PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172).
-
-Not implemented, planning note only: because completion and levels are well defined, `activity_complete` per finished picture, `level_start` / `level_complete` per grid stage, the highest grid reached, active time and the number of pieces placed (`interaction`) would be meaningful. No personal data would be needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`). `js/app.js` records the activity start and end and the module counts touches inside the stage; `js/puzzle.js` calls `levelStart(N)` when a picture is built (N = number of pieces) and `levelComplete(N)` plus `complete(N)` when all pieces are placed. Recorded: starts, active time, replays, quick exits, touches, completions (a completion is a finished picture), exits before completion and the highest piece count reached. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -146,7 +144,7 @@ Not implemented, planning note only: because completion and levels are well defi
 - **Layout:** `build()` creates slots and pieces for the current picture and grid; `fit()` searches the largest `P` where frame and tray fit; `layout()` positions everything.
 - **Events:** `pointerdown/move/up/cancel`, `lostpointercapture` per piece; `click` on pieces (keyboard) and slots; `resize`, `orientationchange`, `visibilitychange`.
 - **Animation:** one loop `frame_()` (dt capped at 50 ms), smoothstep glides; stops when idle; paused while hidden.
-- **Dependencies:** `window.PuzzlePictures`, [`js/random.js`](../../js/random.js) (`Rand.shuffle`). **Persistence:** none. **Analytics:** none.
+- **Dependencies:** `window.PuzzlePictures`, [`js/random.js`](../../js/random.js) (`Rand.shuffle`). **Persistence:** none. **Analytics:** `Analytics.levelStart` / `levelComplete` / `complete`.
 - **Cleanup:** cancels the frame, removes the three listeners and the board.
 
 ## 15. Responsive layout and coordinate system

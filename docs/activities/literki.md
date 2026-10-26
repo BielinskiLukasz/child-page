@@ -110,9 +110,7 @@ There is no completion state and no failure. Feedback: wiggle and word for the p
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no analytics events**; see [Analytics status](README.md#analytics-status) and open PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172).
-
-Not implemented (for planning only): as an open-ended browsing activity, the meaningful signals would be `activity_start` / `activity_end` (active time) and an `interaction` count (picture touches, letter touches, letter changes). No completion rate, because the activity has no end. No personal data is needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`). `js/app.js` records the activity start and end and the module counts touches inside the stage; `js/literki.js` additionally calls `levelStart(0, letter)` for each letter shown and `track('interaction', { variant: letter })` when the picture or the letter is touched, so the letters shown and touched are recorded. Recorded: starts, active time, replays, quick exits, touches and the letter variants. It is open-ended, so no completion or level is defined. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 

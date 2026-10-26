@@ -133,9 +133,7 @@ No formal completion state. Feedback: the seed appears, grows into a plant in ab
 
 ## 13. Analytics and metrics
 
-Nothing is emitted on `main` for this activity (see [Analytics status](README.md#analytics-status)). `js/ogrod.js` has no analytics calls. All seven event types (`activity_start`, `activity_end`, `activity_complete`, `activity_restart`, `interaction`, `level_start`, `level_complete`) are **not emitted** and no metric is supported.
-
-Not implemented (planning note only): for this open-ended activity, active time per visit and interaction count (plantings and cloud clears) would be meaningful; a completion rate would not. Any future implementation must stay on-device with no personal data ([#164](https://github.com/BielinskiLukasz/child-page/issues/164), PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172) open).
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 

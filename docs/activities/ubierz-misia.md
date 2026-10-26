@@ -112,9 +112,7 @@ There is no completion state and no failure. Feedback: item selection outline, g
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no analytics events**; see [Analytics status](README.md#analytics-status) and open PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172).
-
-Not implemented (for planning only): as an open-ended activity the meaningful signals would be `activity_start` / `activity_end` (active time) and an `interaction` count (weather changes and items worn, optionally without the item identity). A completion rate or levels would not apply. No personal data is needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 

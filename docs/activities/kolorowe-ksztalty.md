@@ -126,15 +126,7 @@ No external assets. All shapes and outlines are inline SVG (`viewBox="0 0 100 10
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no analytics events** (see [Analytics status](README.md#analytics-status)); usage metrics are only proposed in open PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172).
-
-| Event | Emitted today |
-|---|---|
-| `activity_start`, `activity_end`, `activity_complete`, `activity_restart`, `interaction`, `level_start`, `level_complete` | No (none are implemented) |
-
-All metrics (starts, active time, average active time per start, completions, completion rate, replays, exit-before-completion, highest level, interactions) are **not supported**.
-
-*Not implemented, for planning only:* `level_start` / `level_complete` would map naturally to a picture (with the grid size as the level), `activity_complete` is not meaningful for a repeating activity, and interactions would be drags (completed or returned). Active time is also useful. Nothing identifying a child is needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -144,7 +136,7 @@ All metrics (starts, active time, average active time per start, completions, co
 - **Loop:** one `requestAnimationFrame` loop (`frame`) that stops when idle and is restarted by `start()` (glide, resize, `visibilitychange`); the time step is capped at 50 ms.
 - **Events:** `pointerdown`, `pointermove`, `pointerup`, `pointercancel`, `lostpointercapture` per shape; `click` (keyboard, `detail === 0`) on shapes; `click` on outlines; `resize`, `orientationchange`, `visibilitychange`.
 - **Shared code:** `window.Rand` (`pick`, `shuffle`).
-- **Persistence and analytics:** none.
+- **Persistence:** none. **Analytics:** `Analytics.levelStart` / `levelComplete` / `complete`.
 
 ## 15. Responsive layout and coordinate system
 

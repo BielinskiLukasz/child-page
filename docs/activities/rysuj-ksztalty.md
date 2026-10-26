@@ -139,9 +139,7 @@ Nothing is randomized: the six shapes always appear in the same order (line, cir
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no** analytics events; see [Analytics status](README.md#analytics-status). No metric is supported.
-
-*Not implemented, for planning only:* `activity_complete` (or `level_complete`) per traced shape, with the shape label as a non-personal property, plus active time and an `interaction` count would be meaningful. Because shapes loop endlessly, the best signals are active time and shapes completed per visit; a completion rate would be of limited use. No data that could identify a child should be collected.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -197,7 +195,7 @@ On `main` this activity emits **no** analytics events; see [Analytics status](RE
 
 **Confirmed**
 
-- No automated tests; no analytics on `main`.
+- No automated tests. Analytics is covered in section 13.
 - Fixed order, no randomization, no way to choose a shape.
 - ArrowLeft/ArrowUp do nothing; there is no way to undo or erase.
 - `getContext('2d')` is not checked.

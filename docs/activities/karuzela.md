@@ -124,9 +124,7 @@ No progression, levels or difficulty. Nothing persists between sessions.
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no** analytics events and no metrics are collected; see [analytics status](README.md#analytics-status). Usage metrics are proposed in PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172) (open, not merged).
-
-**Not implemented (planning note only):** for this open-ended activity the meaningful signals would be active time and interactions (for example `interaction` with a variant such as start/stop, drag, animal tap), plus `activity_start`/`activity_end`. A completion rate is not meaningful because there is no completion state. Data must stay anonymous and on the device.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 

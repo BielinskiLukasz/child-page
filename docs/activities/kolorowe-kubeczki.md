@@ -116,9 +116,7 @@ None. Every round has three cups and six balls; nothing persists between session
 
 ## 13. Analytics and metrics
 
-Nothing is emitted on `main`; see [README.md](README.md#analytics-status). None of `activity_start`, `activity_end`, `activity_complete`, `activity_restart`, `interaction`, `level_start`, `level_complete` is emitted for this activity, and no metric is supported. On-device metrics are proposed in open PR [#172](https://github.com/BielinskiLukasz/child-page/pull/172).
-
-Not implemented, planning note only: active time, the number of balls placed (`interaction`) and sorted rounds (a completed round could be an `activity_complete`) would be meaningful; the number of wrong drops could be counted but is not an error measure. No personal data would be needed.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -128,7 +126,7 @@ Not implemented, planning note only: active time, the number of balls placed (`i
 - **Events:** `pointerdown/move/up/cancel`, `lostpointercapture` per ball; `click` on balls (keyboard) and cups; `resize`, `orientationchange`, `visibilitychange`.
 - **Animation:** one `frame()` loop (dt capped at 50 ms), smoothstep glides, restarted by `start()` and stopped when nothing is moving; paused while hidden.
 - **Randomization:** `Rand.pickOne` for the combination, local `shuffled()` for the ball slots (uses `Math.random` directly).
-- **Dependencies:** [`js/random.js`](../../js/random.js). **Persistence:** none. **Analytics:** none.
+- **Dependencies:** [`js/random.js`](../../js/random.js). **Persistence:** none. **Analytics:** none from the activity itself (reported by `js/app.js`).
 - **Cleanup:** cancels the frame, removes the three listeners and removes the board.
 
 ## 15. Responsive layout and coordinate system

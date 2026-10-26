@@ -132,9 +132,7 @@ No levels. Each animal always goes through the same three stages; the brush gets
 
 ## 13. Analytics and metrics
 
-On `main` this activity emits **no** analytics events; see [Analytics status](README.md#analytics-status). No metric is supported.
-
-*Not implemented, for planning only:* `activity_complete` per animal washed (one full three-stage cycle), `level_start`/`level_complete` per stage (stage number only), active time and an `interaction` count (rubbing strokes). Exit-before-completion would show whether children leave during a stage. No data that could identify a child should be collected.
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`) through the app shell only: `js/app.js` records the activity start and end, and the module counts touches inside the stage. The activity file itself calls no `Analytics` function. Recorded for it: starts, active time, replays (re-opening in the same session), quick exits (within 10 s) and touches. It is open-ended, so no completion, level or exit-before-completion is defined for it. Data stays on the device as anonymous daily aggregates; see [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 
@@ -192,7 +190,7 @@ On `main` this activity emits **no** analytics events; see [Analytics status](RE
 
 **Confirmed**
 
-- No automated tests; no analytics on `main`.
+- No automated tests. Analytics is covered in section 13.
 - No error handling for silhouette image load failure (section 16).
 - Keyboard play needs many key presses.
 - The final animal swap overrides phase `wait` with `swap`, so input may open at the end of the fade even if the new layer image has not finished loading (practically only on the very first load of an animal colour).

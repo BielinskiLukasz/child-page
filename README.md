@@ -89,3 +89,6 @@ In Settings (behind the same gate) a parent can enable or disable each activity 
 `js/animals.js` (loaded after `random.js`) exposes `window.Animals`, the shared animal family drawn in one round-head style (13 animals: Miś, Króliczek, Kotek, Piesek, Myszka, Świnka, Lisek, Lew, Słoń, Panda, Żabka, Sowa, Koala): `Animals.head(id, opts)` returns the SVG markup, `Animals.pick(n, {distinct})` returns `n` random unique animals (`distinct` avoids alike silhouettes). Pociąg, Dobranoc, Farma, Chowany, Cienie, Autobusik and Buźki pick their animals from it on every launch, in memory only.
 
 `js/random.js` (loaded before the activities) exposes `window.Rand` for activity variety, kept in memory only (nothing stored, nothing scored): `Rand.shuffle(list)` returns a new shuffled copy; `Rand.pick(list, n)` returns `n` unique items (the whole pool shuffled if `n` exceeds it); `Rand.pickOne(list, key)` returns one item that differs from the previous result for the same `key` in this page session when the pool has 2+ entries. An empty pool gives `[]` / `undefined`.
+
+## Activity documentation
+One document per activity (purpose, flow, rules, configuration, risks, technical details, manual test scenarios) is in [docs/activities/](docs/activities/README.md); new ones start from the [template](docs/activities/ACTIVITY_TEMPLATE.md).

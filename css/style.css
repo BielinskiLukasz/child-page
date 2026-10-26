@@ -719,3 +719,11 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .hs-leaf { position: absolute; left: 0; top: 0; width: 18px; height: 18px; pointer-events: none; z-index: 4; will-change: transform, opacity; }
 .stage .hs-leaf svg { width: 18px; height: 18px; display: block; }
 .hs-treebtn:focus-visible, .hs-seat:focus-visible, .hs-an:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 16px; }
+/* Latawiec (lw-) */
+.lw { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none;
+  user-select: none; -webkit-user-select: none; background: linear-gradient(#cfeaf8, #f3f7e6); }
+.lw-board { position: relative; aspect-ratio: 400 / 300; width: min(100%, calc((100dvh - var(--safe-t) - var(--safe-b) - 64px) * 400 / 300)); }
+.stage .lw-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border-radius: 24px; pointer-events: none; }
+.lw-an { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.lw-kb { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%; will-change: transform; -webkit-tap-highlight-color: transparent; }
+.lw-an:focus-visible, .lw-kb:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 16px; }

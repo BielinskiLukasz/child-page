@@ -290,7 +290,7 @@
         else if (swapDir > 0 && boxOp >= 1) { boxOp = 1; phase = 'play'; swapDir = 0; }
         box.style.opacity = boxOp.toFixed(3);
       }
-      if (busy) { raf = requestAnimationFrame(frame); }
+      if (busy && !raf) { raf = requestAnimationFrame(frame); }
     }
     function start() {
       if (raf || document.hidden || !alive) { return; }

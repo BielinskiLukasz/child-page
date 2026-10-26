@@ -6,7 +6,7 @@
   var list = window.ACTIVITIES;
 
   function defaults() {
-    return list.map(function (a) { return { id: a.id, on: true }; });
+    return list.map(function (a) { return { id: a.id, on: !a.defaultOff }; });
   }
 
   // Saved entries for unknown activities are dropped; activities missing from the save are appended enabled.
@@ -20,7 +20,7 @@
         }
       });
     }
-    list.forEach(function (a) { if (!seen[a.id]) { out.push({ id: a.id, on: true }); } });
+    list.forEach(function (a) { if (!seen[a.id]) { out.push({ id: a.id, on: !a.defaultOff }); } });
     if (!out.some(function (e) { return e.on; })) { return defaults(); }
     return out;
   }

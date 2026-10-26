@@ -70,7 +70,7 @@
     var hx = x1 + 5, hy = top + 3, hr = b.hr, sn = b.snout, i, legs = '';
     var legX = [x0 + 3, x0 + 13, x1 - 21, x1 - 11];
     for (i = 0; i < 4; i++) {
-      legs += '<rect x="' + legX[i] + '" y="' + r1(bot - 4) + '" width="8" height="' + (b.leg + 4) + '" rx="4" fill="' + (i % 2 ? b.fur : b.fur2 === '#ffffff' ? b.fur : b.fur) + '"/>' +
+      legs += '<rect x="' + legX[i] + '" y="' + r1(bot - 4) + '" width="8" height="' + (b.leg + 4) + '" rx="4" fill="' + b.fur + '"/>' +
         ell(legX[i] + 4, 91.5, 5, 2.6, b.fur2);
     }
     var tailPx = x0 + 2, tailPy = top + 7;

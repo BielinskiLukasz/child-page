@@ -727,3 +727,12 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .lw-an { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .lw-kb { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 50%; will-change: transform; -webkit-tap-highlight-color: transparent; }
 .lw-an:focus-visible, .lw-kb:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 16px; }
+/* Zegar z Kukułką (kk-) */
+.kk { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: manipulation;
+  user-select: none; -webkit-user-select: none; background: linear-gradient(#fdeff3, #f3ecf9); }
+.kk-board { position: relative; aspect-ratio: 400 / 300; width: min(100%, calc((100dvh - var(--safe-t) - var(--safe-b) - 64px) * 400 / 300)); }
+.stage .kk-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border-radius: 24px; pointer-events: none; }
+.kk-door, .kk-hands, .kk-pbtn { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.kk-hands { border-radius: 50%; }
+.stage .kk-door svg { display: block; overflow: visible; pointer-events: none; }
+.kk-door:focus-visible, .kk-hands:focus-visible, .kk-pbtn:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; border-radius: 16px; }

@@ -98,9 +98,9 @@
         n++;
       }
     }
-    // Birds: a small flock (7-9, chosen on every launch) only by day. Each flies slowly across in a lane that keeps clear of the sun/moon
-    // button; when one leaves the screen another follows shortly after, so at least 5 are visible at the day peak.
-    var flockSize = 7 + Math.floor(Math.random() * 3), birds = [], respawn = [], flockOn = false;
+    // Birds: a small flock (2-3, chosen on every launch) only by day. Each flies slowly across in a lane that keeps clear of the sun/moon
+    // button; when one leaves the screen another follows shortly after, so 2-3 are visible at the day peak.
+    var flockSize = 2 + Math.floor(Math.random() * 2), birds = [], respawn = [], flockOn = false;
     function removeBird(b) {
       var i = birds.indexOf(b);
       if (i >= 0) { birds.splice(i, 1); }

@@ -13,7 +13,8 @@
     ]},
     { u: 'B', l: 'b', pics: [
       { w: 'balon', svg: '<ellipse cx="50" cy="40" rx="26" ry="32" fill="#a8d8f0"/><path d="M44 72L56 72L50 80Z" fill="#a8d8f0"/><path d="M50 80Q42 88 52 94" fill="none" stroke="#8a84a8" stroke-width="2.4" stroke-linecap="round"/><path d="M36 26a16 18 0 0 1 10-12" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="4" stroke-linecap="round"/>' },
-      { w: 'banan', svg: '<path d="M22 26Q18 84 80 80L82 66Q46 66 38 24Z" fill="#ffe08a" stroke="#e8c050" stroke-width="3" stroke-linejoin="round"/><rect x="20" y="16" width="10" height="12" rx="3" fill="#b99a86"/>' }
+      { w: 'banan', svg: '<path d="M22 26Q18 84 80 80L82 66Q46 66 38 24Z" fill="#ffe08a" stroke="#e8c050" stroke-width="3" stroke-linejoin="round"/><rect x="20" y="16" width="10" height="12" rx="3" fill="#b99a86"/>' },
+      { w: 'butelka', svg: '<rect x="40" y="8" width="20" height="12" rx="3" fill="#8f7fa3"/><path d="M42 20h16v18Q74 48 74 66v20Q74 94 66 94H34Q26 94 26 86V66Q26 48 42 38Z" fill="#a9d6f2"/><rect x="30" y="62" width="40" height="16" fill="#fff" opacity=".6"/>' }
     ]},
     { u: 'C', l: 'c', pics: [
       { w: 'cytryna', svg: '<ellipse cx="50" cy="54" rx="34" ry="24" fill="#fff09a" stroke="#f0d060" stroke-width="3"/><path d="M84 54l8-3v6z" fill="#f0d060"/><path d="M12 54l-8-3v6z" fill="#f0d060"/><path d="M58 32Q68 18 80 24Q70 36 58 32Z" fill="#9fd4a8"/>' },
@@ -25,7 +26,8 @@
     ]},
     { u: 'D', l: 'd', pics: [
       { w: 'dom', svg: '<rect x="20" y="46" width="60" height="44" rx="5" fill="#f6dcc8"/><path d="M12 50L50 16L88 50Z" fill="#c9a0c0" stroke="#c9a0c0" stroke-width="5" stroke-linejoin="round"/><rect x="43" y="64" width="16" height="26" rx="8" fill="#b99a86"/><rect x="26" y="56" width="12" height="12" rx="2" fill="#ffe9a8"/>' },
-      { w: 'dynia', svg: '<g fill="#f7b27a"><ellipse cx="32" cy="58" rx="20" ry="28"/><ellipse cx="68" cy="58" rx="20" ry="28"/><ellipse cx="50" cy="58" rx="20" ry="30" fill="#f9c18f"/></g><path d="M50 28Q50 16 58 12" fill="none" stroke="#7fbf8f" stroke-width="6" stroke-linecap="round"/>' }
+      { w: 'dynia', svg: '<g fill="#f7b27a"><ellipse cx="32" cy="58" rx="20" ry="28"/><ellipse cx="68" cy="58" rx="20" ry="28"/><ellipse cx="50" cy="58" rx="20" ry="30" fill="#f9c18f"/></g><path d="M50 28Q50 16 58 12" fill="none" stroke="#7fbf8f" stroke-width="6" stroke-linecap="round"/>' },
+      { w: 'drzewo', svg: '<rect x="43" y="56" width="14" height="38" rx="4" fill="#b98f6a"/><circle cx="50" cy="36" r="26" fill="#9fd4a8"/><circle cx="34" cy="48" r="16" fill="#8cc79a"/><circle cx="66" cy="48" r="16" fill="#8cc79a"/>' }
     ]},
     { u: 'E', l: 'e', pics: [
       { w: 'ekran', svg: '<rect x="12" y="14" width="76" height="50" rx="7" fill="#a8d8f0" stroke="#8a84a8" stroke-width="5"/><rect x="44" y="66" width="12" height="14" fill="#8a84a8"/><rect x="28" y="80" width="44" height="7" rx="3" fill="#8a84a8"/>' },
@@ -41,7 +43,8 @@
     ]},
     { u: 'G', l: 'g', pics: [
       { w: 'gruszka', svg: '<circle cx="50" cy="64" r="26" fill="#cfe69a"/><circle cx="50" cy="38" r="16" fill="#cfe69a"/><path d="M50 24Q50 14 56 8" fill="none" stroke="#b99a86" stroke-width="4" stroke-linecap="round"/><path d="M54 16Q68 8 74 18Q62 24 54 16Z" fill="#7fbf8f"/>' },
-      { w: 'grzyb', svg: '<rect x="38" y="52" width="24" height="36" rx="9" fill="#f6dcc8"/><path d="M10 56Q10 12 50 12Q90 12 90 56Z" fill="#f7a8a8"/><g fill="#fff"><circle cx="34" cy="34" r="6"/><circle cx="60" cy="28" r="5"/><circle cx="70" cy="46" r="5"/><circle cx="44" cy="46" r="4"/></g>' }
+      { w: 'grzyb', svg: '<rect x="38" y="52" width="24" height="36" rx="9" fill="#f6dcc8"/><path d="M10 56Q10 12 50 12Q90 12 90 56Z" fill="#f7a8a8"/><g fill="#fff"><circle cx="34" cy="34" r="6"/><circle cx="60" cy="28" r="5"/><circle cx="70" cy="46" r="5"/><circle cx="44" cy="46" r="4"/></g>' },
+      { w: 'gwiazda', svg: '<path d="M50 8L61 38L92 38L67 57L77 88L50 69L23 88L33 57L8 38L39 38Z" fill="#ffd37a" stroke="#e8a94f" stroke-width="3" stroke-linejoin="round"/>' }
     ]},
     { u: 'H', l: 'h', pics: [
       { w: 'herbata', svg: '<ellipse cx="46" cy="84" rx="38" ry="6" fill="#e8e0f2"/><path d="M18 38H74V58Q74 80 46 80Q18 80 18 58Z" fill="#fff" stroke="#d9cfe8" stroke-width="3"/><path d="M74 44Q94 44 92 60Q90 74 72 70" fill="none" stroke="#d9cfe8" stroke-width="5" stroke-linecap="round"/><ellipse cx="46" cy="40" rx="28" ry="5" fill="#d9a07a"/><path d="M36 28Q30 20 38 12M54 28Q48 20 56 12" fill="none" stroke="#c9d6e8" stroke-width="3" stroke-linecap="round"/>' },
@@ -53,15 +56,18 @@
     ]},
     { u: 'J', l: 'j', pics: [
       { w: 'jabłko', svg: '<circle cx="38" cy="58" r="26" fill="#f7a8a8"/><circle cx="62" cy="58" r="26" fill="#f7a8a8"/><path d="M50 34Q50 22 56 14" fill="none" stroke="#b99a86" stroke-width="4" stroke-linecap="round"/><path d="M54 24Q68 14 76 24Q62 30 54 24Z" fill="#7fbf8f"/>' },
-      { w: 'jeż', svg: '<path d="M12 72Q10 30 50 24Q90 30 88 72Z" fill="#8a6a4a"/><path d="M16 56L8 50M22 44L16 34M34 34L30 22M48 28L48 14M62 30L68 18M76 38L84 28M84 50L94 46" stroke="#6a5038" stroke-width="4" stroke-linecap="round"/><circle cx="78" cy="62" r="14" fill="#f6dcc8"/><circle cx="82" cy="58" r="2.6" fill="#5b5675"/><circle cx="90" cy="64" r="3.4" fill="#5b5675"/><rect x="28" y="70" width="8" height="14" rx="3" fill="#6a5038"/><rect x="56" y="70" width="8" height="14" rx="3" fill="#6a5038"/>' }
+      { w: 'jeż', svg: '<path d="M12 72Q10 30 50 24Q90 30 88 72Z" fill="#8a6a4a"/><path d="M16 56L8 50M22 44L16 34M34 34L30 22M48 28L48 14M62 30L68 18M76 38L84 28M84 50L94 46" stroke="#6a5038" stroke-width="4" stroke-linecap="round"/><circle cx="78" cy="62" r="14" fill="#f6dcc8"/><circle cx="82" cy="58" r="2.6" fill="#5b5675"/><circle cx="90" cy="64" r="3.4" fill="#5b5675"/><rect x="28" y="70" width="8" height="14" rx="3" fill="#6a5038"/><rect x="56" y="70" width="8" height="14" rx="3" fill="#6a5038"/>' },
+      { w: 'jajko', svg: '<ellipse cx="50" cy="56" rx="26" ry="34" fill="#fdf3e0" stroke="#e6d3b0" stroke-width="3"/><path d="M34 40Q40 28 50 26" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/>' }
     ]},
     { u: 'K', l: 'k', pics: [
       { w: 'kot', svg: '<path d="M24 46L26 14L46 30ZM76 46L74 14 54 30Z" fill="#f7d6b4"/><circle cx="50" cy="56" r="30" fill="#f7d6b4"/><circle cx="39" cy="52" r="3.6" fill="#5b5675"/><circle cx="61" cy="52" r="3.6" fill="#5b5675"/><ellipse cx="50" cy="62" rx="4" ry="3" fill="#e59aa8"/><path d="M43 69q7 5 14 0" fill="none" stroke="#5b5675" stroke-width="2" stroke-linecap="round"/>' },
-      { w: 'kwiat', svg: '<path d="M50 94V52" stroke="#7fbf8f" stroke-width="5" stroke-linecap="round"/><path d="M50 80Q32 80 28 66Q46 66 50 80Z" fill="#9fd4a8"/><g fill="#f7a8c9"><circle cx="50" cy="22" r="13"/><circle cx="72" cy="36" r="13"/><circle cx="64" cy="58" r="13"/><circle cx="36" cy="58" r="13"/><circle cx="28" cy="36" r="13"/></g><circle cx="50" cy="42" r="11" fill="#ffe08a"/>' }
+      { w: 'kwiat', svg: '<path d="M50 94V52" stroke="#7fbf8f" stroke-width="5" stroke-linecap="round"/><path d="M50 80Q32 80 28 66Q46 66 50 80Z" fill="#9fd4a8"/><g fill="#f7a8c9"><circle cx="50" cy="22" r="13"/><circle cx="72" cy="36" r="13"/><circle cx="64" cy="58" r="13"/><circle cx="36" cy="58" r="13"/><circle cx="28" cy="36" r="13"/></g><circle cx="50" cy="42" r="11" fill="#ffe08a"/>' },
+      { w: 'klucz', svg: '<circle cx="32" cy="32" r="20" fill="none" stroke="#e8b84f" stroke-width="9"/><path d="M46 46L88 88M72 72L82 62M80 80L90 70" stroke="#e8b84f" stroke-width="9" stroke-linecap="round"/>' }
     ]},
     { u: 'L', l: 'l', pics: [
       { w: 'lody', svg: '<path d="M32 52L50 94L68 52Z" fill="#e8c9a8"/><circle cx="40" cy="44" r="16" fill="#f7a8c9"/><circle cx="60" cy="42" r="15" fill="#bfe6b4"/><circle cx="50" cy="30" r="14" fill="#ffe9a8"/>' },
-      { w: 'lampa', svg: '<path d="M30 18H70L84 54H16Z" fill="#ffe08a"/><rect x="47" y="54" width="6" height="30" fill="#8a84a8"/><ellipse cx="50" cy="86" rx="20" ry="6" fill="#c9a0c0"/>' }
+      { w: 'lampa', svg: '<path d="M30 18H70L84 54H16Z" fill="#ffe08a"/><rect x="47" y="54" width="6" height="30" fill="#8a84a8"/><ellipse cx="50" cy="86" rx="20" ry="6" fill="#c9a0c0"/>' },
+      { w: 'liść', svg: '<path d="M14 86Q10 30 50 14Q90 22 86 62Q70 90 14 86Z" fill="#9fd4a8"/><path d="M14 86Q40 56 72 34" fill="none" stroke="#6fb584" stroke-width="3" stroke-linecap="round"/>' }
     ]},
     { u: 'Ł', l: 'ł', pics: [
       { w: 'łódka', svg: '<path d="M10 62H90L76 84Q74 88 68 88H32Q26 88 24 84Z" fill="#f7a8c9"/><path d="M50 12V62" stroke="#8a6a4a" stroke-width="3"/><path d="M54 14L84 58H54Z" fill="#fff" stroke="#e8e0f2" stroke-width="2" stroke-linejoin="round"/><path d="M6 92q10-6 20 0t20 0t20 0t20 0" fill="none" stroke="#a8d8f0" stroke-width="4" stroke-linecap="round"/>' },
@@ -81,7 +87,8 @@
     ]},
     { u: 'O', l: 'o', pics: [
       { w: 'owca', svg: '<g fill="#fff" stroke="#e8e0f2" stroke-width="2"><circle cx="34" cy="52" r="16"/><circle cx="50" cy="44" r="18"/><circle cx="64" cy="54" r="16"/><circle cx="48" cy="62" r="16"/></g><circle cx="80" cy="46" r="12" fill="#d9cfe8"/><circle cx="83" cy="43" r="2.4" fill="#5b5675"/><rect x="36" y="72" width="6" height="16" rx="3" fill="#d9cfe8"/><rect x="58" y="72" width="6" height="16" rx="3" fill="#d9cfe8"/>' },
-      { w: 'ołówek', svg: '<g transform="rotate(-35 50 50)"><rect x="6" y="40" width="12" height="20" rx="4" fill="#f7a8c9"/><rect x="18" y="40" width="54" height="20" fill="#ffd37a"/><path d="M72 40L96 50L72 60Z" fill="#f6dcc8"/><path d="M89 47L96 50L89 53Z" fill="#5b5675"/></g>' }
+      { w: 'ołówek', svg: '<g transform="rotate(-35 50 50)"><rect x="6" y="40" width="12" height="20" rx="4" fill="#f7a8c9"/><rect x="18" y="40" width="54" height="20" fill="#ffd37a"/><path d="M72 40L96 50L72 60Z" fill="#f6dcc8"/><path d="M89 47L96 50L89 53Z" fill="#5b5675"/></g>' },
+      { w: 'oko', svg: '<path d="M6 50Q50 8 94 50Q50 92 6 50Z" fill="#fff" stroke="#5b5675" stroke-width="4" stroke-linejoin="round"/><circle cx="50" cy="50" r="19" fill="#8fc2e6"/><circle cx="50" cy="50" r="9" fill="#5b5675"/><circle cx="45" cy="45" r="3.5" fill="#fff"/>' }
     ]},
     { u: 'Ó', l: 'ó', pics: [
       { w: 'ósemka', svg: '<circle cx="50" cy="30" r="16" fill="none" stroke="#8f7fd1" stroke-width="10"/><circle cx="50" cy="68" r="20" fill="none" stroke="#8f7fd1" stroke-width="10"/>' },
@@ -89,7 +96,8 @@
     ]},
     { u: 'P', l: 'p', pics: [
       { w: 'piłka', svg: '<circle cx="50" cy="50" r="40" fill="#f7a8c9"/><path d="M10 44Q50 66 90 44" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="7"/><path d="M24 24a34 34 0 0 1 22-12" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="5" stroke-linecap="round"/>' },
-      { w: 'pomidor', svg: '<circle cx="50" cy="56" r="34" fill="#f78a8a"/><path d="M50 24L58 36L72 30L64 42L76 48L62 50L56 62L50 52L44 62L38 50L24 48L36 42L28 30L42 36Z" fill="#7fbf8f"/>' }
+      { w: 'pomidor', svg: '<circle cx="50" cy="56" r="34" fill="#f78a8a"/><path d="M50 24L58 36L72 30L64 42L76 48L62 50L56 62L50 52L44 62L38 50L24 48L36 42L28 30L42 36Z" fill="#7fbf8f"/>' },
+      { w: 'parasol', svg: '<path d="M8 50A42 42 0 0 1 92 50Z" fill="#f7a8c9"/><path d="M50 50V84Q50 94 40 90" fill="none" stroke="#7a748f" stroke-width="5" stroke-linecap="round"/><path d="M50 8V10" stroke="#7a748f" stroke-width="5" stroke-linecap="round"/>' }
     ]},
     { u: 'R', l: 'r', pics: [
       { w: 'rower', svg: '<g fill="none" stroke="#8f7fd1" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="68" r="18"/><circle cx="76" cy="68" r="18"/><path d="M24 68L42 38H64L76 68M42 38L50 68H24M50 68L64 38M38 30H48M64 38L60 26H70"/></g>' },
@@ -97,7 +105,8 @@
     ]},
     { u: 'S', l: 's', pics: [
       { w: 'słoń', svg: '<ellipse cx="44" cy="62" rx="30" ry="22" fill="#c9d6e8"/><circle cx="74" cy="46" r="16" fill="#c9d6e8"/><path d="M82 56Q96 62 92 84Q90 89 85 86Q87 70 79 62Z" fill="#c9d6e8"/><circle cx="62" cy="46" r="10" fill="#b4c4dc"/><rect x="24" y="74" width="12" height="18" rx="5" fill="#b4c4dc"/><rect x="50" y="74" width="12" height="18" rx="5" fill="#b4c4dc"/><circle cx="78" cy="42" r="2.6" fill="#5b5675"/>' },
-      { w: 'sowa', svg: '<path d="M22 34L26 10L42 24ZM78 34L74 10L58 24Z" fill="#c9a98a"/><ellipse cx="50" cy="58" rx="32" ry="34" fill="#c9a98a"/><circle cx="36" cy="46" r="14" fill="#fff"/><circle cx="64" cy="46" r="14" fill="#fff"/><circle cx="37" cy="47" r="6" fill="#5b5675"/><circle cx="63" cy="47" r="6" fill="#5b5675"/><path d="M44 58L50 70L56 58Z" fill="#f7c27a"/><ellipse cx="50" cy="80" rx="16" ry="8" fill="#e8d4bc"/>' }
+      { w: 'sowa', svg: '<path d="M22 34L26 10L42 24ZM78 34L74 10L58 24Z" fill="#c9a98a"/><ellipse cx="50" cy="58" rx="32" ry="34" fill="#c9a98a"/><circle cx="36" cy="46" r="14" fill="#fff"/><circle cx="64" cy="46" r="14" fill="#fff"/><circle cx="37" cy="47" r="6" fill="#5b5675"/><circle cx="63" cy="47" r="6" fill="#5b5675"/><path d="M44 58L50 70L56 58Z" fill="#f7c27a"/><ellipse cx="50" cy="80" rx="16" ry="8" fill="#e8d4bc"/>' },
+      { w: 'serce', svg: '<path d="M50 88L12 50A21 21 0 0 1 50 24A21 21 0 0 1 88 50Z" fill="#f48ab0"/><path d="M28 36Q34 28 42 30" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".7"/>' }
     ]},
     { u: 'Ś', l: 'ś', pics: [
       { w: 'ślimak', svg: '<path d="M8 78Q10 66 24 68H70Q84 68 84 56V36" fill="none" stroke="#e8c9a8" stroke-width="14" stroke-linecap="round"/><circle cx="84" cy="30" r="9" fill="#e8c9a8"/><path d="M80 24L78 12M88 24L90 12" stroke="#e8c9a8" stroke-width="3" stroke-linecap="round"/><circle cx="48" cy="46" r="24" fill="#c9a0c0"/><circle cx="48" cy="46" r="15" fill="none" stroke="#a87fa0" stroke-width="4"/><circle cx="48" cy="46" r="6" fill="none" stroke="#a87fa0" stroke-width="4"/>' },
@@ -105,7 +114,8 @@
     ]},
     { u: 'T', l: 't', pics: [
       { w: 'tulipan', svg: '<path d="M50 94V58" stroke="#7fbf8f" stroke-width="5" stroke-linecap="round"/><path d="M50 82Q30 80 26 62Q44 64 50 82Z" fill="#9fd4a8"/><path d="M50 78Q70 76 74 58Q56 60 50 78Z" fill="#9fd4a8"/><path d="M30 24Q30 62 50 62Q70 62 70 24L60 36L50 18L40 36Z" fill="#f7a8c9" stroke="#f7a8c9" stroke-width="3" stroke-linejoin="round"/>' },
-      { w: 'tort', svg: '<rect x="14" y="56" width="72" height="30" rx="6" fill="#f7c9a0"/><rect x="18" y="38" width="64" height="22" rx="6" fill="#f7a8c9"/><path d="M18 46Q26 54 34 46T50 46T66 46T82 46" fill="none" stroke="#fff" stroke-width="4"/><rect x="47" y="22" width="6" height="16" rx="2" fill="#a8d8f0"/><path d="M50 8Q57 16 50 22Q43 16 50 8Z" fill="#ffb74d"/>' }
+      { w: 'tort', svg: '<rect x="14" y="56" width="72" height="30" rx="6" fill="#f7c9a0"/><rect x="18" y="38" width="64" height="22" rx="6" fill="#f7a8c9"/><path d="M18 46Q26 54 34 46T50 46T66 46T82 46" fill="none" stroke="#fff" stroke-width="4"/><rect x="47" y="22" width="6" height="16" rx="2" fill="#a8d8f0"/><path d="M50 8Q57 16 50 22Q43 16 50 8Z" fill="#ffb74d"/>' },
+      { w: 'truskawka', svg: '<path d="M50 90Q14 62 18 40Q24 24 50 30Q76 24 82 40Q86 62 50 90Z" fill="#f2697e"/><path d="M50 30L36 16L50 22L64 16Z" fill="#6fb584"/><g fill="#fff4b0"><ellipse cx="38" cy="46" rx="2" ry="3"/><ellipse cx="60" cy="44" rx="2" ry="3"/><ellipse cx="50" cy="58" rx="2" ry="3"/><ellipse cx="42" cy="68" rx="2" ry="3"/><ellipse cx="60" cy="68" rx="2" ry="3"/></g>' }
     ]},
     { u: 'U', l: 'u', pics: [
       { w: 'ul', svg: '<g fill="#ffd37a" stroke="#e8b84f" stroke-width="2"><rect x="24" y="64" width="52" height="22" rx="9"/><rect x="28" y="44" width="44" height="22" rx="9"/><rect x="32" y="26" width="36" height="20" rx="9"/></g><path d="M36 26Q50 6 64 26Z" fill="#e8b84f"/><ellipse cx="50" cy="75" rx="7" ry="6" fill="#8a6a4a"/>' },

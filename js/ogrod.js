@@ -58,8 +58,12 @@
   function weatherHtml(c) {
     var h = '<div class="g-wx">';
     if (c.t === 'night') {
-      for (var s = 0; s < 14; s++) {
-        h += '<i class="g-star" style="left:' + (4 + (s * 37) % 92) + '%;top:' + (3 + (s * 23) % 40) + '%;animation-delay:-' + (s % 5) + 's"></i>';
+      // Random per launch, like the stars in Dzień i Noc: mostly small dots, a few bigger bright ones (3+ sizes).
+      for (var s = 0; s < 40; s++) {
+        var bright = Math.random() < 0.1;
+        var sz = bright ? 3 + Math.random() : 1.4 + Math.random() * 1.3;
+        h += '<i class="g-star" style="left:' + (2 + Math.random() * 96).toFixed(1) + '%;top:' + (2 + Math.random() * 46).toFixed(1) + '%;width:' + sz.toFixed(1) + 'px;height:' + sz.toFixed(1) +
+          'px;opacity:' + (bright ? 0.9 : 0.4 + Math.random() * 0.4).toFixed(2) + ';animation-delay:-' + (Math.random() * 4).toFixed(2) + 's"></i>';
       }
     }
     if (c.w === 'sunny' || c.w === 'breeze') { h += '<i class="g-orb"></i>'; }
@@ -67,8 +71,10 @@
       h += '<i class="g-bank g-bank1"></i><i class="g-bank g-bank2"></i>';
     }
     if (c.w === 'rain') {
-      for (var d = 0; d < 26; d++) {
-        h += '<i class="g-drop" style="left:' + ((d * 4 + (d % 3) * 1.3) % 100).toFixed(1) + '%;animation-delay:-' + ((d * 0.37) % 1.1).toFixed(2) + 's"></i>';
+      // Random positions, start times and slightly varying speeds, so the drops never fall in synchronised waves.
+      for (var d = 0; d < 30; d++) {
+        var dur = 0.9 + Math.random() * 0.5;
+        h += '<i class="g-drop" style="left:' + (Math.random() * 100).toFixed(1) + '%;animation-duration:' + dur.toFixed(2) + 's;animation-delay:-' + (Math.random() * dur).toFixed(2) + 's"></i>';
       }
     }
     if (c.w === 'breeze') {

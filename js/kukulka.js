@@ -19,6 +19,9 @@
   var T_OPEN = 1, T_OUT = 0.6, T_WAVE = 1.8, T_IN = 0.6, T_CLOSE = 1, T_ALL = T_OPEN + T_OUT + T_WAVE + T_IN + T_CLOSE;
   var MAX_DT = 0.05;
   var DOOR_MIN = 64;                               // px
+  // Feet height of an emerged character in door units: the ~43-unit body then fills the 56-unit opening (top at y = 13, below the
+  // upper edge at 8), standing just above the door's bottom edge where the sliding clip stays.
+  var UP = 56;
   var DOORS = [
     { id: 'top', cx: 200, cy: 62, label: 'Górne drzwiczki – otwórz', who: 'bird', leaf: '#f7c8dc', hinge: 0 },
     { id: 'left', cx: 50, cy: 196, label: 'Lewe drzwiczki – otwórz', who: 'mouse', leaf: '#cfe6f7', hinge: 0 },
@@ -174,9 +177,9 @@
         else { open = 1 - smooth((t - (T_ALL - T_CLOSE)) / T_CLOSE); }
         var t1 = T_OPEN, t2 = t1 + T_OUT, t3 = t2 + T_WAVE, t4 = t3 + T_IN;
         if (t < t1) { base = 100; }
-        else if (t < t2) { base = 100 - 80 * smooth((t - t1) / T_OUT); }
-        else if (t < t3) { base = 20; wave = (t - t2) / T_WAVE; }
-        else if (t < t4) { base = 20 + 80 * smooth((t - t3) / T_IN); }
+        else if (t < t2) { base = 100 - (100 - UP) * smooth((t - t1) / T_OUT); }
+        else if (t < t3) { base = UP; wave = (t - t2) / T_WAVE; }
+        else if (t < t4) { base = UP + (100 - UP) * smooth((t - t3) / T_IN); }
         else { base = 100; }
       }
       var hx = +s.leaf.getAttribute('data-hx');

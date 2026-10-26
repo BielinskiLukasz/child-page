@@ -39,6 +39,7 @@
   window.addEventListener('storage', function (e) { if (e.key === 'swa.menu') { buildTiles(); } });
 
   function unmount() {
+    window.Analytics.activityEnd();
     window.Playtime.stop();
     if (typeof cleanup === 'function') { cleanup(); }
     cleanup = null;
@@ -73,6 +74,7 @@
       // Time is up: stop the activity and show the gentle "later" screen; Back/menu stay usable.
       if (shownLater) { return; } // already shown; don't re-render on every tick
       shownLater = true;
+      window.Analytics.activityEnd();
       if (typeof cleanup === 'function') { cleanup(); }
       cleanup = null;
       window.Playtime.renderLater(stage, true);
@@ -81,6 +83,7 @@
     if (expired) {
       window.Playtime.renderLater(stage);
     } else {
+      window.Analytics.activityStart(a.id);
       cleanup = a.mount(stage) || null;
     }
     backBtn.focus();

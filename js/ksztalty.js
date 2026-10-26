@@ -56,6 +56,7 @@
       items.forEach(function (it) { field.removeChild(it.el); });
       defs.forEach(function (def) { field.removeChild(def.outlineEl); });
       selected = null; doneActive = false; doneT = -1;
+      window.Analytics.levelStart(n);
       var shp = Rand.pick(SHAPES, n), col = Rand.pick(COLORS, n);
       defs = shp.map(function (sh, k) {
         return { id: sh.id, label: sh.label, path: sh.path, color: col[k].color, glow: col[k].glow };
@@ -214,7 +215,7 @@
       });
       // Whole-picture glow, then drift back after RETURN_AFTER (time only advances while visible).
       var allIn = items.every(function (it) { return it.placed && it.mode === 'idle'; });
-      if (allIn && !doneActive) { doneActive = true; doneT = 0; }
+      if (allIn && !doneActive) { doneActive = true; doneT = 0; window.Analytics.levelComplete(g * g); window.Analytics.complete(g * g); }
       if (doneActive) {
         doneT += dt;
         if (doneT >= RETURN_AFTER) {

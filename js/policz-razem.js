@@ -48,6 +48,7 @@
     function build() {
       var n = si % ROUNDS + 1, i;
       kind = Rand.pickOne(KINDS, 'policz-razem');
+      window.Analytics.levelStart(n);
       layer.innerHTML = '';
       var ov = '<svg class="pr-row" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">';
       for (i = 0; i < ROUNDS; i++) { ov += '<circle cx="' + (20 + i * 26) + '" cy="262" r="12" fill="#fff" stroke="#d9d0ee" stroke-width="3"/>'; }
@@ -83,7 +84,7 @@
         o.counted = true;
         prevShown = shown; count++; shown = count; numT = 0;
         dots[count - 1].on = true; dots[count - 1].t = 0;
-        if (count === objs.length) { phase = 'glow'; pt = 0; }
+        if (count === objs.length) { phase = 'glow'; pt = 0; window.Analytics.levelComplete(count); window.Analytics.complete(count); }
       }
       wake();
     }

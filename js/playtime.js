@@ -220,6 +220,8 @@
     overlay.hidden = false;
     gatePane.hidden = false;
     setPane.hidden = true;
+    var sp = document.getElementById('stats-pane');
+    if (sp) { sp.hidden = true; }
     gateMsg.textContent = '';
     newSum();
     gateIn.focus();

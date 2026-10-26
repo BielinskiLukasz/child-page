@@ -78,7 +78,14 @@ Pushing to `main` runs `.github/workflows/pages.yml`, which publishes to GitHub 
 Mandatory manual tests: Chrome desktop, Chrome Android, Safari iPhone/iPad. Edge and Firefox should work. Zoom is intentionally disabled to avoid accidental pinch-zoom.
 
 ## Privacy
-No backend, analytics, cookies, ads or tracking; no third-party requests, no data collected or transmitted. The only things stored, locally on the device (localStorage), are the parent-configured daily playtime limit, the playtime used today (with its date), and which activities are shown in the menu and in what order; it never leaves the device. No audio.
+No backend, cookies, ads, third-party requests or tracking; no network request is made for analytics. The only things stored, locally on the device (localStorage), are the parent-configured daily playtime limit, the playtime used today (with its date), which activities are shown in the menu and in what order, and the anonymous usage statistics described below; none of it leaves the device. No audio.
+
+## Usage statistics
+`js/analytics.js` (`window.Analytics`) is the single module through which every activity reports usage; nothing is shown to the child. It keeps only **daily aggregates** for the last 90 days plus running all-time totals (localStorage key `swa.stats`), never per-event history, names, age, location, text or any device fingerprint. The per-session id is random and kept in memory only.
+
+Measured: sessions (a session ends when the app is closed or after 30 minutes hidden), active vs. inactive time (active = page visible and a touch/key/pointer less than 60 s ago), activity starts, active time, completions, replays (re-opening in the same session), exits before completion, quick exits (within 10 s), touches, the highest level reached in Puzzle, Pamięć, Kolorowe Kształty and Policz Razem, and letters shown/touched in Literki. Completion is defined only for Puzzle (a picture finished), Pamięć (all pairs found), Kolorowe Kształty (a layout finished) and Policz Razem (a round counted); all other activities are open-ended.
+
+To view it: gear icon, parent gate, Settings, **Statystyki** (app metrics, ranking by active time, other rankings; filter: this session, today, 7 days, 30 days, all time). The same screen exports all stored aggregates as JSON (download or copy) and has "Wyzeruj statystyki" (with confirmation) to delete everything.
 
 ## Playtime limit
 A gear icon on the main menu opens a parent gate (a simple sum) and then Settings: daily limit in minutes (default 20, or no limit) and a timer reset. The timer counts only visible activity time and resets each new day. An hourglass (no numbers) shows time left, content dims gently over the last 20%, and when time is up a sleeping-moon screen is shown.

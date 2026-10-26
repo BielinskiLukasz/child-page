@@ -63,13 +63,35 @@
           <button id="act-confirm-no" type="button">Nie</button>
         </div>
       </section>
+      <button id="stats-open" type="button" class="stats-open">Statystyki</button>
+    </div>
+    <div id="stats-pane" class="panel stats" hidden>
+      <h2>Statystyki</h2>
+      <p class="stats-note">Zapisane tylko na tym urządzeniu, anonimowo. Nic nie jest nigdzie wysyłane.</p>
+      <div id="stats-periods" class="stats-periods" role="group" aria-label="Okres"></div>
+      <section aria-labelledby="stats-app-title"><h3 id="stats-app-title">Aplikacja</h3><dl id="stats-app" class="stats-dl"></dl></section>
+      <section aria-labelledby="stats-rank-title"><h3 id="stats-rank-title">Ranking zabaw (czas aktywny)</h3><ol id="stats-rank" class="stats-list"></ol></section>
+      <section aria-labelledby="stats-sec-title"><h3 id="stats-sec-title">Inne rankingi</h3><div id="stats-sec"></div></section>
+      <section aria-labelledby="stats-prog-title"><h3 id="stats-prog-title">Postępy</h3><ul id="stats-prog" class="stats-list"></ul></section>
+      <p id="stats-msg" class="msg" role="status"></p>
+      <button id="stats-export" type="button">Pobierz dane (JSON)</button>
+      <button id="stats-copy" type="button">Skopiuj dane (JSON)</button>
+      <button id="stats-reset" type="button">Wyzeruj statystyki</button>
+      <div id="stats-confirm" class="act-confirm" role="group" aria-label="Potwierdzenie" hidden>
+        <p>Usunąć wszystkie zapisane statystyki?</p>
+        <button id="stats-confirm-yes" type="button">Tak</button>
+        <button id="stats-confirm-no" type="button">Nie</button>
+      </div>
+      <button id="stats-back" type="button">Wróć do ustawień</button>
     </div>
   </section>
   <script src="js/activities.js"></script>
   <script src="js/random.js"></script>
   <script src="js/animals.js"></script>
+  <script src="js/analytics.js"></script>
   <script src="js/menu-config.js"></script>
   <script src="js/playtime.js"></script>
+  <script src="js/stats-ui.js"></script>
   <script src="js/motyle.js"></script>
   <script src="js/malowanie.js"></script>
   <script src="js/akwarium.js"></script>

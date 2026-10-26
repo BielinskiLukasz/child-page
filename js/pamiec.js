@@ -61,6 +61,7 @@
       var keys = Rand.pick(POOL, n), d = [];
       keys.forEach(function (k) { d.push(k, k); });
       deck = Rand.shuffle(d);
+      window.Analytics.levelStart(deck.length);
       cards.forEach(function (c) { if (c.el.parentNode) { c.el.parentNode.removeChild(c.el); } });
       cards = deck.map(function (key, i) {
         var el = document.createElement('button');
@@ -115,7 +116,7 @@
           if (sel[0].key === sel[1].key) {
             sel.forEach(function (c) { c.matched = true; });
             sel = [];
-            if (cards.every(function (c) { return c.matched; })) { phase = 'glow'; phaseT = 0; }
+            if (cards.every(function (c) { return c.matched; })) { phase = 'glow'; phaseT = 0; window.Analytics.levelComplete(cards.length); window.Analytics.complete(cards.length); }
           } else {
             backT += dt;
             if (backT >= BACK_AFTER_S) {

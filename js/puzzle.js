@@ -45,15 +45,18 @@
     var order = makeOrder(-1), oi = 0, pic = order[0], done = 0;
     var cw = 2, ch = 2, N = 4, raf = 0, last = 0, doneT = -1, doneActive = false, glow = 0;
     var fade = 1, fadeDir = 0; // fadeDir: -1 out, +1 in, 0 steady
-    var slots = [], pieces = [], cells = [], trayPos = [];
+    var slots = [], pieces = [], cells = [], trayPos = [], flipGrid = Math.random() < 0.5;
 
-    // Builds slots and pieces for the current picture and grid; the frame is cw x ch cells (portrait: cw <= ch).
+    // Builds slots and pieces for the current picture and grid; the frame is cw x ch cells (tall or wide, random per puzzle).
     function build() {
       slots.forEach(function (s) { if (s.parentNode) { s.parentNode.removeChild(s); } });
       pieces.forEach(function (p) { if (p.el.parentNode) { p.el.parentNode.removeChild(p.el); } });
       slots = []; pieces = []; selected = null;
       var g = GRIDS[Math.min(GRIDS.length - 1, Math.floor(done / PER_GRID))];
-      cw = portrait ? g[0] : g[1]; ch = portrait ? g[1] : g[0]; N = cw * ch;
+      // Non-square grids: tall (cols < rows) or wide (cols > rows) is drawn at random per puzzle, whatever the screen orientation.
+      var tall = portrait !== flipGrid;
+      cw = tall ? g[0] : g[1]; ch = tall ? g[1] : g[0]; N = cw * ch;
+      window.Analytics.levelStart(N);
       cells = window.Rand.shuffle(Array.apply(null, Array(N)).map(function (_, i) { return i; }));
       for (var i = 0; i < N; i++) {
         (function (i) {
@@ -113,9 +116,7 @@
       var r = field.getBoundingClientRect();
       fw = r.width; fh = r.height;
       var np = fh >= fw;
-      var flip = np !== portrait;
       portrait = np;
-      if (flip && pieces.length && cw !== ch) { restartRound(); return; }
       var f = fit();
       P = f.p;
       var fW = cw * P, fH = ch * P, tx0, ty0, tw, th;
@@ -145,11 +146,6 @@
         else { it.x = it.hx; it.y = it.hy; }
         place(it);
       });
-    }
-    // Screen orientation flipped: a non-square grid shows a different crop, so the same picture restarts with fresh pieces.
-    function restartRound() {
-      doneActive = false; doneT = -1; glow = 0;
-      build(); layout(); paint(); start();
     }
     function place(it) { it.el.style.transform = 'translate(' + (it.x - P / 2) + 'px,' + (it.y - P / 2) + 'px)'; }
     function paint() {
@@ -219,6 +215,7 @@
       oi++;
       if (oi >= order.length) { order = makeOrder(order[order.length - 1]); oi = 0; }
       pic = order[oi];
+      flipGrid = Math.random() < 0.5;
       build();
       layout();
     }
@@ -240,7 +237,7 @@
         it.el.disabled = it.placed;
       });
       var allIn = pieces.every(function (it) { return it.placed && it.mode === 'idle'; });
-      if (allIn && !doneActive && fadeDir === 0) { doneActive = true; doneT = 0; }
+      if (allIn && !doneActive && fadeDir === 0) { doneActive = true; doneT = 0; window.Analytics.levelComplete(N); window.Analytics.complete(N); }
       if (doneActive) {
         doneT += dt;
         if (doneT >= NEXT_S) { doneActive = false; doneT = -1; fadeDir = -1; }

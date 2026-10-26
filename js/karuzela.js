@@ -15,6 +15,7 @@
   var BW = 400, BH = 300;          // board units
   var CX = 200, ORB_R = 118, ORB_Y = 214, ORB_D = 20;   // orbit: x = CX + R sin, feet y = ORB_Y + D cos
   var N = 4, SEAT = 68;            // seat count, seat box in board units
+  var FRONT_DROP = 0.08;           // extra drop of an animal at the front-most point, as a fraction of its height
   var VB = '-34 -44 68 86', FEET = 83 / 86;
 
   function sm(u) { return u * u * (3 - 2 * u); }
@@ -114,11 +115,12 @@
         var bob = BOB * amp * Math.sin(2 * th + i * 1.6);
         var fx = ox + (CX + ORB_R * s) * k, fy = oy + (ORB_Y + ORB_D * c) * k;
         var sc = 0.92 + 0.12 * c;
+        var sink = FRONT_DROP * seatPx * (1 + c) / 2;      // smooth in the angle: 0 at the back, 8% of the animal's height at the very front
         var hop = 0;
         if (react[i] >= 0) { hop = (i % 2 ? 0 : HOP * Math.sin(Math.PI * react[i] / REACT_S)); }
         b.style.transform = 'translate(' + (fx - seatPx / 2).toFixed(1) + 'px,' + (fy - seatPx * FEET - hop).toFixed(1) + 'px)';
         b.style.zIndex = c > 0 ? 5 : 3;
-        figs[i].style.transform = 'translateY(' + (-bob).toFixed(2) + 'px) scale(' + sc.toFixed(3) + ')';
+        figs[i].style.transform = 'translateY(' + (sink - bob).toFixed(2) + 'px) scale(' + sc.toFixed(3) + ')';
         if (paws[i]) {
           var u = react[i] >= 0 ? react[i] / REACT_S : 1, env = u >= 1 ? 0 : Math.sin(Math.PI * u);
           paws[i].setAttribute('transform', env ? 'rotate(' + (-40 * env + 10 * env * Math.sin(4 * Math.PI * u)).toFixed(1) + ' 16 20)' : '');

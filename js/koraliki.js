@@ -128,6 +128,8 @@
       });
     }
     function drawDeco(bx, by, bw, bh) {
+      // CSS (.stage svg { 120px }) beats width/height attributes, so the size is set inline: one coordinate space with the field
+      deco.style.width = fw + 'px'; deco.style.height = fh + 'px';
       deco.setAttribute('width', fw); deco.setAttribute('height', fh);
       deco.setAttribute('viewBox', '0 0 ' + fw + ' ' + fh);
       var d = 'M' + pts[0][0] + ' ' + pts[0][1];

@@ -39,6 +39,7 @@
       }
       idx = (i + order.length) % order.length;
       var L = order[idx], P = Rand.pickOne(L.pics, 'literki-' + L.l);
+      window.Analytics.levelStart(0, L.l);
       letterTxt.textContent = L.u + L.l;
       letterBtn.setAttribute('aria-label', 'Litera ' + L.u);
       picBtn.innerHTML = picSvg(P);
@@ -52,8 +53,8 @@
       slide = { t: 0, dir: dir, swapped: false };
       start();
     }
-    function onPic() { wiggle = 0; wordT = 0; start(); }
-    function onLetter() { glow = 0; start(); }
+    function onPic() { window.Analytics.track('interaction', { variant: order[idx].l }); wiggle = 0; wordT = 0; start(); }
+    function onLetter() { window.Analytics.track('interaction', { variant: order[idx].l }); glow = 0; start(); }
 
     function frame(now) {
       raf = 0;

@@ -13,9 +13,10 @@
     { label: 'pudło', ox: 0,
       cover: '<rect x="14" y="40" width="72" height="56" rx="8" fill="#e8c9a0"/><rect x="10" y="34" width="80" height="14" rx="6" fill="#d9b185"/>' +
         '<path d="M22 62H78M22 78H78" stroke="#c9a070" stroke-width="3" stroke-linecap="round"/>' },
-    { label: 'drzewo', ox: 26,
-      cover: '<rect x="30" y="46" width="36" height="50" rx="10" fill="#c9a98a"/><circle cx="40" cy="34" r="26" fill="#9fd4a8"/>' +
-        '<circle cx="28" cy="40" r="5" fill="#bfe6b4"/><circle cx="48" cy="24" r="5" fill="#bfe6b4"/><ellipse cx="48" cy="70" rx="6" ry="9" fill="#a98b6c"/>' },
+    // the tree is wide enough to hide a whole animal (crown + thick trunk), so only a gentle rustle tells the child where to look
+    { label: 'drzewo', ox: 0, rustle: true,
+      cover: '<rect x="22" y="58" width="56" height="38" rx="10" fill="#c9a98a"/><circle cx="50" cy="46" r="41" fill="#9fd4a8"/>' +
+        '<circle cx="28" cy="50" r="6" fill="#bfe6b4"/><circle cx="62" cy="22" r="6" fill="#bfe6b4"/><circle cx="72" cy="56" r="5" fill="#bfe6b4"/><ellipse cx="50" cy="78" rx="7" ry="10" fill="#a98b6c"/>' },
     { label: 'beczka', ox: 0,
       cover: '<rect x="16" y="40" width="68" height="56" rx="16" fill="#d9b8e8"/><path d="M16 56H84M16 80H84" stroke="#b894cc" stroke-width="5"/>' +
         '<path d="M26 44q-6 24 0 48" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="4" stroke-linecap="round"/>' }
@@ -51,7 +52,7 @@
     var field = board.querySelector('.hd-field');
 
     var ANIMALS = window.Animals.pick(4), occ = arrangement(null), spots = [];
-    var phase = 'play', phaseT = 0, idleT = 0, glow = 0, fadeJob = null, raf = 0, last = 0;
+    var phase = 'play', phaseT = 0, idleT = 0, glow = 0, fadeJob = null, raf = 0, last = 0, clock = 0;
 
     PLACES.forEach(function (pl, i) {
       var el = document.createElement('button');
@@ -86,7 +87,14 @@
     function paintSpot(s) {
       var u = smooth(s.o), rm = reduced();
       s.cov.style.transform = rm ? '' : 'translateY(' + (-38 * u).toFixed(1) + '%)';
-      s.cov.style.opacity = (rm ? 1 - u : 1 - 0.6 * u).toFixed(3);
+      var cop = rm ? 1 - u : 1 - 0.6 * u;
+      if (PLACES[s.i].rustle && occ[s.i] >= 0 && s.o === 0) {
+        // gentle rustling cue while an animal hides behind the closed tree: a soft pulse every ~7 s (opacity only when motion is reduced)
+        var env = Math.pow(Math.max(0, Math.sin(clock * 0.9)), 2);
+        if (rm) { cop = 1 - 0.14 * env; }
+        else { s.cov.style.transformOrigin = '50% 100%'; s.cov.style.transform = 'rotate(' + (env * 2.6 * Math.sin(clock * 11)).toFixed(2) + 'deg)'; }
+      }
+      s.cov.style.opacity = cop.toFixed(3);
       s.flower.style.opacity = occ[s.i] < 0 ? u.toFixed(3) : '0';
       var hop = s.hop >= 0 && !rm ? Math.sin(Math.PI * Math.min(1, s.hop / HOP_S)) * 7 : 0;
       s.ani.style.transform = 'translate(' + (PLACES[s.i].ox) + '%,' + (-hop).toFixed(1) + '%)';
@@ -96,7 +104,7 @@
 
     function frame(now) {
       raf = 0;
-      var dt = Math.min((now - last) / 1000, 0.05); last = now;
+      var dt = Math.min((now - last) / 1000, 0.05); last = now; clock += dt;
       var rate = dt / (reduced() ? MOVE_S * 0.5 : MOVE_S);
       spots.forEach(function (s) {
         if (s.o !== s.t) {

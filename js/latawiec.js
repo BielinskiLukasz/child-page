@@ -23,7 +23,34 @@
     return '<circle cx="-18" cy="4" r="12"/><circle cx="0" cy="-4" r="16"/><circle cx="19" cy="3" r="12"/><rect x="-30" y="4" width="60" height="12" rx="6"/>';
   }
 
-  function scene(def) {
+
+  // Kite designs, all inside about 44 x 56 units around the centre (the tail hangs from y = 28): outline path + optional detail drawn on top.
+  var DESIGNS = [
+    { id: 'diamond', d: 'M0-28L22-4L0 28L-22-4Z', detail: '<path d="M0-28V28M-22-4H22" stroke="#fff" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>' },
+    { id: 'dragon', d: 'M0-24L7-18L13-22L15-10L23-8L16 0L21 10L11 12L0 28L-11 12L-21 10L-16 0L-23-8L-15-10L-13-22L-7-18Z',
+      detail: '<path d="M-6-22L-9-30L-2-24ZM6-22L9-30L2-24Z" fill="#8f7fd1"/><circle cx="-6" cy="-8" r="3.2" fill="#fff"/><circle cx="6" cy="-8" r="3.2" fill="#fff"/><circle cx="-6" cy="-8" r="1.5" fill="#5b5675"/><circle cx="6" cy="-8" r="1.5" fill="#5b5675"/><path d="M-6 4Q0 9 6 4" fill="none" stroke="#5b5675" stroke-width="1.8" stroke-linecap="round"/>' },
+    { id: 'plane', d: 'M0-28Q5-22 5-10L5-4L26 10L26 17L5 10L5 20L12 25L12 28L0 25L-12 28L-12 25L-5 20L-5 10L-26 17L-26 10L-5-4L-5-10Q-5-22 0-28Z',
+      detail: '<ellipse cx="0" cy="-16" rx="2.4" ry="4" fill="#fff" fill-opacity=".85"/>' },
+    { id: 'butterfly', d: 'M0-6Q-8-30-22-24Q-26-6-3 0Q-24 6-16 22Q-6 26 0 8Q6 26 16 22Q24 6 3 0Q26-6 22-24Q8-30 0-6Z',
+      detail: '<path d="M0-8V14" stroke="#8f7fd1" stroke-width="3" stroke-linecap="round"/><path d="M0-8Q-4-16-8-18M0-8Q4-16 8-18" fill="none" stroke="#8f7fd1" stroke-width="1.4" stroke-linecap="round"/>' },
+    { id: 'star', d: 'M0-28L7-9L26-9L11 3L17 24L0 12L-17 24L-11 3L-26-9L-7-9Z', detail: '' },
+    { id: 'heart', d: 'M0 28C-30 6-26-16-12-18C-5-19 0-14 0-10C0-14 5-19 12-18C26-16 30 6 0 28Z', detail: '' }
+  ];
+  // Colour sets: [main, second, third]; patterns lay the second / third colour over the main one.
+  var PALETTES = [['#f7a8c9', '#ffd98a', '#a8d8f0'], ['#a8d8f0', '#fdfbff', '#f7a8c9'], ['#bfe6b4', '#ffd98a', '#c9b8f2'], ['#ffd98a', '#f7a8c9', '#9ed8c6'], ['#c9b8f2', '#a8d8f0', '#ffd98a']];
+  var PATTERNS = ['plain', 'quarters', 'stripes', 'dots'];
+
+  function kiteSvg(design, pal, pattern) {
+    var over = '';
+    if (pattern === 'quarters') { over = '<g fill="' + pal[1] + '"><rect x="0" y="-32" width="32" height="32"/><rect x="-32" y="0" width="32" height="32"/></g>'; }
+    else if (pattern === 'stripes') { over = '<g fill="' + pal[1] + '"><rect x="-32" y="-18" width="64" height="7"/><rect x="-32" y="-2" width="64" height="7"/><rect x="-32" y="14" width="64" height="7"/></g>'; }
+    else if (pattern === 'dots') { over = '<g fill="' + pal[2] + '"><circle cx="-9" cy="-6" r="3.6"/><circle cx="9" cy="-6" r="3.6"/><circle cx="0" cy="8" r="3.6"/><circle cx="0" cy="-18" r="3"/><circle cx="-12" cy="14" r="3"/><circle cx="12" cy="14" r="3"/></g>'; }
+    return '<clipPath id="lw-kclip"><path d="' + design.d + '"/></clipPath>' +
+      '<path d="' + design.d + '" fill="' + pal[0] + '"/><g clip-path="url(#lw-kclip)">' + over + '</g>' + design.detail +
+      '<path d="' + design.d + '" fill="none" stroke="#8f7fd1" stroke-width="2" stroke-linejoin="round"/>';
+  }
+
+  function scene(def, kite) {
     var fur = def.fur;
     var clouds = '';
     CLOUDS.forEach(function (c, i) { clouds += '<g class="lw-cloud" fill="#fff" fill-opacity=".92" transform="translate(' + c[0] + ' ' + c[1] + ')">' + cloudSvg() + '</g>'; });
@@ -43,18 +70,19 @@
       '<circle cx="-21" cy="-14" r="5" fill="' + fur + '"/><circle class="lw-paw" cx="21" cy="-14" r="5" fill="' + fur + '"/></g>' +
       '<path class="lw-string" d="M0 0" fill="none" stroke="#8f7fd1" stroke-width="1.6" stroke-linecap="round"/>' +
       '<path class="lw-tail" d="M0 0" fill="none" stroke="#8f7fd1" stroke-width="1.6" stroke-linecap="round"/>' + bows +
-      '<g class="lw-kite"><path d="M0-28L22-4L0 28L-22-4Z" fill="#f7a8c9"/><path d="M0-28L22-4L0-4Z" fill="#ffd98a"/><path d="M0 28L-22-4L0-4Z" fill="#a8d8f0"/>' +
-      '<path d="M0-28V28M-22-4H22" stroke="#fff" stroke-opacity=".75" stroke-width="2" stroke-linecap="round"/>' +
-      '<path d="M0-28L22-4L0 28L-22-4Z" fill="none" stroke="#8f7fd1" stroke-width="2" stroke-linejoin="round"/></g>';
+      '<g class="lw-kite">' + kite + '</g>';
   }
 
   function mount(container) {
     var def = window.Animals.pick(1)[0];       // a new animal on every launch
+    // One random kite per launch: design x colour set x pattern (nothing stored)
+    var design = window.Rand.pickOne(DESIGNS, 'latawiec-design'), palette = window.Rand.pickOne(PALETTES, 'latawiec-colours'),
+      pattern = window.Rand.pickOne(PATTERNS, 'latawiec-pattern');
     var root = document.createElement('div');
     root.className = 'lw';
     root.setAttribute('role', 'group');
     root.setAttribute('aria-label', 'Latawiec');
-    root.innerHTML = '<div class="lw-board"><svg class="lw-bg" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">' + scene(def) + '</svg>' +
+    root.innerHTML = '<div class="lw-board"><svg class="lw-bg" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">' + scene(def, kiteSvg(design, palette, pattern)) + '</svg>' +
       '<button type="button" class="lw-an" aria-label="' + def.name + ' – pomachaj"></button>' +
       '<button type="button" class="lw-kb" aria-label="Latawiec – strzałki przesuwają latawiec"></button></div>';
     container.appendChild(root);

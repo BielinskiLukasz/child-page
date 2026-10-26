@@ -9,7 +9,7 @@
 // prefers-reduced-motion rule that disables CSS animations.
 (function () {
   var BW = 400, BH = 300;
-  var PX = 260, PY = 112, ROPE = 118;     // pivot (under the branch) and rope length, board units
+  var PX = 260, PY = 112, ROPE = 118, ROPE_X = 26;     // pivot (under the branch) and rope length, board units
   var PERIOD = 3.6, OMEGA = 2 * Math.PI / PERIOD;
   var MAX_AMP = 35, STEP = 8, DRAIN = 2.7, EASE = 2;   // degrees, degrees, degrees per second, 1 / second
   var LEAF_AMP = 20, MAX_LEAVES = 6, LEAF_GAP = 0.9;
@@ -46,11 +46,10 @@
       }).join('') + '</g>';
   }
   function swingSvg() {
-    // viewBox x -50..50, y 0..ROPE+12: ropes from the pivot down to the seat
+    // viewBox x -50..50, y 0..ROPE+12: only the seat; the ropes are drawn in a fixed layer so their tops stay on the branch
     return '<svg viewBox="-50 0 100 ' + (ROPE + 12) + '" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
-      '<g stroke="#a8946f" stroke-width="3" stroke-linecap="round"><line x1="-26" y1="2" x2="-26" y2="' + (ROPE + 2) + '"/><line x1="26" y1="2" x2="26" y2="' + (ROPE + 2) + '"/></g>' +
       '<rect x="-34" y="' + ROPE + '" width="68" height="9" rx="4.5" fill="#f7a8c9"/><rect x="-30" y="' + ROPE + '" width="60" height="3.5" rx="1.7" fill="#ffd0e0"/>' +
-      '<circle cx="-26" cy="3" r="3.5" fill="#8f7fd1"/><circle cx="26" cy="3" r="3.5" fill="#8f7fd1"/></svg>';
+      '</svg>';
   }
   function figure(def) {
     var fur = def.fur;
@@ -71,6 +70,10 @@
     root.innerHTML = '<div class="hs-board"><svg class="hs-bg" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
       scene() + '<g class="hs-crown">' + crown() + '</g></svg>' +
       '<button type="button" class="hs-treebtn" aria-label="Drzewo – pokołysz"></button>' + leafHtml +
+      '<svg class="hs-ropes" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
+      '<g stroke="#a8946f" stroke-width="3" stroke-linecap="round"><line class="hs-rl" x1="' + (PX - ROPE_X) + '" y1="' + (PY + 2) + '" x2="' + (PX - ROPE_X) + '" y2="' + (PY + ROPE + 2) + '"/>' +
+      '<line class="hs-rr" x1="' + (PX + ROPE_X) + '" y1="' + (PY + 2) + '" x2="' + (PX + ROPE_X) + '" y2="' + (PY + ROPE + 2) + '"/></g>' +
+      '<circle cx="' + (PX - ROPE_X) + '" cy="' + (PY + 3) + '" r="3.5" fill="#8f7fd1"/><circle cx="' + (PX + ROPE_X) + '" cy="' + (PY + 3) + '" r="3.5" fill="#8f7fd1"/></svg>' +
       '<div class="hs-swing">' + swingSvg() +
       '<button type="button" class="hs-seat" aria-label="Huśtawka – pchnij"></button>' +
       '<button type="button" class="hs-an" aria-label="' + def.name + ' – pchnij i pomachaj">' + figure(def) + '</button></div></div>';
@@ -81,6 +84,7 @@
     var treeBtn = root.querySelector('.hs-treebtn');
     var swing = root.querySelector('.hs-swing');
     var swingBg = swing.querySelector('svg');
+    var ropeL = root.querySelector('.hs-rl'), ropeR = root.querySelector('.hs-rr');
     var seat = root.querySelector('.hs-seat');
     var an = root.querySelector('.hs-an');
     var anSvg = an.querySelector('svg');
@@ -142,6 +146,10 @@
 
     function paint() {
       swing.style.transform = 'rotate(' + theta.toFixed(2) + 'deg)';
+      // Rope tops stay at their fixed points on the branch; the lower ends follow the rotated seat (same pivot and angle as the wrapper).
+      var tr = theta * Math.PI / 180, cs = Math.cos(tr), sn = Math.sin(tr), by = ROPE + 2;
+      ropeL.setAttribute('x2', (PX + (-ROPE_X) * cs - by * sn).toFixed(2)); ropeL.setAttribute('y2', (PY + (-ROPE_X) * sn + by * cs).toFixed(2));
+      ropeR.setAttribute('x2', (PX + ROPE_X * cs - by * sn).toFixed(2)); ropeR.setAttribute('y2', (PY + ROPE_X * sn + by * cs).toFixed(2));
       var sw = 0, u, env, ang, i, l, p;
       if (swayT >= 0) { u = swayT / SWAY_T; sw = 2.2 * Math.sin(2 * Math.PI * u) * Math.sin(Math.PI * u); }
       crownG.setAttribute('transform', 'rotate(' + sw.toFixed(2) + ' 93 160)');

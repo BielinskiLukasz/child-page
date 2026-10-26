@@ -156,6 +156,7 @@
       it.placed = true; select(null);
       it.tx = it.cup.x + (it.nest ? 1 : -1) * C * 0.18;
       glideTo(it, it.tx, it.ty, it.ts);
+      it.gd = Math.min(it.gd, 700); // a short fall into the cup, also when released high above it
     }
     function cancelDrag(it) {
       if (it.pid !== null) { try { it.el.releasePointerCapture(it.pid); } catch (e) { /* already released */ } }
@@ -184,7 +185,9 @@
       try { it.el.releasePointerCapture(it.pid); } catch (err) { /* already released */ }
       it.pid = null; it.mode = 'idle';
       var cp = it.cup;
-      if (Math.abs(it.x - cp.x) < C * 0.5 && Math.abs(it.y - cp.y) < C * 0.5) { snap(it); } else { sendHome(it); }
+      // Anywhere in the column above the cup (its full width, from the cup's lower edge up to the top of the screen) counts;
+      // above another colour's cup the ball drifts back as before.
+      if (Math.abs(it.x - cp.x) < C * 0.5 && it.y < cp.y + C * 0.5) { snap(it); } else { sendHome(it); }
     }
 
     function select(it) {

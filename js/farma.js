@@ -39,6 +39,10 @@
   // left, top, width in % of the 4:3 board (buttons are square); the barn stays put, the five animals fill the slots
   var BARN_POS = [3, 14, 32];
   var SLOTS = [[38, 36, 30], [79, 36, 18], [4, 58, 26], [64, 66, 20], [40, 74, 16]];
+  // Drawn width (% of the board) by real-life size class, so a small animal never looks bigger than a clearly larger one:
+  // small (mouse, frog, hen, rabbit) < medium (cat, fox, sheep, pig) < medium-large (dog) < large (bear, cow). Mouse is 48% of the dog.
+  // The 56 px touch floor in CSS still applies on very narrow boards.
+  var SIZE = { mouse: 10, frog: 11, hen: 13, rabbit: 14, cat: 16, fox: 17, sheep: 19, pig: 19, dog: 21, bear: 25, cow: 27 };
 
   function figureSvg(id) {
     return '<g class="fm-all"><g class="fm-body"><g transform="translate(50 50) scale(1.2)">' +
@@ -61,14 +65,22 @@
     container.appendChild(root);
     var board = root.firstChild;
 
-    var picks = window.Rand.pick(HAND.concat(SHARED), 5); // random order = random slot
+    // Five random animals; the biggest take the biggest slots so sizes never collide (slot order: widest first)
+    var picks = window.Rand.pick(HAND.concat(SHARED), 5).sort(function (a, b) { return SIZE[b] - SIZE[a]; });
+    var SLOT_ORDER = [0, 2, 3, 1, 4];
     var names = ['barn'].concat(picks), A = {};
     names.forEach(function (n, ni) {
-      var shared = SHARED.indexOf(n) >= 0, pos = ni === 0 ? BARN_POS : SLOTS[ni - 1];
+      var shared = SHARED.indexOf(n) >= 0, pos = ni === 0 ? BARN_POS : SLOTS[SLOT_ORDER[ni - 1]];
       var b = document.createElement('button');
       b.type = 'button'; b.className = 'fm-btn fm-' + n;
       b.setAttribute('aria-label', shared ? window.Animals.byId(n).name : LABEL[n]);
-      b.style.left = pos[0] + '%'; b.style.top = pos[1] + '%'; b.style.width = pos[2] + '%';
+      var w = pos[2];
+      if (ni > 0) {
+        // keep the slot's centre and ground line, change only the size
+        w = SIZE[n];
+        pos = [Math.min(100 - w, Math.max(0, pos[0] + (pos[2] - w) / 2)), pos[1] + (pos[2] - w) * 4 / 3];
+      }
+      b.style.left = pos[0].toFixed(2) + '%'; b.style.top = pos[1].toFixed(2) + '%'; b.style.width = w + '%';
       b.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' + (shared ? figureSvg(n) : SVG[n]) + '</svg>';
       board.appendChild(b);
       var a = { n: n, el: b, t: -1, ph: Math.random() * 6, blinkAt: 2 + Math.random() * 3, blink: 0,

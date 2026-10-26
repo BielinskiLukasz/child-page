@@ -101,10 +101,21 @@
       { d: circ(162, 56, 3), fill: '#f4efe6' }] }
   ];
 
+  // Weighted pick of the next animal: the dog weighs 3, every other animal 1; never the previous animal (so the dog never repeats).
+  var DOG_WEIGHT = 3, lastAnimal = null;
+  function pickAnimal() {
+    var pool = ANIMALS.filter(function (a) { return a !== lastAnimal; });
+    var w = pool.map(function (a) { return a.label === 'piesek' ? DOG_WEIGHT : 1; });
+    var r = Math.random() * w.reduce(function (x, y) { return x + y; }, 0), i = 0;
+    while (i < pool.length - 1 && r >= w[i]) { r -= w[i]; i++; }
+    lastAnimal = pool[i];
+    return lastAnimal;
+  }
+
   // Item n of a launch: a vehicle in a random type and colour, with an animal after every two vehicles (V V A V V A ...).
   function makeItem(n) {
     if (n % 3 === 2) {
-      var an = Rand.pickOne(ANIMALS, 'myjnia-animal');
+      var an = pickAnimal();
       return { label: an.label, animal: true, shapes: an.shapes };
     }
     var v = Rand.pickOne(VEHICLES, 'myjnia-vehicle'), col = Rand.pickOne(COLOURS, 'myjnia-colour');

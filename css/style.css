@@ -467,6 +467,25 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .mj-bubbles { position: absolute; inset: 0; pointer-events: none; }
 .mj-bub { position: absolute; border-radius: 50%; aspect-ratio: 1; transform: translate(-50%, -50%);
   background: rgba(255, 255, 255, .55); border: 2px solid #b7deff; pointer-events: none; }
+/* Kąpiel Zwierzątek */
+.kp { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#d8ecfb, #eaf6fb 60%, #d3ecea); }
+.kp-field { position: absolute; display: flex; align-items: center; justify-content: center;
+  top: calc(var(--safe-t) + 64px); right: calc(var(--safe-r) + 12px);
+  bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
+.kp-box { position: relative; outline: none; border-radius: 24px; touch-action: none; }
+.kp-box:focus-visible { box-shadow: 0 0 0 4px #8f7fd1; }
+.kp-animal, .kp-layer, .kp-acc, .kp-halo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.kp-halo { background-size: 100% 100%; transform: scale(1.09); filter: blur(3px); opacity: 0; }
+.stage .kp-animal svg, .stage .kp-acc svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.kp-shower { display: none; position: absolute; top: 0; height: 0; transform: translateX(-50%); pointer-events: none; border-radius: 0 0 40% 40%;
+  background: repeating-linear-gradient(90deg, rgba(150, 205, 245, .75) 0 3px, rgba(150, 205, 245, 0) 3px 9px); }
+.kp-brush { display: none; position: absolute; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%;
+  border: 3px solid #8f7fd1; background: rgba(255, 255, 255, .35); pointer-events: none; }
+.kp-bubbles { position: absolute; inset: 0; pointer-events: none; }
+.kp-bub { position: absolute; border-radius: 50%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, .55); border: 2px solid #b7deff; pointer-events: none; }
+.kp-bub.kp-drop { background: rgba(160, 210, 245, .7); border-color: rgba(130, 190, 235, .9); }
 /* Buźki */
 .bz { position: fixed; inset: 0; overflow: hidden; touch-action: manipulation; user-select: none; -webkit-user-select: none;
   background: linear-gradient(#f3eefb, #e3f1ea); }

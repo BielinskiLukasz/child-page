@@ -56,6 +56,7 @@
       // Non-square grids: tall (cols < rows) or wide (cols > rows) is drawn at random per puzzle, whatever the screen orientation.
       var tall = portrait !== flipGrid;
       cw = tall ? g[0] : g[1]; ch = tall ? g[1] : g[0]; N = cw * ch;
+      window.Analytics.levelStart(N);
       cells = window.Rand.shuffle(Array.apply(null, Array(N)).map(function (_, i) { return i; }));
       for (var i = 0; i < N; i++) {
         (function (i) {
@@ -236,7 +237,7 @@
         it.el.disabled = it.placed;
       });
       var allIn = pieces.every(function (it) { return it.placed && it.mode === 'idle'; });
-      if (allIn && !doneActive && fadeDir === 0) { doneActive = true; doneT = 0; }
+      if (allIn && !doneActive && fadeDir === 0) { doneActive = true; doneT = 0; window.Analytics.levelComplete(N); window.Analytics.complete(N); }
       if (doneActive) {
         doneT += dt;
         if (doneT >= NEXT_S) { doneActive = false; doneT = -1; fadeDir = -1; }

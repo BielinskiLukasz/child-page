@@ -50,8 +50,8 @@ A small "plant and watch it grow" scene where each touch produces a pleasant, sl
 | sunny | Sun orb (a pale moon-like orb at night) |
 | breeze | Orb plus 4 white wind streaks crossing in 7 s |
 | cloudy | Two cloud banks |
-| rain | Two cloud banks plus 26 rain drops falling in 1.1 s (linear, infinite) |
-| night (any weather) | 14 twinkling stars (4 s cycle), dark blue sky and lawn, white glow around plants |
+| rain | Two cloud banks plus 30 rain drops at random horizontal positions, each falling linearly and endlessly with its own random duration of 0.9 to 1.4 s and a random negative start delay (the CSS default of 1.1 s is overridden per drop) |
+| night (any weather) | 40 twinkling stars (4 s cycle) at random positions (x 2-98 %, y 2-48 % of the garden), about 10 % of them bigger and brighter (3-4 px, opacity 0.9) and the rest small (1.4-2.7 px, opacity 0.4-0.8), dark blue sky and lawn, white glow around plants |
 
 Decorative layers have `pointer-events: none`.
 
@@ -90,7 +90,7 @@ Reduced motion: the global rule disables CSS animations and transitions. For thi
 - Continuous rain and wind animation run for as long as the activity is open.
 - Cloud tap clears all plants, which may surprise a child who wanted to keep them (the cloud is drawn as a decoration, not a button).
 - Up to 20 plants of up to 168 px height can crowd the lawn; they overlap freely.
-- Rain drops share a fixed delay pattern (drops start with a regular `0.37 s` step) and night stars are placed by a fixed formula (see section 18).
+- Night stars and rain drops are random per launch (positions, sizes, durations and delays), so no two launches look the same.
 - No personal data is involved.
 
 ## 8. Configuration
@@ -116,6 +116,8 @@ No external assets. Plants, cloud and weather elements are inline SVG strings bu
 | What | When | Pool | Rule |
 |---|---|---|---|
 | Weather and time of day | Each mount | 8 combinations (`COMBOS`) | `Rand.pickOne(COMBOS, 'ogrod-weather')`: never the same as the previous launch in the same page session; falls back to a plain random pick if `window.Rand` is missing; not stored |
+| Night stars | Each mount (night only) | 40 stars | `Math.random`: position, size (about 10 % bright), opacity and twinkle delay |
+| Rain drops | Each mount (rain only) | 30 drops | `Math.random`: position, duration 0.9-1.4 s, start delay |
 | Plant kind | Each tap | 7 | Uniform (`Math.random`), repetition allowed |
 | Plant colour | Each tap | 6 (flowers) or 5 (mushrooms) | Uniform, repetition allowed |
 | Plant scale | Each tap | 0.8-1.2 | Uniform |
@@ -187,12 +189,9 @@ Manual scenarios (all unchecked):
 
 **Confirmed**
 
-- Night stars are placed by a fixed formula (`left = 4 + (s*37) % 92`, `top = 3 + (s*23) % 40`), so they form visible patterns and look the same on every launch; they do not match the stars in Dzień i Noc.
-- Rain drops are evenly spaced with a regular delay step and uniform speed, which can produce visible synchronised waves.
+- The former fixed-formula night stars and evenly spaced, uniform-speed rain drops (synchronised waves) are fixed on `main` (items 1 and 2 of issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173)): stars and drops are now random per launch.
 - `FADE_MS` in JavaScript and the 0.9 s opacity transition in CSS are separate constants.
 - The cloud is the only way to clear the garden and looks like decoration.
-
-Both star and rain defects are listed in open issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (items 1 and 2).
 
 **Requires verification**
 
@@ -201,11 +200,11 @@ Both star and rain defects are listed in open issue [#167](https://github.com/Bi
 
 ## 19. Planned improvements
 
-- Random night-star placement with varied sizes and more natural rain (random start times and speeds): [#167](https://github.com/BielinskiLukasz/child-page/issues/167), items 1 and 2 (open).
+None currently planned (random night stars and more natural rain from issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) are done, see section 21).
 
 ## 20. Related activities and reusable components
 
-- [Deszczyk i Tęcza](deszczyk-i-tecza.md) (rain look referenced by #167), [Dzień i Noc](dzien-i-noc.md) (stars), [Ogród Motyli](ogrod-motyli.md) (garden theme), [Akwarium Artura](akwarium-artura.md).
+- [Deszczyk i Tęcza](deszczyk-i-tecza.md) (rain look), [Dzień i Noc](dzien-i-noc.md) (stars), [Ogród Motyli](ogrod-motyli.md) (garden theme), [Akwarium Artura](akwarium-artura.md).
 - Shared helper: [`js/random.js`](../../js/random.js) (`Rand.pickOne`). It does not use `js/animals.js`.
 
 ## 21. Change history
@@ -213,3 +212,4 @@ Both star and rain defects are listed in open issue [#167](https://github.com/Bi
 - Issue [#4](https://github.com/BielinskiLukasz/child-page/issues/4) / PR [#11](https://github.com/BielinskiLukasz/child-page/pull/11): initial activity (the core `js/ogrod.js` was added in a follow-up commit after review; percent-positioned plants and keyboard activation were added at a human request).
 - Issue [#21](https://github.com/BielinskiLukasz/child-page/issues/21): app review polish.
 - Issue [#109](https://github.com/BielinskiLukasz/child-page/issues/109) / PR [#133](https://github.com/BielinskiLukasz/child-page/pull/133): random weather and day/night.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): random night stars (40, mixed sizes) and random rain (30 drops, random positions, durations and delays).

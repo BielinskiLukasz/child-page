@@ -36,7 +36,7 @@ Source: [`js/kukulka.js`](../../js/kukulka.js), CSS prefix `kk-` in [`css/style.
 |---|---|
 | Doors | Top (bird) at board (200, 62), left (mouse) at (50, 196), right (bear) at (350, 196). Timeline per door: open 1 s (`T_OPEN`), character out 0.6 s (`T_OUT`), wave 1.8 s (`T_WAVE`, two waves), back in 0.6 s (`T_IN`), close 1 s (`T_CLOSE`); total `T_ALL` = 5 s. The door leaf is scaled horizontally to 8% about its hinge (left hinge for top and left doors, right hinge for the bear door). |
 | Busy door | Touching a door that is already running does nothing (no restart). Different doors run independently and can be open at the same time. |
-| Character | Slides from y = 100 to y = 20 of the door box (80 units) with smoothstep easing; shown only while it is out. It is clipped by a rectangle that ends at y = 60 of the 72-unit door box, so it appears to emerge from the opening. |
+| Character | Slides from y = 100 to y = `UP` = 56 of the door box (44 units) with smoothstep easing, so the roughly 43-unit body fills the 56-unit opening with its top at y = 13, below the upper edge at y = 8; shown only while it is out. It is clipped by a rectangle that ends at y = 60 of the 72-unit door box, so it appears to emerge from the opening. |
 | Minute hand | Each touch adds 90 degrees to the target (`minTarget`); touches queue (no limit). Motion is slew-limited: acceleration `HAND_ACC` = 45 degrees/s^2, maximum `HAND_MAX` = 30 degrees/s, with deceleration so it arrives smoothly; it never moves backwards. |
 | Hour hand | Follows at 1/12 of the minute hand's rotation. Start angles: minute 60, hour 305 degrees clockwise from 12 (about 10:10). |
 | Pendulum | Period `PERIOD` = 2.4 s; normal amplitude `AMP0` = 11 degrees. A touch sets the target to `AMP1` = 24 degrees for `BOOST_T` = 4 s, then back to 11; amplitude eases with rate `AMP_EASE` = 1.6 per second. |
@@ -77,7 +77,7 @@ Source: [`js/kukulka.js`](../../js/kukulka.js), CSS prefix `kk-` in [`css/style.
 
 - Continuous gentle motion: the pendulum always swings and the loop never stops while the activity is open.
 - The hands target can accumulate many queued quarter turns if the child taps repeatedly; the hand keeps turning slowly (max 30 degrees/s) until it catches up.
-- Characters rise above their door; with the current geometry the top of a bird or mouse can extend above the door box (issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), item 15, targets this).
+- Characters rise only until fully visible in the opening (`UP` = 56); the top of a bird or mouse stays below the door's upper edge (fixed on `main`, issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173)).
 - Visual check in a real browser is not documented.
 
 ## 8. Configuration
@@ -94,6 +94,7 @@ No external configuration; constants live in [`js/kukulka.js`](../../js/kukulka.
 | `HAND_ACC`, `HAND_MAX` | 45 deg/s^2, 30 deg/s | Minute hand slew limits |
 | `MIN0`, `HOUR0` | 60, 305 degrees | Starting hand angles |
 | `T_OPEN`, `T_OUT`, `T_WAVE`, `T_IN`, `T_CLOSE` | 1, 0.6, 1.8, 0.6, 1 s | Door timeline (total 5 s) |
+| `UP` | 56 | Feet height of an emerged character in door units (rest position is 100) |
 | `DOOR_MIN` | 64 px | Minimum door button size |
 | `DOORS` | 3 entries | Door id, position, label, character, leaf colour, hinge side |
 | `MAX_DT` | 0.05 s | Frame time cap |
@@ -172,7 +173,6 @@ Manual scenarios (all unchecked):
 **Confirmed**
 
 - No automated tests; no documented real-device verification.
-- Characters rise to y = 20 of the door box, so their top (tuft or ears) can extend above the door's upper edge; issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (open) item 15 asks that an emerging animal rise only until its whole body is visible in the opening and its top is at most 25% of its height above the window's upper edge.
 - Only the door box is touchable; touching the character does nothing.
 - The animation loop never idles.
 
@@ -182,7 +182,7 @@ Manual scenarios (all unchecked):
 
 ## 19. Planned improvements
 
-- Limit how far the emerging character rises: issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), pull request [#173](https://github.com/BielinskiLukasz/child-page/pull/173) (open, touches `js/kukulka.js`).
+None currently planned.
 
 ## 20. Related activities and reusable components
 
@@ -192,4 +192,4 @@ Manual scenarios (all unchecked):
 ## 21. Change history
 
 - Issue #101, PR [#166](https://github.com/BielinskiLukasz/child-page/pull/166): activity added (commit 519a854).
-- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): open, not on `main`.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): fixed on `main`; the emerging character rises only to `UP` = 56 so it is fully visible in the opening.

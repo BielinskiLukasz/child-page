@@ -6,7 +6,7 @@
 |---|---|
 | Display name | Latawiec |
 | Activity ID | `latawiec` (`js/activities.js`) |
-| Description | A pastel sky with a hill, a random animal holding the kite string, a diamond kite with a ribbon tail of 5 bows and three clouds. The kite follows the child's finger softly. |
+| Description | A pastel sky with a hill, a random animal holding the kite string, a randomly designed kite (six shapes) with a ribbon tail of 5 bows and three clouds. The kite follows the child's finger softly. |
 | Category | Open-ended play, cause and effect, coordination |
 | Interaction type | Touch/drag in the sky (follow), tap the animal |
 | Status | Implemented; enabled in the menu by default (no `defaultOff`) |
@@ -72,7 +72,7 @@ No sound, scoring or failure state.
 - **Labels:** the animal button is labelled "<name> – pomachaj"; the SVG scene is `aria-hidden`.
 - **Focus:** `:focus-visible` outline 4px `#8f7fd1` on both buttons.
 - **Orientation:** the board keeps its 400:300 ratio and is sized `min(100%, (100dvh - safe areas - 64px) * 400/300)`, so it works in portrait (smaller) and landscape.
-- **Colour:** the kite and bows use several colours but nothing depends on colour.
+- **Colour:** the kite and bows use several colours (the kite's colour set is random) but nothing depends on colour.
 - **Reduced motion:** motion is driven by a `requestAnimationFrame` loop and is not disabled by the global rule; there is no separate reduced-motion variant (motion is slow and speed-capped).
 - **Reading:** none required; suitable for a young child to use independently.
 - **Limitations:** the scene sets `touch-action: none`; the keyboard only moves the kite in steps and has no way to "drag".
@@ -107,7 +107,7 @@ No external asset files. The sky, sun, clouds, hills, grass, animal, string, tai
 ## 10. Randomization and variants
 
 - One animal per `mount` from `Animals.pick(1)[0]` (13 animals, uniform; see [`js/animals.js`](../../js/animals.js), [`js/random.js`](../../js/random.js)). Not persisted; the same animal can repeat.
-- The kite design is fixed (diamond with pink, yellow and blue panels). Nothing else is random.
+- One kite per `mount`, built from three independent random picks with `Rand.pickOne` (keys `latawiec-design`, `latawiec-colours`, `latawiec-pattern`; the same pick is not repeated twice in a row within one page session): six designs (diamond, dragon, airplane, butterfly, star, heart) x five colour sets (`PALETTES`) x four patterns (`plain`, `quarters`, `stripes`, `dots`; the second or third colour of the set is laid over the main one and clipped to the kite outline). Not persisted. Tail, physics and touch targets do not depend on the design.
 
 ## 11. Progression and difficulty
 
@@ -127,6 +127,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 - **Entry point:** `mount(container)` assigned to the registry entry `latawiec`; returns a cleanup function.
 - **Rendering:** one SVG (`viewBox 0 0 400 300`, `preserveAspectRatio="none"`) inside `.lw-board`, updated every frame through attributes (`transform`, path `d`); two transparent `<button>`s (animal and kite) sit on top for accessibility and focus.
+- **Kite look:** `DESIGNS`, `PALETTES`, `PATTERNS` and `kiteSvg(design, palette, pattern)` build the kite group inside `scene(def, kite)`; picked once in `mount`.
 - **State:** kite `x, y, vx, vy, tilt`; hover centre `cx, cy`, phase `th`, `tFree`; `dragging`, `pid`, target `tx, ty`; `hist[]` position history; per-cloud `{ ox, side, away, pulse }`.
 - **Animation:** one `requestAnimationFrame` loop (`frame`/`paint`) with capped dt. It starts in `mount`, continues forever and is cancelled only while `document.hidden`.
 - **Events:** `pointerdown`/`pointermove`/`pointerup`/`pointercancel` on the root element (pointer coordinates converted with `getBoundingClientRect` to board units); `click` on the animal; `keydown` on the kite button; `resize`/`orientationchange` call `layout()`.
@@ -165,7 +166,7 @@ Manual scenarios (all unchecked):
 - [ ] Completion: confirm there is no end state.
 - [ ] Incorrect interaction: use two fingers; the second is ignored.
 - [ ] Restart: leave with Back and re-enter; a fresh scene, usually with a different animal.
-- [ ] Randomization: enter several times; the animal varies.
+- [ ] Randomization: enter several times; the animal and the kite (shape, colours, pattern) vary.
 - [ ] Progression: confirm there is none.
 - [ ] Portrait and landscape on phone and tablet; rotate while the kite is flying; the kite remains fully visible.
 - [ ] Touch and mouse; keyboard: Tab to the kite button and use the arrow keys; Tab to the animal and press Enter.
@@ -179,7 +180,8 @@ Manual scenarios (all unchecked):
 **Confirmed**
 
 - No automated tests; no documented real-device verification.
-- Only one kite design exists; issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (open) requests at least 6 designs, 4 colour combinations and 3 patterns chosen at random per start (not on `main`).
+- The kite design (six shapes, five colour sets, four patterns) is random per start and not stored; the former single-design limitation is fixed on `main` (issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173)).
+- The kite's clip path uses the fixed id `lw-kclip`; this is harmless because only one Latawiec scene is mounted at a time.
 - The animation loop never idles.
 
 **Requires verification**
@@ -188,7 +190,7 @@ Manual scenarios (all unchecked):
 
 ## 19. Planned improvements
 
-- Random kite design (shapes including dragon and airplane, colours, patterns), with tail, physics and targets unchanged: issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), pull request [#173](https://github.com/BielinskiLukasz/child-page/pull/173) (open, touches `js/latawiec.js`).
+None currently planned (the random kite design from issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) is done, see section 21).
 
 ## 20. Related activities and reusable components
 
@@ -199,4 +201,4 @@ Manual scenarios (all unchecked):
 ## 21. Change history
 
 - Issue #99, PR [#162](https://github.com/BielinskiLukasz/child-page/pull/162): activity added (commit b13a2e7).
-- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): open, not on `main`.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): random kite per launch (six designs, five colour sets, four patterns); tail, physics and targets unchanged.

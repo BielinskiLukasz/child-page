@@ -202,11 +202,11 @@ Manual checklist (not yet performed):
 - Visual layout on very small or very wide viewports.
 - Frame rate on slow devices.
 
-No open issue specifically concerns Traktor (open issues: [#164](https://github.com/BielinskiLukasz/child-page/issues/164) metrics, [#167](https://github.com/BielinskiLukasz/child-page/issues/167) visual behaviour fixes, [#168](https://github.com/BielinskiLukasz/child-page/issues/168) documentation).
+No open issue specifically concerns Traktor; the metrics (#164), visual fixes (#167) and documentation (#168) issues are all merged or in review.
 
 ## 19. Planned improvements
 
-None currently planned for this activity (see the open issues listed above for cross-cutting work).
+None currently planned for this activity.
 
 ## 20. Related activities and reusable components
 

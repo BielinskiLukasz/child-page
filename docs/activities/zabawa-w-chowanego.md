@@ -42,7 +42,8 @@ Based on the issue and the code, the activity offers a slow, predictable "where 
 | Input while moving | A tap on a moving place, or any tap during the glow and closing phases, is ignored (`toggle`) |
 | Wrong answers | None; there is no failure, scoring or timer |
 
-- The tree's animal is shifted 26% to the right (`ox: 26`) so it peeks from behind the trunk and foliage; the other places use 0.
+- The tree cover (crown radius 41 plus a 56-unit-wide trunk, in the 100-unit SVG) is wide enough to hide a whole animal, so the tree's animal is no longer shifted (`ox: 0` for all four places) and is fully hidden while the tree is closed.
+- Rustle cue: while the tree is fully closed (`o === 0`) and an animal hides behind it, the tree cover rustles gently, a soft pulse about every 7 s (`sin(clock * 0.9)` squared on its positive half; rotation up to 2.6 degrees about the bottom centre, wobbling at `sin(clock * 11)`). With reduced motion it is an opacity dip of up to 14% instead of a rotation. The empty (flower) place does not rustle. `clock` is the sum of the capped frame times.
 - Opening state is tracked per place (`opened`) and reset when the round rearranges.
 - Sound: none ([shared behaviour](README.md#shared-platform-behaviour)).
 
@@ -90,7 +91,7 @@ The activity has no external configuration; everything is a constant in [`js/cho
 | `HOP_S` | Hop after opening (s) | number | 0.7 | top of IIFE |
 | `SWAP_IDLE_S` | Idle time before an idle swap (s) | number | 7 | top of IIFE |
 | `FADE_S` | Fade out/in used by swap and rearrangement (s) | number | 0.9 | top of IIFE |
-| `PLACES` | Four places: label, horizontal offset `ox`, cover SVG | array | see code | top of IIFE |
+| `PLACES` | Four places: label, horizontal offset `ox` (0 for all), optional `rustle` flag (tree only), cover SVG | array | see code | top of IIFE |
 | Layout numbers | Max size 200, min size 64, 0.92 scale factor, 0.4 extra row for the animal head room | numbers | see `layout()` | `layout()` |
 
 There is no fallback for invalid values because no value is read from outside.
@@ -131,7 +132,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 - **Entry point:** `mount(container)` in [`js/chowany.js`](../../js/chowany.js), registered by replacing `mount` of the `chowany` entry. It returns `cleanup`.
 - **Rendering:** DOM: `div.hd > div.hd-field > 4 x button.hd-spot`. Each button holds an inline-SVG flower, an animal container and a cover SVG (class `hd-cov`). Buttons are positioned by `transform: translate()` in `layout()`.
-- **State:** per-place object `{ o (current openness 0..1), t (target 0/1), opened, hop, op, shown }`; global `occ` (occupant per place: animal index 0-3 or -1 for the flower), `phase` (`play`, `glow`, `close`), `phaseT`, `idleT`, `glow`, `fadeJob`.
+- **State:** per-place object `{ o (current openness 0..1), t (target 0/1), opened, hop, op, shown }`; global `occ` (occupant per place: animal index 0-3 or -1 for the flower), `phase` (`play`, `glow`, `close`), `phaseT`, `idleT`, `glow`, `fadeJob`, `clock` (seconds, drives the tree rustle).
 - **Animation:** one `frame()` loop with dt capped to 0.05 s. `o` moves linearly towards `t` and is shaped with `smooth` (smoothstep) in `paintSpot`. The loop requests the next frame only while the page is visible.
 - **Phases:** `play` -> (all opened) `glow` (2 s) -> `close` (all targets 0; when nothing moves, start a fade job that applies `arrangement(old)` at 50%) -> `play`.
 - **Events:** `click` on each button; `resize`, `orientationchange` and `visibilitychange` on window/document.
@@ -188,7 +189,7 @@ PR [#81](https://github.com/BielinskiLukasz/child-page/pull/81) is the introduci
 - No automated tests.
 - Idle swap or rearrangement can change an occupant behind an already lifted cover if the child opens a place during the fade (section 16).
 - Occupants are not exposed to assistive technology; only the places have labels.
-- No open GitHub issue references this activity.
+- The tree rustle is the only cue for which place hides an animal while all covers are closed; it is subtle and its visibility on real devices is not documented.
 
 **Requires verification:**
 - Layout on very small viewports (below the 64 px minimum cell).
@@ -196,7 +197,7 @@ PR [#81](https://github.com/BielinskiLukasz/child-page/pull/81) is the introduci
 
 ## 19. Planned improvements
 
-None currently planned (no open issue).
+None currently planned. (The tree that fully hides the animal and rustles as a cue is done, see issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173).)
 
 ## 20. Related activities and reusable components
 
@@ -208,3 +209,4 @@ None currently planned (no open issue).
 
 - [#55](https://github.com/BielinskiLukasz/child-page/issues/55) / [PR #81](https://github.com/BielinskiLukasz/child-page/pull/81): activity introduced.
 - [#113](https://github.com/BielinskiLukasz/child-page/issues/113): random animal pool via the shared helpers (commit `dae142c`).
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): fixed on `main`; the tree fully hides the animal and rustles as a cue.

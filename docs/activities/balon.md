@@ -190,7 +190,7 @@ Manual checklist (not yet performed):
 - Layout on very short or very wide viewports.
 - Frame rate on slow devices.
 
-No open issue specifically concerns Balon (open: [#164](https://github.com/BielinskiLukasz/child-page/issues/164), [#167](https://github.com/BielinskiLukasz/child-page/issues/167), [#168](https://github.com/BielinskiLukasz/child-page/issues/168)).
+No open issue specifically concerns Balon; the metrics (#164), visual fixes (#167) and documentation (#168) issues are all merged or in review.
 
 ## 19. Planned improvements
 

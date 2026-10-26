@@ -64,18 +64,18 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 - **Input:** all 6 interactive elements are native `<button>`s using the `click` event; touch, mouse and keyboard (Tab, Enter, Space) work.
 - **Labels (Polish):** hand-drawn animals "Owieczka", "Krowa", "Kura", "Kotek"; barn "Stodoła"; shared animals use the name from `js/animals.js`. There is no state announcement.
-- **Target sizes:** buttons are square, `min-width/min-height: 56px`; widths are 16 to 30 % of the board for animals and 32 % for the barn (see section 15).
+- **Target sizes:** buttons are square, `min-width/min-height: 56px`; widths are 10 to 27 % of the board for animals (by size class, see section 10) and 32 % for the barn; the 56 px minimum still applies on narrow boards (see section 15).
 - **Layout:** 4:3 board fitted into the viewport (with padding for the Back button and safe areas); works in portrait and landscape (a smaller board in portrait).
 - **Colour:** nothing depends on colour.
 - **Reduced motion:** all idle and reaction movement is driven by one `requestAnimationFrame` loop and `transform`s, so it survives the global reduced-motion rule.
 - **Touch:** `touch-action: manipulation`.
 - **Reading:** not required. A young child can use it independently.
-- **Limitation:** animal sizes do not follow real-world size (see section 18).
+- **Animal sizes:** drawn width follows the animal's real-life size class (`SIZE`), so a small animal never looks bigger than a clearly larger one (fixed via issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) item 5 / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173)).
 
 ## 7. Risks and limitations
 
 - A loop that runs continuously (breathing and blinking), even when nothing was touched; on slow devices this is constant work (requires verification).
-- Animal sizes depend on the slot, not on the animal, so a small animal can appear larger than a big one.
+- Animal sizes follow a fixed size table (`SIZE`); animals of similar size (for example pig and sheep, both 19 %) are drawn equally large.
 - The five hit areas can overlap slightly (see section 18).
 - No ending; relies on the global playtime limit.
 - No privacy concerns; nothing is stored.
@@ -92,7 +92,9 @@ No external configuration. Constants in [`js/farma.js`](../../js/farma.js):
 | `HAND` | Hand-drawn animals | sheep, cow, hen, cat |
 | `SHARED` | Animals drawn by `Animals.head` | dog, pig, rabbit, mouse, frog, bear, fox |
 | `BARN_POS` | Barn left, top, width (percent of board) | 3, 14, 32 |
-| `SLOTS` | Animal slots (left, top, width in percent) | (38,36,30), (79,36,18), (4,58,26), (64,66,20), (40,74,16) |
+| `SLOTS` | Animal slots (left, top, width in percent); an animal keeps its slot's centre and ground line but is drawn at its own `SIZE` width | (38,36,30), (79,36,18), (4,58,26), (64,66,20), (40,74,16) |
+| `SLOT_ORDER` | Order in which animals, sorted from largest to smallest, take the slots (indexes into `SLOTS`) | 0, 2, 3, 1, 4 |
+| `SIZE` | Drawn width (percent of the board) by animal; mouse is 48 % of the dog | mouse 10, frog 11, hen 13, rabbit 14, cat 16, fox 17, sheep 19, pig 19, dog 21, bear 25, cow 27 |
 
 Fallback: none; `window.Animals` is required for the shared animals and `window.Rand` for the selection, and neither is checked for being absent.
 
@@ -102,7 +104,7 @@ No external asset files. Hand-drawn animals (`SVG.sheep`, `SVG.cow`, `SVG.hen`, 
 
 ## 10. Randomization and variants
 
-- `window.Rand.pick(HAND.concat(SHARED), 5)` selects **5 unique animals from 11** ([`js/random.js`](../../js/random.js)): 462 possible sets. The returned order assigns the animals to the five slots, so the arrangement is random too (first animal gets the largest slot).
+- `window.Rand.pick(HAND.concat(SHARED), 5)` selects **5 unique animals from 11** ([`js/random.js`](../../js/random.js)): 462 possible sets. The five picks are then sorted by `SIZE` (largest first) and assigned to the slots in the order `SLOT_ORDER`, so the biggest animals take the biggest slots; which animals appear is random, their positions follow from their sizes. Small, medium, medium-large and large classes: small (mouse, frog, hen, rabbit) < medium (cat, fox, sheep, pig) < dog < large (bear, cow).
 - The barn and backdrop are fixed.
 - Random breathing phase and blink timing per animal.
 - Nothing is stored; there is no guard against the same selection on consecutive launches.
@@ -127,7 +129,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 - **Loop:** `frame()` with `dt` capped at 0.05 s sets `transform`s on the SVG groups (`transform-origin` set from JavaScript). It re-requests itself on every frame while the tab is visible (it does not stop when idle); it is cancelled when the tab is hidden and restarted by `wake()`.
 - **Events:** `click` on each button; `visibilitychange`.
 - **Shared code:** `Rand.pick`, `Animals.head`, `Animals.byId`, `Animals.eyes`.
-- **Persistence and analytics:** none.
+- **Persistence:** none. **Analytics:** through the app shell only (section 13).
 
 ## 15. Responsive layout and coordinate system
 
@@ -171,10 +173,10 @@ PR [#42](https://github.com/BielinskiLukasz/child-page/pull/42) reports a Node r
 
 **Confirmed**
 
-- Animal size is determined by the slot, not by the animal: the first random animal always gets the widest slot (30 % of the board), the last the narrowest (16 %), so a mouse can be drawn larger than a dog. Item 5 of open issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) asks for size classes; fix in open PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173) (not merged).
+- Animal sizes follow the `SIZE` table (fixed on `main`: item 5 of issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173)); the former problem of a mouse drawn larger than a dog no longer exists.
 - The peeking face in the barn is a generic cream face, not one of the displayed animals (`A.barn.who` is set but never read).
 - The cow neither breathes nor blinks (its SVG lacks the `fm-body` and `fm-eyes` groups).
-- Hit boxes of the slots overlap (computed from `SLOTS`): slot 1 (38, 36, 30) and slot 4 (64, 66, 20) overlap by 4 % x 10 % of the board; slot 1 and slot 5 (40, 74, 16) by 16 % x 2 %. The later button in DOM order is on top. The visible artwork may not fill the boxes (requires verification).
+- Hit boxes can still overlap. Computed from `SLOTS`, `SLOT_ORDER` and `SIZE` over all 462 possible animal sets, the largest animal (slot 1) overlaps the third largest (slot 4) by at most about 3 % x 11 % of the board and the smallest (slot 5) by at most about 18 % x 6 %; no other pair, and not the barn, overlaps. The later button in DOM order is on top. The visible artwork may not fill the boxes (requires verification).
 - The animation loop never idles while the activity is open.
 - No automated tests.
 
@@ -185,7 +187,7 @@ PR [#42](https://github.com/BielinskiLukasz/child-page/pull/42) reports a Node r
 
 ## 19. Planned improvements
 
-Size classes for the animals are proposed in open issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173). Otherwise `None currently planned`.
+None currently planned (the animal size classes from issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) are done, see section 21).
 
 ## 20. Related activities and reusable components
 
@@ -197,4 +199,4 @@ Size classes for the animals are proposed in open issue [#167](https://github.co
 - Issue [#32](https://github.com/BielinskiLukasz/child-page/issues/32) / PR [#42](https://github.com/BielinskiLukasz/child-page/pull/42): initial activity (sheep, cow, hen, cat and barn).
 - Issue [#66](https://github.com/BielinskiLukasz/child-page/issues/66) / PR [#68](https://github.com/BielinskiLukasz/child-page/pull/68): the barn door's X is part of the door group, so it scales with the door.
 - Issue [#113](https://github.com/BielinskiLukasz/child-page/issues/113) / PR [#137](https://github.com/BielinskiLukasz/child-page/pull/137): five random animals from a wider pool (shared family added); the pool was later widened to 11 (commit `a312c6d`).
-- Open: issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): animal size classes.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): animals are drawn by real-life size class and the biggest take the biggest slots.

@@ -126,7 +126,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 ## 14. Technical implementation
 
 - **Entry point:** `mount(container)` in [`js/pociag.js`](../../js/pociag.js) replaces the `mount` of the `pociag` registry entry; it returns a cleanup function that cancels the frame request, removes all listeners and removes the scene.
-- **Rendering:** DOM plus inline SVG. The train is one `div` moved with a CSS `transform` each frame; wheels and animals are SVG groups whose `transform` attribute is set from JavaScript; steam puffs are pooled `div`s.
+- **Rendering:** DOM plus inline SVG. The train is one `div` moved with a CSS `transform` each frame; wheels and animals are SVG groups whose `transform` attribute is set from JavaScript; steam puffs are pooled `div`s released above the chimney (at 91% of the train width).
 - **State:** `f` (train position as a fraction of the loop; 0 = just off the left edge, 1 = just off the right edge), `v` (speed), `ramp`, `plan` (station approach), `parked`, `odo` (distance for the wheels), `nods[]`, `puffs[]`.
 - **Layout:** `layout()` sets CSS variables `--tw`, `--th`, `--ty`; loop length `L = W + tw`; the station position is `fs = (tw + (W - tw) / 2) / L`. Because speed and positions are fractions of the loop, resizing or rotating keeps them valid; a moving station plan is re-planned from the current speed.
 - **Events:** `pointerdown` (with `preventDefault`) plus `click` for keyboard activation (`detail === 0`); `keydown` Enter/Space on the train; `resize`, `orientationchange`, `visibilitychange`.
@@ -136,7 +136,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 ## 15. Responsive layout and coordinate system
 
 - The scene is `position: fixed; inset: 0`; the track is at `0.72 * H`; the train is `tw = min(0.8 * W, 560, 1.6 * H)` wide and `th = tw / 4` high.
-- The train SVG uses `viewBox="0 0 400 100"` (three wagons 92 wide at x = 4, 104, 204; locomotive from x = 304 to 386). Animal heads are centred in each wagon. The station SVG is `viewBox="0 0 200 120"`.
+- The train SVG uses `viewBox="0 0 400 100"` (three wagons 92 wide at x = 4, 104, 204; locomotive from x = 304 to 386, drawn facing right: the tall cab block at x 304 to 350 sits at the back next to the carriages, the boiler at x 326 to 386, the chimney at x 356 to 372 and the headlight at x 360 at the front). Animal heads are centred in each wagon. The station SVG is `viewBox="0 0 200 120"`.
 - Moving elements use pixels (translate in px); the train position uses loop fractions, so changing the screen size does not move the stopping point away from the station.
 - Portrait and landscape both work; no aspect-ratio-specific layout exists. Extremely wide, low screens are limited by the `1.6 * H` rule.
 
@@ -179,7 +179,6 @@ PR [#39](https://github.com/BielinskiLukasz/child-page/pull/39) reports a Node r
 
 **Confirmed**
 
-- The locomotive is drawn facing the wrong way: the taller cab block (x 340 to 386) is at the front (right) and the chimney (x 318) at the back, although the train travels to the right. Reported as item 4 of issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167); fix in open PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173) (not merged).
 - Steam is released continuously even while the train is parked.
 - No keyboard or screen-reader state: the train button does not announce whether it is moving.
 - The animal pool allows visually similar animals in the same train (no `distinct`).
@@ -192,7 +191,7 @@ PR [#39](https://github.com/BielinskiLukasz/child-page/pull/39) reports a Node r
 
 ## 19. Planned improvements
 
-The locomotive direction fix is proposed in open issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173). Otherwise `None currently planned`.
+None currently planned. (The locomotive direction fix is done, see issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173).)
 
 ## 20. Related activities and reusable components
 
@@ -204,4 +203,4 @@ The locomotive direction fix is proposed in open issue [#167](https://github.com
 
 - Issue [#30](https://github.com/BielinskiLukasz/child-page/issues/30) / PR [#39](https://github.com/BielinskiLukasz/child-page/pull/39): initial activity (including reviewer-suggested refinements).
 - Issue [#113](https://github.com/BielinskiLukasz/child-page/issues/113) / PR [#137](https://github.com/BielinskiLukasz/child-page/pull/137): wagon animals drawn at random from the shared animal family.
-- Open: issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): locomotive direction fix.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): fixed on `main`; the locomotive now faces the direction of travel (chimney and headlight at the front, steam puffs released above the chimney at 91% of the train width).

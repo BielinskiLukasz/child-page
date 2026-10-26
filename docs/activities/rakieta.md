@@ -195,7 +195,7 @@ Manual checklist (not yet performed):
 - Whether any two of the 15 stars (56 px hit boxes) or a star and a planet overlap on very small or very narrow screens (a layout fix was made in PR [#154](https://github.com/BielinskiLukasz/child-page/pull/154)).
 - Frame rate on slow devices.
 
-No open issue specifically concerns Rakieta (open: [#164](https://github.com/BielinskiLukasz/child-page/issues/164), [#167](https://github.com/BielinskiLukasz/child-page/issues/167), [#168](https://github.com/BielinskiLukasz/child-page/issues/168)).
+No open issue specifically concerns Rakieta; the metrics (#164), visual fixes (#167) and documentation (#168) issues are all merged or in review.
 
 ## 19. Planned improvements
 

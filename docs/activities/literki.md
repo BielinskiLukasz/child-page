@@ -34,7 +34,7 @@ A parent-and-child letter picture book: the child sees large letters with friend
 | Rule | Value |
 |---|---|
 | Letters | 32 (Polish alphabet): A Ą B C Ć D E Ę F G H I J K L Ł M N Ń O Ó P R S Ś T U W Y Z Ź Ż |
-| Pictures per letter | 2 (64 pictures in total) |
+| Pictures per letter | 2, or 3 for ten letters (B, D, G, J, K, L, O, P, S, T); 74 pictures in total |
 | Slide | 0.5 s (`SLIDE_S`); card fades out for the first half and in for the second half; the letter is swapped at the midpoint; slide offset 60 px |
 | Wiggle | 0.8 s (`WIGGLE_S`), up to 7 degrees |
 | Word display | visible 3 s (`WORD_S`) after 0.25 s fade-in, 0.5 s fade-out (`WORD_FADE_S`) |
@@ -91,13 +91,13 @@ No runtime configuration; the letters and pictures are data in [`js/literki-data
 
 ## 9. Assets
 
-No external image files. The 64 pictures are inline SVG strings in `js/literki-data.js` (100x100 viewBox, the app's own style), one `w` (Polish word) per picture and an optional `c` flag. The file is about 24 KB and is loaded by a script tag before `js/literki.js`. The arrow icons are inline SVG in `js/literki.js`.
+No external image files. The 74 pictures are inline SVG strings in `js/literki-data.js` (100x100 viewBox, the app's own style), one `w` (Polish word) per picture and an optional `c` flag. The file is about 26 KB and is loaded by a script tag before `js/literki.js`. The arrow icons are inline SVG in `js/literki.js`.
 
 ## 10. Randomization and variants
 
 - **Letter order:** `Rand.shuffle(LETTERS)` at launch and again at the start of each new round; each letter appears once per round. When a new round starts, its first letter is never the letter just shown (the first element is rotated to the end if equal).
-- **Picture:** `Rand.pickOne(L.pics, 'literki-' + L.l)` on each showing; with 2 pictures per letter, the picture differs from the last one shown for that letter within the page session (the memory is in-process and per letter).
-- **Pool sizes:** 32 letters; 2 pictures per letter.
+- **Picture:** `Rand.pickOne(L.pics, 'literki-' + L.l)` on each showing; with 2 or 3 pictures per letter, the picture differs from the last one shown for that letter within the page session (the memory is in-process and per letter).
+- **Pool sizes:** 32 letters; 2 pictures per letter, 3 for B, D, G, J, K, L, O, P, S and T (extra pictures: butelka, drzewo, gwiazda, jajko, klucz, liść, oko, parasol, serce, truskawka).
 - **Persistence:** none; a new order on every launch.
 
 ## 11. Progression and difficulty
@@ -150,7 +150,7 @@ There are no automated tests. Manual scenarios to perform:
 - [ ] Swipe left and right over 60 px on the card; short movements do nothing.
 - [ ] Double-tap an arrow quickly: only one letter change.
 - [ ] Leave and re-enter: the order is different; the letters Ą, Ę, Ń, Y show words flagged with "w słowie".
-- [ ] See both pictures of several letters by revisiting them; the picture alternates.
+- [ ] See all pictures of several letters by revisiting them (including a 3-picture letter such as B); the picture varies and does not repeat directly.
 - [ ] Portrait and landscape; very small phone; large tablet.
 - [ ] Touch, mouse and keyboard (Tab, Enter, Space).
 - [ ] Switch tab while the word is shown and return.
@@ -163,7 +163,7 @@ PR [#86](https://github.com/BielinskiLukasz/child-page/pull/86) reports `node --
 
 **Confirmed**
 - No automated tests; device checks were pending in the PR descriptions.
-- Each letter has exactly 2 pictures; Ą, Ę, Ń and Y have only words that contain, not start with, the letter.
+- Each letter has 2 pictures, ten letters have 3; Ą, Ę, Ń and Y have only words that contain, not start with, the letter.
 - No audio.
 - No handling when `LiterkiData` is missing.
 - Swipe is bound to `pointerdown`/`pointerup` on the whole card, so a drag that starts and ends on the same button may both swipe and trigger the button (code reading; behaviour in browsers not verified).
@@ -172,11 +172,11 @@ PR [#86](https://github.com/BielinskiLukasz/child-page/pull/86) reports `node --
 - Whether horizontal swipes are ever stolen by the browser (`touch-action: manipulation` allows panning).
 - Appearance of the letters in the fonts available on each device.
 
-Open issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (item 6) asks for at least 2 pictures per letter and 3 where a good Polish word exists, with a random picture on each showing.
+Item 6 of issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (at least 2 pictures per letter, 3 where a good Polish word exists) is done on `main` via PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173); the random picture on each showing was already implemented.
 
 ## 19. Planned improvements
 
-- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), item 6: more pictures per letter (3 where a good word exists); the random choice on each showing is already implemented.
+None currently planned (the third pictures from issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), item 6, are done, see section 21).
 
 ## 20. Related activities and reusable components
 
@@ -188,4 +188,4 @@ Open issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (ite
 
 - Issue [#63](https://github.com/BielinskiLukasz/child-page/issues/63) / PR [#86](https://github.com/BielinskiLukasz/child-page/pull/86): activity added (12 letters).
 - Issue [#118](https://github.com/BielinskiLukasz/child-page/issues/118) / PR [#142](https://github.com/BielinskiLukasz/child-page/pull/142): full Polish alphabet, random order and random pictures.
-- Open issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167): visual and playability fixes batch, including more Literki pictures.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): third pictures for ten letters (74 pictures in total).

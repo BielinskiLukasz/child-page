@@ -2,6 +2,8 @@
 
 One document per activity of *Spokojny Świat Artura*, describing the **current implementation on `main`** (planned work is kept apart under "Known limitations" and "Planned improvements" in each document). New documents start from [ACTIVITY_TEMPLATE.md](ACTIVITY_TEMPLATE.md). The product overview lives in the [project README](../../README.md).
 
+*Documents were last brought in line with `main` at commit `4f83f9e` (includes PR #172 usage metrics and PR #173 visual fixes); when `main` changes an activity, update its document.*
+
 ## Shared platform behaviour
 
 These facts apply to every activity; the activity documents link here instead of repeating them and only note deviations.

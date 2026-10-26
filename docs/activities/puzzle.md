@@ -24,7 +24,7 @@ The only activity with graded difficulty: it starts with four large pieces and, 
 4. When all pieces are placed (and idle) the finished picture glows for 3 s.
 5. After 7 s in total the picture cross-fades out (0.7 s), the next picture with the next grid size is built, and it fades in (0.7 s).
 6. After five finished pictures the grid grows (see section 11). The cycle continues indefinitely.
-7. Rotating the device between portrait and landscape on a non-square grid restarts the current picture with fresh pieces.
+7. Rotating the device only re-lays-out the current puzzle: pieces keep their state and the grid shape (tall or wide) is not changed.
 8. The child leaves with the Back button (see [README.md](README.md#shared-platform-behaviour)); progress is lost.
 
 ## 4. Rules and behavior
@@ -66,7 +66,7 @@ The only activity with graded difficulty: it starts with four large pieces and, 
 - **Input:** pointer events (touch, mouse, stylus) with pointer capture and `touch-action: none`; keyboard alternative as above with a 4 px inset outline (`#8f7fd1`).
 - **Screen readers:** places are labelled "Miejsce N" and pieces "Kawałek obrazka N (Enter lub spacja, potem wybierz miejsce)"; the picture content itself is not described (SVG `aria-hidden`).
 - **Target size:** pieces are 56 to 170 px; when even 56 px does not fit, tray cells overlap slightly.
-- **Orientation:** portrait places the tray below the frame, landscape beside it; grids are transposed with the orientation (for example 2 columns x 3 rows in portrait, 3 x 2 in landscape).
+- **Orientation:** portrait places the tray below the frame, landscape beside it. A non-square grid is drawn tall (for example 2 columns x 3 rows) or wide (3 x 2) at random for each puzzle, whatever the screen orientation; rotating the device keeps the grid of the current puzzle.
 - **Colour:** pictures are colourful but a piece's correct place is found by image content, not colour alone.
 - **Reduced motion:** glides, fades and glow are driven by a `requestAnimationFrame` loop with inline styles, so they still run under the global CSS rule; glides shorten to 300 ms.
 - **Reading:** none required. Whether a young child can solve 3x4 or 4x4 independently is not documented.
@@ -75,7 +75,7 @@ The only activity with graded difficulty: it starts with four large pieces and, 
 ## 7. Risks and limitations
 
 - Difficulty can rise to 16 pieces; there is no way to lower it again except leaving and reopening (which restarts at 2x2).
-- Rotating the device mid-puzzle on a non-square grid restarts the picture with fresh pieces and loses the progress of that picture (reported as a review note in PR [#147](https://github.com/BielinskiLukasz/child-page/pull/147)).
+- Rotating the device mid-puzzle no longer restarts the picture (fixed on `main` via issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173)): the grid keeps its shape and only the layout is recomputed.
 - Pictures are simple drawings that may be hard to recognise when cut into 16 pieces (requires verification).
 - No privacy concerns; nothing stored or sent.
 
@@ -140,9 +140,9 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 - **Entry point:** `mount(container)` in [`js/puzzle.js`](../../js/puzzle.js), replacing `mount` of the `puzzle` registry entry; returns `cleanup`.
 - **Rendering:** DOM: `div.pz > div.pz-field > div.pz-frame` plus, per round, `N` `button.pz-slot` (invisible targets, used for keyboard) and `N` `button.pz-piece` each containing an SVG whose `viewBox` selects its square of the picture (`pieceSvg`). Elements are moved with `transform: translate()`.
-- **State:** `order`, `oi`, `pic` (picture), `done` (finished count), `cw`/`ch`/`N` (grid), `portrait`, `P`, `fx`/`fy` (frame origin), per piece `{ i, cell, x, y, hx/hy (tray), tx/ty (place), mode, placed }`, `doneActive`, `doneT`, `glow`, `fade`/`fadeDir`.
+- **State:** `order`, `oi`, `pic` (picture), `done` (finished count), `cw`/`ch`/`N` (grid), `flipGrid` (random tall/wide choice per puzzle), `portrait`, `P`, `fx`/`fy` (frame origin), per piece `{ i, cell, x, y, hx/hy (tray), tx/ty (place), mode, placed }`, `doneActive`, `doneT`, `glow`, `fade`/`fadeDir`.
 - **Layout:** `build()` creates slots and pieces for the current picture and grid; `fit()` searches the largest `P` where frame and tray fit; `layout()` positions everything.
-- **Events:** `pointerdown/move/up/cancel`, `lostpointercapture` per piece; `click` on pieces (keyboard) and slots; `resize`, `orientationchange`, `visibilitychange`.
+- **Events:** `pointerdown/move/up/cancel`, `lostpointercapture` per piece; `click` on pieces (keyboard) and slots; `resize`, `orientationchange` (both only re-layout), `visibilitychange`.
 - **Animation:** one loop `frame_()` (dt capped at 50 ms), smoothstep glides; stops when idle; paused while hidden.
 - **Dependencies:** `window.PuzzlePictures`, [`js/random.js`](../../js/random.js) (`Rand.shuffle`). **Persistence:** none. **Analytics:** `Analytics.levelStart` / `levelComplete` / `complete`.
 - **Cleanup:** cancels the frame, removes the three listeners and the board.
@@ -153,7 +153,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 - The frame is `cw * P` by `ch * P`; slot `i` sits at column `i % cw`, row `floor(i / cw)`; the piece's target centre is `(fx + (col + 0.5) * P, fy + (row + 0.5) * P)`. Tray cells are in a grid of `tc` columns by `tr` rows; if the tray does not fit its cells overlap by a smaller step (`sx`, `sy`).
 - Portrait: tray below the frame (falls back to beside); landscape: tray beside (falls back to below). The frame and tray are centred as one group.
 - Picture coordinates: pieces use `viewBox` of the 200x200 picture with `preserveAspectRatio="none"`; for non-square grids the crop is `200` by `200 * short / long` (centred), so each cell shows a unit square of the crop.
-- Orientation change: for a square grid (`cw === ch`) only `layout()` runs; otherwise `restartRound()` rebuilds the same picture with the transposed grid.
+- Grid shape: `GRIDS` holds `[short, long]` sizes; `build()` sets `tall = portrait !== flipGrid` (`flipGrid` is re-drawn at random, 50 %, for every new picture) and uses `cols = short, rows = long` when tall, the reverse when wide. Orientation change only runs `layout()`; there is no round restart any more.
 - If nothing fits at 56 px the tray cells overlap; the layout then continues to render, but pieces could be harder to separate (requires verification on small screens).
 
 ## 16. Error and edge-case handling
@@ -161,7 +161,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 | Case | Handling |
 |---|---|
 | Missing pictures file | `PICTURES` is `[]`; `pieceSvg` would use an undefined picture (no guard; requires verification) |
-| Resize / rotation | Re-layout, or round restart for non-square grids; active drag cancelled and piece sent home |
+| Resize / rotation | Re-layout only (grid shape kept); active drag cancelled and piece sent home |
 | Backgrounding | Loop paused while hidden; completion timers advance only while visible |
 | Multi-touch | Each piece tracks its own pointer; a second pointer on the same piece is ignored |
 | Pointer cancel / lost capture | Treated as release |
@@ -183,7 +183,7 @@ No automated tests exist ([README.md](README.md#shared-platform-behaviour)). PR 
 - [ ] Progression: after 5 pictures the grid is 2x3, after 10 3x3, after 15 3x4, after 20 4x4 and stays.
 - [ ] Portrait (about 360x640): tray below, 4x4 pieces at least 56 px and not overlapping.
 - [ ] Landscape (about 640x360): tray beside; frame and tray fully visible.
-- [ ] Rotate the device mid-puzzle on a 2x3 or 3x4 grid; the picture restarts with fresh pieces and nothing is stuck.
+- [ ] Rotate the device mid-puzzle on a 2x3 or 3x4 grid; the picture and placed pieces stay, the layout adapts and nothing is stuck.
 - [ ] Touch: two fingers dragging two pieces; mouse: left-button drag.
 - [ ] Keyboard: Tab to a piece, Enter selects, Enter on "Miejsce N" places it.
 - [ ] Reduced motion on: glides short, fades and glow still shown.
@@ -196,7 +196,6 @@ No automated tests exist ([README.md](README.md#shared-platform-behaviour)). PR 
 **Confirmed (from code reading):**
 - No automated tests.
 - No way to choose or lower the difficulty during a visit; progress is lost when leaving.
-- Orientation change on non-square grids restarts the picture.
 - No guard for a missing `window.PuzzlePictures`.
 - Picture licence/source is not documented.
 
@@ -220,3 +219,4 @@ None currently planned (no open issue).
 
 - [#51](https://github.com/BielinskiLukasz/child-page/issues/51) / [PR #77](https://github.com/BielinskiLukasz/child-page/pull/77): activity introduced (3 pictures, 2x2).
 - [#122](https://github.com/BielinskiLukasz/child-page/issues/122) / [PR #147](https://github.com/BielinskiLukasz/child-page/pull/147): 25 pictures in random order and a progressive grid from 2x2 to 4x4.
+- [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / [PR #173](https://github.com/BielinskiLukasz/child-page/pull/173): non-square grids are drawn tall or wide at random per puzzle; rotating the device no longer restarts the picture.

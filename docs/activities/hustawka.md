@@ -77,7 +77,7 @@ Source: [`js/hustawka.js`](../../js/hustawka.js), CSS prefix `hs-` in [`css/styl
 ## 7. Risks and limitations
 
 - Leaves have a fixed 18 px size (not scaled with the board).
-- The rope tops rotate with the whole swing wrapper instead of staying fixed at the branch (see section 18).
+- The ropes are a separate SVG layer (`.hs-ropes`) drawn from JavaScript each frame; their tops stay at fixed points on the branch and only the lower ends move with the seat.
 - Visual check in a real browser is not documented.
 - Random leaf placement uses `Math.random` and is not reproducible; this has no functional effect.
 
@@ -88,7 +88,7 @@ No external configuration; constants live in [`js/hustawka.js`](../../js/hustawk
 | Constant | Value | Purpose |
 |---|---|---|
 | `BW` x `BH` | 400 x 300 | Board units |
-| `PX`, `PY`, `ROPE` | 260, 112, 118 | Pivot position and rope length (units) |
+| `PX`, `PY`, `ROPE`, `ROPE_X` | 260, 112, 118, 26 | Pivot position, rope length and horizontal rope offset from the pivot (units) |
 | `PERIOD` | 3.6 s | Swing period |
 | `MAX_AMP`, `STEP` | 35, 8 degrees | Maximum amplitude, increment per push |
 | `DRAIN`, `EASE` | 2.7 degrees/s, 2 per s | Target decay, amplitude easing rate |
@@ -99,7 +99,7 @@ No external configuration; constants live in [`js/hustawka.js`](../../js/hustawk
 
 ## 9. Assets
 
-No external asset files. Background (sky, cloud, hills, grass, tree trunk, branch), tree crown, rope/seat SVG and leaves are inline SVG built in `scene()`, `crown()`, `swingSvg()` and `leafSvg()`. The animal is built from `Animals.head(id, { body: true })` in `figure()`. The menu icon is inline SVG in `js/activities.js`. No fonts, audio or images.
+No external asset files. Background (sky, cloud, hills, grass, tree trunk, branch), tree crown, seat SVG, rope SVG and leaves are inline SVG built in `scene()`, `crown()`, `swingSvg()`, the `.hs-ropes` markup in `mount()` and `leafSvg()`. The animal is built from `Animals.head(id, { body: true })` in `figure()`. The menu icon is inline SVG in `js/activities.js`. No fonts, audio or images.
 
 ## 10. Randomization and variants
 
@@ -124,7 +124,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 ## 14. Technical implementation
 
 - **Entry point:** `mount(container)` assigned to the registry entry `hustawka`; returns a cleanup function.
-- **Rendering:** `.hs-board` with a background SVG (`viewBox 0 0 400 300`, including the crown group `.hs-crown`), a tree button, six pooled leaf spans and one `.hs-swing` wrapper (rope/seat SVG, seat button, animal button) that is rotated by CSS `transform: rotate()` about its top centre.
+- **Rendering:** `.hs-board` with a background SVG (`viewBox 0 0 400 300`, including the crown group `.hs-crown`), a tree button, six pooled leaf spans and a fixed rope layer `.hs-ropes` (two lines `.hs-rl`/`.hs-rr` and two knobs at x = 260 +/- 26, y = 115) and one `.hs-swing` wrapper (seat SVG, seat button, animal button) that is rotated by CSS `transform: rotate()` about its top centre. In `paint()` the lower rope ends are set to the rotated seat positions (same pivot and angle), so the rope tops never move.
 - **State:** `amp`, `target`, `phase`, `theta`, `swayT`, `waveT`, `sinceLeaf`, `leaves[]`.
 - **Animation:** one `requestAnimationFrame` loop (`frame`/`paint`), capped dt, stops itself when idle and is restarted by `start()` on a touch; paused while the tab is hidden.
 - **Events:** `click` on the seat, animal and tree buttons; `resize`/`orientationchange` call `layout()`.
@@ -134,7 +134,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 ## 15. Responsive layout and coordinate system
 
 - Board 400 x 300 units, scale `k = board.clientWidth / 400`.
-- The swing wrapper is `max(56, 100k)` px wide, centred on the pivot (260, 112) units, and `(118 + 12) * k` px high; the rope SVG inside is 100 units wide.
+- The swing wrapper is `max(56, 100k)` px wide, centred on the pivot (260, 112) units, and `(118 + 12) * k` px high; the seat SVG inside is 100 units wide.
 - The animal button is anchored to the seat position (bottom at `ROPE * k + 6k`), the seat button is centred on the seat line.
 - Leaves are positioned in board units times `k` in the board's pixel space; their 18 px size is not scaled.
 - The tree button spans x 12-188, y 14-262 units, matching the drawn tree.
@@ -165,7 +165,7 @@ Manual scenarios (all unchecked):
 - [ ] Randomization: enter several times; the animal varies; falling leaves differ in path.
 - [ ] Progression: confirm there is none.
 - [ ] Portrait and landscape; rotate while swinging; the scene stays on screen and the swing continues.
-- [ ] Highest amplitude: check how the ropes meet the branch (known limitation, section 18).
+- [ ] Highest amplitude: the rope tops stay on the branch and only the lower ends move with the seat.
 - [ ] Touch and mouse; keyboard Tab and Enter/Space on seat, animal and tree.
 - [ ] Background the tab while swinging and return; no jump.
 - [ ] Browsers: Chrome desktop, Chrome Android, Safari iPhone/iPad.
@@ -176,16 +176,15 @@ Manual scenarios (all unchecked):
 **Confirmed**
 
 - No automated tests; no documented real-device verification.
-- The whole swing wrapper (ropes and seat) rotates about the pivot at the centre of the ropes (260, 112 units), so the rope tops at x = pivot +/- 26 units move sideways with the swing instead of staying attached at fixed branch points. This is item 13 of issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (open).
 - Leaf size is fixed at 18 px.
 
 **Requires verification**
 
-- Appearance of the rope/branch attachment at the highest amplitude on real devices.
+- Appearance of the rope/branch attachment at the highest amplitude on real devices (fixed rope tops are implemented, but no real-device check is documented).
 
 ## 19. Planned improvements
 
-- Ropes anchored at fixed points on the branch with only the lower end moving: issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), pull request [#173](https://github.com/BielinskiLukasz/child-page/pull/173) (open, touches `js/hustawka.js`).
+None currently planned (no open issue).
 
 ## 20. Related activities and reusable components
 
@@ -195,4 +194,4 @@ Manual scenarios (all unchecked):
 ## 21. Change history
 
 - Issue #98, PR [#161](https://github.com/BielinskiLukasz/child-page/pull/161): activity added (commit ad2ff47).
-- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): open, not on `main`.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (closed) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173) (merged): ropes anchored at fixed points on the branch with only the lower end moving (`ROPE_X`, `.hs-ropes`).

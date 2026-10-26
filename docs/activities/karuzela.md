@@ -44,7 +44,7 @@ Source: [`js/karuzela.js`](../../js/karuzela.js), CSS prefix `kz-` in [`css/styl
 - Angle `th` grows in one direction only. Seats sit on an ellipse (x = sin, depth = cos) and always stay upright.
 - Drag sensitivity: `angleDelta` converts horizontal finger movement to angle; touching in the front half (below the orbit centre) turns forward, in the back half the sign flips; a dead zone keeps the factor at least 0.5 in magnitude.
 - Seat bobbing: up to `BOB` = 4 px up or down (8 px range), scaled by current speed, with a per-seat phase.
-- Perspective: seat scale = 0.92 + 0.12 cos(angle); front seats (cos > 0) get a higher z-index (5 vs 3).
+- Perspective: seat scale = 0.92 + 0.12 cos(angle); each animal is also drawn lower toward the front: a vertical offset `FRONT_DROP * seatPx * (1 + cos) / 2` (`FRONT_DROP` = 0.08, i.e. 0 at the back and 8% of the animal's height at the very front, smooth in the angle); front seats (cos > 0) get a higher z-index (5 vs 3).
 - Bunting: 9 flags rock by up to 5 degrees with a 6 s period, independent of the ride.
 - No sound, no scoring, no failure state. See also [shared platform behaviour](README.md#shared-platform-behaviour).
 
@@ -98,6 +98,7 @@ The activity has no external configuration; the constants are inside [`js/karuze
 | `HOP`, `REACT_S` | 8 px, 1.8 s | Animal reaction height and length |
 | `MAX_DT` | 0.05 s | Frame time cap |
 | `BW` x `BH` | 400 x 300 | Board units |
+| `FRONT_DROP` | 0.08 | Extra drop of an animal at the front-most point, as a fraction of its height |
 | `CX`, `ORB_R`, `ORB_Y`, `ORB_D` | 200, 118, 214, 20 | Orbit centre x, radius, feet baseline y, depth amplitude |
 | `N`, `SEAT` | 4, 68 | Seat count; seat box in board units |
 
@@ -182,7 +183,6 @@ Manual scenarios (all unchecked):
 **Confirmed**
 
 - No automated tests; no documented real-device verification.
-- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (open) requests that animals are drawn lower the closer they are to the front of the carousel (6-10% of animal height); this is not in `main`. The current code only varies scale (0.92 to 1.04) with depth.
 - No keyboard way to turn the carousel by hand.
 - Touching the carousel never auto-stops it.
 
@@ -192,7 +192,7 @@ Manual scenarios (all unchecked):
 
 ## 19. Planned improvements
 
-- Depth-dependent vertical offset of the animals: issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), pull request [#173](https://github.com/BielinskiLukasz/child-page/pull/173) (open).
+None currently planned. (The depth-dependent vertical offset of the animals is done, see issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), pull request [#173](https://github.com/BielinskiLukasz/child-page/pull/173).)
 
 ## 20. Related activities and reusable components
 
@@ -203,4 +203,4 @@ Manual scenarios (all unchecked):
 ## 21. Change history
 
 - Issue #96, PR [#159](https://github.com/BielinskiLukasz/child-page/pull/159): activity added (commit 69c94ef).
-- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): open visual improvements, not on `main`.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): fixed on `main`; animals sit lower toward the front of the carousel (`FRONT_DROP`).

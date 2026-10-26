@@ -6,7 +6,7 @@
 |---|---|
 | Display name | Dzień i Noc |
 | Activity ID | `dzien-i-noc` (`js/activities.js`) |
-| Description | Touching the sun slowly brings night with stars, touching the moon brings the day back, touching the sky sends a cloud drifting by. By day a flock of birds crosses the sky; at night a satellite or a plane sometimes drifts past and new stars slowly appear. |
+| Description | Touching the sun slowly brings night with stars, touching the moon brings the day back, touching the sky sends a cloud drifting by. By day 2-3 birds cross the sky; at night a satellite or a plane sometimes drifts past and new stars slowly appear. |
 | Category | Calming, observation, cause and effect |
 | Interaction type | Tap the sun/moon, tap the sky, tap a bird |
 | Status | Implemented. Enabled by default in the menu (no `defaultOff` flag). |
@@ -19,7 +19,7 @@ A slow, predictable scene about the day-night cycle: one big button changes the 
 ## 3. Activity flow
 
 1. The child opens the tile (hash `#dzien-i-noc`); the scene starts in full day.
-2. A light blue sky, three drifting clouds and a big sun (centre, 42 % from the top) are shown; after a moment 7-9 birds fly across.
+2. A light blue sky, three drifting clouds and a big sun (centre, 42 % from the top) are shown; after a moment 2-3 birds fly across.
 3. The child can tap the sun, the sky or a bird.
 4. Tapping the sun starts a 3.5 s transition to night: the sky darkens, the sun cross-fades into a smiling moon, stars appear, clouds fade and birds disappear. Tapping the moon reverses it. Tapping the sky adds a cloud; tapping a bird makes it fly a slow loop.
 5. There is no completion state.
@@ -37,7 +37,7 @@ A slow, predictable scene about the day-night cycle: one big button changes the 
 | Sun/moon button | One `<button>`, size `clamp(150px, 38vmin, 320px)`, at 50 % / 42 %; its `aria-label` switches between "Słońce" and "Księżyc" at `progress >= 0.5` |
 | Clouds | 3 ambient clouds are kept at all times (`AMBIENT`); max 7 in total (`MAX_CLOUDS`, oldest dropped); ambient speed 1.6-2.4 vw/s; removed beyond 105 vw; width 18-30 vmin; opacity falls from .95 to .40 as night comes |
 | Cloud tap | Adds a cloud entering at -30 vw at the tapped height (y minus 8 %, clamped to 2-70 %) moving 3.2 vw/s |
-| Birds | Flock of 7-9 (`flockSize`, chosen each launch), daytime only. Each crosses the screen in 20 s (+/- 15-25 %), in a lane that avoids the sun/moon box, with slow wing flapping (0.55-1 vertical scale, 1.2 flaps/s); when one leaves, the next enters after 0-1.5 s. The flock appears when day is fully reached (`progress < 0.05` and target day), and is removed once `progress >= 0.5` |
+| Birds | Flock of 2-3 (`flockSize`, chosen each launch), daytime only. Each crosses the screen in 20 s (+/- 15-25 %), in a lane that avoids the sun/moon box, with slow wing flapping (0.55-1 vertical scale, 1.2 flaps/s); when one leaves, the next enters after 0-1.5 s. The flock appears when day is fully reached (`progress < 0.05` and target day), and is removed once `progress >= 0.5` |
 | Bird tap | A bird that is not already looping flies one 2.6 s loop away from the sun/moon; bird button at least 56 px (`clamp(56px, 9vmin, 72px)`) |
 | Stars | 100 fixed stars (seeded generator, same layout each visit; 10 % bright 3-4 px, others 1.4-2.7 px, opacity 0.4-0.8) in the top 60 % of the screen; a new star is added every 15-30 s up to `STAR_CAP` = 160 and grows from 1 px in 8 s (`STAR_GROW_SECONDS`); they exist (hidden) by day too |
 | Night flyer | At most one; only when night is reached (`progress >= 0.95`, target night), every 20-45 s; 50 % a steady white satellite (18 s crossing), 50 % a grey airplane dot with a red pulse (12 s crossing, 0.7 s cosine pulse); not touchable; removed when day returns |
@@ -94,7 +94,7 @@ No external configuration. Constants at the top of [`js/dzien-i-noc.js`](../../j
 | `BIRD_SECONDS`, `LOOP_SECONDS` | Bird crossing and loop duration | 20, 2.6 |
 | `STAR_ADD_MIN`, `STAR_ADD_MAX`, `STAR_GROW_SECONDS`, `STAR_CAP` | New-star interval (s), growth time, total cap | 15, 30, 8, 160 |
 | `FLY_MIN`, `FLY_MAX`, `SAT_SECONDS`, `PLANE_SECONDS`, `BLINK_SECONDS` | Night flyer interval, crossing times and pulse | 20, 45, 18, 12, 0.7 |
-| `flockSize` | Birds per launch | 7-9 (local variable) |
+| `flockSize` | Birds per launch | 2-3 (local variable) |
 | Star seed | Fixed layout of the first 100 stars | 7 (`makeStars`) |
 
 No fallback is needed because nothing is read from outside.
@@ -107,7 +107,7 @@ No external assets. Sun, moon, birds and clouds are inline SVG strings in the JS
 
 | What | When | Rule |
 |---|---|---|
-| Flock size | Each launch | 7, 8 or 9 uniformly (`Math.random`) |
+| Flock size | Each launch | 2 or 3 uniformly (`Math.random`) |
 | Bird direction, lane, speed (+/- 15-25 %), phase | Each bird spawn | Uniform |
 | Respawn delay | When a bird leaves | 0-1.5 s |
 | Cloud heights, widths, speeds, respawn offset | Each cloud | Ranges in section 4 |
@@ -165,7 +165,7 @@ Manual scenarios (all unchecked):
 - [ ] Normal: tap the sun; the sky darkens over about 3.5 s, stars appear, the sun becomes a moon; tap the moon; day returns.
 - [ ] Taps on the sun/moon and sky during the transition are ignored; bird taps still loop.
 - [ ] Sky tap by day and at night adds a cloud that drifts across and leaves.
-- [ ] Birds: 7-9 appear after day is reached; none overlap the sun; touching one makes a slow loop; they vanish when night begins.
+- [ ] Birds: 2-3 appear after day is reached; none overlap the sun; touching one makes a slow loop; they vanish when night begins.
 - [ ] Night: wait 20-45 s after night is reached; a satellite or plane crosses; the plane's red pulse is calm.
 - [ ] Wait 60 s: new stars appear one by one and grow.
 - [ ] Restart: reopen; scene starts as day, the flock size varies between launches.
@@ -180,7 +180,7 @@ Manual scenarios (all unchecked):
 
 **Confirmed**
 
-- The flock is 7-9 birds, which the product owner considers too many; issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) item 3 asks for 2-3 at a time.
+- The flock was reduced from 7-9 to 2-3 birds (fixed on `main`: item 3 of issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173)); no flock-size limitation remains.
 - Sky taps cannot add clouds by keyboard.
 - Initial stars use no centring transform whereas added stars do (a sub-pixel inconsistency).
 - The sun/moon button has no pressed state for assistive technology.
@@ -189,11 +189,11 @@ Manual scenarios (all unchecked):
 **Requires verification**
 
 - Bird lanes in very short landscape viewports (see section 7).
-- Performance with up to 7 clouds, 9 birds and 160 stars on slow devices.
+- Performance with up to 7 clouds, 3 birds and 160 stars on slow devices.
 
 ## 19. Planned improvements
 
-- Reduce the daytime flock to 2-3 visible birds, never overlapping the sun/moon: [#167](https://github.com/BielinskiLukasz/child-page/issues/167), item 3 (open).
+None currently planned (the smaller flock from issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167), item 3, is done, see section 21).
 
 ## 20. Related activities and reusable components
 
@@ -207,4 +207,4 @@ Manual scenarios (all unchecked):
 - Issue [#21](https://github.com/BielinskiLukasz/child-page/issues/21): app review polish.
 - Human requests on the PR: slowly growing stars, removed Big Dipper constellation, occasional satellite and plane.
 - Issue [#111](https://github.com/BielinskiLukasz/child-page/issues/111) / PR [#135](https://github.com/BielinskiLukasz/child-page/pull/135): grey plane with red pulse, steady satellite, daytime bird flock.
-- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167): open, covers the flock size.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): daytime flock reduced from 7-9 to 2-3 birds.

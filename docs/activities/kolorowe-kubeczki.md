@@ -21,7 +21,7 @@ A colour-matching game with a small, fixed workload (six balls, three cups) and 
 1. The child opens the activity (`#kubeczki`); a random colour/pattern combination is picked and the scene is laid out.
 2. Three cups stand in a row at the top; six balls (two per colour) wait in the bottom area in shuffled places (one row of six, or two rows of three on narrow screens).
 3. The child drags a ball. It follows the pointer and cannot leave the visible screen.
-4. Released over its own cup the ball glides into the cup (smaller); released elsewhere or over another cup it floats back to its waiting place.
+4. Released over its own cup, or anywhere above it (in the column of the cup's width, up to the top of the screen), the ball glides into the cup (smaller); released elsewhere or above another colour's cup it floats back to its waiting place.
 5. When all six balls are in their cups (and nothing moves) the three cups glow for 2 s.
 6. After 4 s the balls drift out of the cups to the bottom area in a new order.
 7. The activity then continues with the same colours; there is no end.
@@ -33,10 +33,10 @@ A colour-matching game with a small, fixed workload (six balls, three cups) and 
 |---|---|
 | Cups | 3, each with a colour name, colour, glow colour and a pattern (`plain`, `dots`, `stripes`) |
 | Balls | 6: ball `k` belongs to cup `k % 3` (two per cup) |
-| Accept area | Ball centre within `0.5 * C` horizontally and vertically of the cup centre (a square `C x C`) and the ball's own cup |
+| Accept area | Ball centre within `0.5 * C` horizontally of the cup centre and anywhere above the cup's lower edge (`y < cup.y + 0.5 * C`, up to the top of the screen), and the ball's own cup: a column above the cup, not a square |
 | Wrong drop | Ball glides home; no message |
 | Placed balls | Disabled (not draggable); scaled to `min(1, 0.42 * C / B)` and nested left/right in the cup (offset `0.18 * C`) |
-| Glide duration | `min(1600, 800 + distance * 0.9)` ms; 300 ms with reduced motion; 200 ms for re-layout glides |
+| Glide duration | `min(1600, 800 + distance * 0.9)` ms; 300 ms with reduced motion; 200 ms for re-layout glides; a ball snapped into a cup glides for at most 700 ms, so it falls in briefly even when released high above the cup |
 | Glow | `GLOW_S = 2000` ms on the cups |
 | Reset | `RESET_S = 4000` ms after completion: new shuffle of home slots (must differ from the previous), balls leave the cups |
 | Sound | None ([shared behaviour](README.md#shared-platform-behaviour)) |
@@ -176,7 +176,7 @@ No automated tests exist ([README.md](README.md#shared-platform-behaviour)). PR 
 
 **Confirmed (from code reading):**
 - No automated tests.
-- The accept area is a square around the cup centre, not the cup outline.
+- The accept area is the column above the cup (its full width, from the cup's lower edge up to the top of the screen), not the cup outline; the cups sit at the top of the field, so this column is small in height.
 - `Rand.pickOne` memory only lasts for the current page session.
 - The waiting-slot shuffle uses its own `Math.random` code rather than `Rand.shuffle`.
 
@@ -188,7 +188,7 @@ No open GitHub issue concerns this activity.
 
 ## 19. Planned improvements
 
-None currently planned (no open issue).
+None currently planned. (Accepting a ball released anywhere above its cup is done, see issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173).)
 
 ## 20. Related activities and reusable components
 
@@ -199,3 +199,4 @@ None currently planned (no open issue).
 
 - [#47](https://github.com/BielinskiLukasz/child-page/issues/47) / [PR #76](https://github.com/BielinskiLukasz/child-page/pull/76): activity introduced.
 - [#121](https://github.com/BielinskiLukasz/child-page/issues/121) / [PR #146](https://github.com/BielinskiLukasz/child-page/pull/146): random colour and pattern combinations (8 sets).
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): fixed on `main`; a ball released anywhere above its own cup is accepted and falls in with a glide of at most 700 ms.

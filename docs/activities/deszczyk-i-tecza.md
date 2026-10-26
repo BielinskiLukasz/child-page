@@ -18,7 +18,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 - A weather toy with a delayed, rewarding consequence: rain now, rainbow later, which shows a longer chain of cause and effect than a single tap-response.
 - Calm, low-stimulation scenery (pastel sky, slow-falling drops).
-- Complements [Magiczny Ogród](magiczny-ogrod.md), whose rain issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) (open) asks to match the rain of this activity.
+- Complements [Magiczny Ogród](magiczny-ogrod.md), whose night stars and rain were reworked in [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173) (merged) to look more natural.
 - Described in the README Activities list as item 10.
 
 ## 3. Activity flow
@@ -188,7 +188,7 @@ PR [#38](https://github.com/BielinskiLukasz/child-page/pull/38) reports that `no
 
 ## 20. Related activities and reusable components
 
-- Weather and sky: [Magiczny Ogród](magiczny-ogrod.md) (open issue #167 asks for its rain to match this activity's), [Dzień i Noc](dzien-i-noc.md).
+- Weather and sky: [Magiczny Ogród](magiczny-ogrod.md) (its rain was reworked in #167 / PR #173, merged), [Dzień i Noc](dzien-i-noc.md).
 - Shared helpers: none used (`js/random.js` and `js/animals.js` are not used).
 - The rAF loop pattern (capped time step, stops when idle, restarts on `visibilitychange`) is shared with other activities.
 

@@ -133,7 +133,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 - `layout()` chooses one string row if `(fw - 2*12 - 78) / (8 * 1.04) >= 56`, otherwise two rows of four. Bead size `S = max(56, min(84, row size, height-based size))`.
 - The bowl is one row of eight if the width allows (`fw - 24 >= 9 * clamp(sw, 56, 84)`), otherwise 4x2. It sits at the bottom of the field.
 - The string polyline `pts` is knot, each slot, open end; on two rows an extra cubic curve joins slot 4 to slot 5 in the drawing. The drop test uses the straight segments of `pts`.
-- Beads, string, bowl and decoration share the field's coordinate space (SVG `width/height/viewBox` set to `fw x fh`). The `.stage .kr-deco` rule keeps the SVG from being shrunk by the global `.stage svg` rule (issue [#130](https://github.com/BielinskiLukasz/child-page/issues/130)).
+- Beads, string, bowl and decoration share the field's coordinate space (SVG `width/height/viewBox` set to `fw x fh`). The global `.stage svg` rule (120 px) beats the `width`/`height` attributes, so `drawDeco()` also sets the SVG's size inline (`deco.style.width/height = fw/fh px`), and the `.stage .kr-deco` rule sets `width: 100%; height: 100%`; the string and bowl therefore fill the play area instead of shrinking to 120 px at the top-left (issues [#130](https://github.com/BielinskiLukasz/child-page/issues/130) and [#167](https://github.com/BielinskiLukasz/child-page/issues/167), PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173)).
 - On resize every bead is re-placed at its target; active drags are cancelled and the bead returns home.
 
 ## 16. Error and edge-case handling
@@ -199,3 +199,4 @@ None currently planned (no open issue).
 
 - [#62](https://github.com/BielinskiLukasz/child-page/issues/62) / [PR #72](https://github.com/BielinskiLukasz/child-page/pull/72): activity introduced; moved to the end of the activity list after review (commit `a1024e0`).
 - [#130](https://github.com/BielinskiLukasz/child-page/issues/130) / [PR #155](https://github.com/BielinskiLukasz/child-page/pull/155): layout fix so the string and bowl SVG fill the field.
+- Issue [#167](https://github.com/BielinskiLukasz/child-page/issues/167) / PR [#173](https://github.com/BielinskiLukasz/child-page/pull/173): fixed on `main`; the inline size in `drawDeco()` makes the string and bowl fill the play area.

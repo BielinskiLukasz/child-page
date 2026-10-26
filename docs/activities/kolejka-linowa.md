@@ -188,7 +188,7 @@ Manual checklist (not yet performed):
 - Layout on very short or very narrow viewports (geometry is computed from `min(W, H)` and the ground height).
 - Frame rate on slow devices.
 
-No open issue specifically concerns Kolejka Linowa (open: [#164](https://github.com/BielinskiLukasz/child-page/issues/164), [#167](https://github.com/BielinskiLukasz/child-page/issues/167), [#168](https://github.com/BielinskiLukasz/child-page/issues/168)).
+No open issue specifically concerns Kolejka Linowa; the metrics (#164), visual fixes (#167) and documentation (#168) issues are all merged or in review.
 
 ## 19. Planned improvements
 

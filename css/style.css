@@ -890,6 +890,6 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 
 /* Koparka */
 .kg { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; background: #cfeaf8; }
-.kg-svg { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; }
+.stage .kg-svg, .kg-svg { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; }
 .kg-bucket { position: absolute; left: 0; top: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; pointer-events: none; }
 .kg-bucket:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }

@@ -47,6 +47,7 @@
       '<button type="button" class="nk-dog"><span class="nk-art"></span><span class="nk-name"></span></button>' +
       '<div class="nk-bowl">' + BOWL_SVG + '</div>' +
       '<div class="nk-heart"></div>';
+    container.appendChild(root);
     var yard = root.querySelector('.nk-yard'), table = root.querySelector('.nk-table'), glow = root.querySelector('.nk-glow');
     var dogBtn = root.querySelector('.nk-dog'), art = root.querySelector('.nk-art'), nameEl = root.querySelector('.nk-name');
     var bowl = root.querySelector('.nk-bowl'), heartEl = root.querySelector('.nk-heart');
@@ -142,7 +143,7 @@
       var g = ph === 'lie' ? 1 : ph === 'yawn' ? ease(t / YAWN_S) * 0.4 : ph === 'out' ? 1 - ease(t / OUT_S) : 0;
       glow.style.opacity = g.toFixed(3);
       glow.style.width = (dw * 1.7).toFixed(0) + 'px'; glow.style.height = (dw * 1.2).toFixed(0) + 'px';
-      glow.style.transform = 'translate(' + (px - dw * 0.85 + dog.off * 0).toFixed(1) + 'px,' + (dog.by - dh * 1.05).toFixed(1) + 'px)';
+      glow.style.transform = 'translate(' + (px - dw * 0.85).toFixed(1) + 'px,' + (dog.by - dh * 1.05).toFixed(1) + 'px)';
       var o = ph === 'out' ? 1 - ease(t / OUT_S) : 1;
       dogBtn.style.opacity = o.toFixed(3); heartEl.style.opacity = '0';
       if (heartT >= 0) {

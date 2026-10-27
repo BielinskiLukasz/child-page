@@ -75,7 +75,7 @@
   function randStock() { return 2 + Math.floor(Math.random() * 3); }
   // Which products end up on the counter: the basket first, then missing list products until the counter holds as many items as the list.
   function counterKinds(basket, list) {
-    var out = basket.slice(), need = list.map(function (p) { return p.id; }), i, k;
+    var out = basket.slice(), need = list.slice(), i, k;
     basket.forEach(function (id) { k = need.indexOf(id); if (k >= 0) { need.splice(k, 1); } });
     for (i = 0; i < need.length && out.length < list.length; i++) { out.push(need[i]); }
     return out;

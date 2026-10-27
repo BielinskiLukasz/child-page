@@ -6,7 +6,7 @@
 >
 > Shared platform behaviour (no sound, global reduced-motion rule, menu configuration, analytics status, absence of automated tests) is described once in [README.md](README.md#shared-platform-behaviour); link to it instead of repeating it, and only note activity-specific deviations.
 
-> When the activity is complete, add one linked one-line item to the main README Activities list, update its count word and add the row to the docs index ([README.md](README.md#activity-index)).
+> When the activity is complete, add one linked one-line item to the main README Activities list and add the row to the docs index ([README.md](README.md#activity-index)). If the activity already has a placeholder, follow [Planned activities](README.md#planned-activities) instead.
 
 ## 1. Overview
 

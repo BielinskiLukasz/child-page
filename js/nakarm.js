@@ -176,14 +176,11 @@
       var px = dog.cx + dog.off, w = Math.max(56, dw);
       dogBtn.style.transform = 'translate(' + (px - w / 2).toFixed(1) + 'px,' + (dog.by - NAME_H - dh).toFixed(1) + 'px)';
       bowl.style.transform = 'translate(' + (+bowl.dataset.x).toFixed(1) + 'px,' + (+bowl.dataset.y).toFixed(1) + 'px)';
-      var squash = 1, drop = 0, tilt = 0, shakeA = 0, headA = 0, headDy = 0, tailA = 0, ph = dog.phase, t = dog.t;
+      var tilt = 0, shakeA = 0, headA = 0, headDy = 0, tailA = 0, ph = dog.phase, t = dog.t;
       if (ph === 'eat') { headDy = Math.abs(Math.sin(t * 9)) * 3; headA = 6 * Math.sin(t * 9); tailA = 14 * Math.sin(t * 12); }
       else if (ph === 'wag') { tailA = 26 * Math.sin(t * 14) * Math.min(1, (WAG_S - t) / 0.3 + 0.0001) ; }
       else if (ph === 'shake') { headA = 16 * Math.sin(t / SHAKE_S * Math.PI * 6) * (1 - t / SHAKE_S); }
       else if (ph === 'yawn') { headA = -16 * Math.sin(Math.min(1, t / YAWN_S) * Math.PI); }
-      else if (ph === 'lie' || ph === 'out') { squash = 0.8; drop = dh * 0.1; }
-      if (ph === 'yawn') { var u = ease(t / YAWN_S); squash = 1 - 0.2 * u; drop = dh * 0.1 * u; }
-      art.style.transform = 'translateY(' + drop.toFixed(1) + 'px) scaleY(' + squash.toFixed(3) + ')';
       rot(dog.head, headA, dog.headP, headDy); rot(dog.tail, tailA, dog.tailP);
       var g = ph === 'lie' ? 1 : ph === 'yawn' ? ease(t / YAWN_S) * 0.4 : ph === 'out' ? 1 - ease(t / OUT_S) : 0;
       glow.style.opacity = g.toFixed(3);

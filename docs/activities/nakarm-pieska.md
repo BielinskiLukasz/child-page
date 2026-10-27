@@ -26,7 +26,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 2. Initially displayed: a sky strip, a green yard with the dog and bowl, and a wooden table at the bottom with six pictures drawn at random (4 dog-friendly, 2 unsuitable; section 10), in one row of six when the screen is at least 468 px wide, otherwise two rows of three.
 3. Interactions: drag an item to the dog or the bowl; keyboard alternative in section 6.
 4. Response: a dog-friendly item flies to the bowl or mouth (0.3 s) and is eaten (1.5 s chew), then a heart rises and the dog wags (1 s). An unsuitable item makes the dog shake its head (0.9 s) and drifts back to the table in 0.5 s.
-5. After 3 different items: the dog yawns (1 s), lies down with a soft glow (3 s), walks off to the left (0.5 s); a new breed walks in (0.7 s) and a newly dealt table fades in (0.5 s).
+5. After 3 different items: the dog yawns (1 s, head tilt only; its body size never changes), lies down with a soft glow (3 s), walks off to the left (0.5 s); a new breed walks in (0.7 s) and a newly dealt table fades in (0.5 s).
 6. The rounds repeat without end. Exit: Back button or browser Back.
 
 ## 4. Rules and behavior

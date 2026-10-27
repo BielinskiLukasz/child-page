@@ -920,3 +920,11 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .zr-count { position: absolute; left: 50%; top: 40%; opacity: 0; font-size: min(36vw, 36vh, 220px); font-weight: 700; line-height: 1; color: #fff4cf;
   text-shadow: 0 4px 18px rgba(61, 56, 120, .55); pointer-events: none; }
 .zr-veil { position: absolute; inset: 0; background: #e6f4fb; opacity: 0; pointer-events: none; z-index: 6; }
+
+/* Plac Budowy */
+.pb { position: fixed; inset: 0; overflow: hidden; user-select: none; -webkit-user-select: none; background: #cfeaf8; }
+.pb-sky { position: absolute; inset: 0; background: linear-gradient(#a9dcf5, #e6f4fb 70%); }
+.stage .pb-house, .pb-house { display: block; pointer-events: none; }
+.pb-m { position: absolute; padding: 0; border: 0; border-radius: 18px; background: #fff8e8; box-shadow: 0 3px 0 #e2d4ae; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.pb-m:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+.stage .pb-msvg, .pb-msvg { width: 100%; height: 100%; display: block; pointer-events: none; }

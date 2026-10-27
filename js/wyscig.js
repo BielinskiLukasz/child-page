@@ -228,10 +228,11 @@
       trackW = Math.max(160, fr.width);
       var dh = Math.min(laneH - 20, 130), dw = dh * 6 / 5;
       dw = Math.min(dw, trackW * 0.34); dh = dw * 5 / 6;
+      var bw = Math.max(56, dw); // button stays a 56px touch target; art is centred inside
       runners.forEach(function (r) {
         r.lane.style.height = laneH + 'px';
-        r.pw = dw; r.ph = dh + 18;
-        r.btn.style.width = dw + 'px'; r.btn.style.height = (dh + 18) + 'px';
+        r.pw = bw; r.ph = dh + 18;
+        r.btn.style.width = bw + 'px'; r.art.style.width = dw + 'px'; r.btn.style.height = (dh + 18) + 'px';
         r.art.style.height = dh + 'px';
       });
       paint();

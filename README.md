@@ -1,6 +1,6 @@
 # Spokojny Świat Artura
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens fifty-two gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens fifty-three gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
@@ -97,6 +97,7 @@ A gear icon on the main menu opens a parent gate (a simple sum) and then Setting
 
 ## Menu activities
 In Settings (behind the same gate) a parent can enable or disable each activity and reorder them with up/down buttons; "Przywróć domyślne" restores all of them in the original order. At least one activity always stays enabled, and disabled activities cannot be opened by any route (a stored or typed `#hash` shows the menu).
+53. **Zbuduj Rakietę** – a rocket to assemble from four parts: nose, body, fins and engine, three variants each (different shapes and colours), shown as 12 large pictures (at least 72 px) in a tray in a new random order every round. Dragging a part onto its slot on the rocket snaps it in (a soft pop); dropping it on another slot or anywhere else just drifts it back in 0.5 s, and placing a slot again replaces the earlier part. When all four slots are full a big glowing launch button appears. After launch the numerals 3, 2, 1 count down, then the rocket built from exactly the chosen parts flies up through the sky and stars (9 s) while the Moon surface slides into view; it lands (2 s), an astronaut appears and waves for 4 s, and a new empty assembly with a reshuffled tray fades in. With reduced motion the count, flight and landing shorten to 0.5 s per numeral, 1.2 s and 0.4 s and the astronaut only raises an arm, but every state is still reached. Portrait and landscape layouts (tray below or beside the rocket). Keyboard: Tab to a part and press Enter/Space to place it in its slot; Tab to the launch button and press Enter. No wrong moves, no scores, no text other than the countdown numerals, nothing stored. Usage metrics: each placed part (`n1`..`e3`) and the launch are `interaction` events, each landing counts as a completion, and the activity stays open-ended.
 
 ## Randomisation helper
 `js/animals.js` (loaded after `random.js`) exposes `window.Animals`, the shared animal family drawn in one round-head style (13 animals: Miś, Króliczek, Kotek, Piesek, Myszka, Świnka, Lisek, Lew, Słoń, Panda, Żabka, Sowa, Koala): `Animals.head(id, opts)` returns the SVG markup, `Animals.pick(n, {distinct})` returns `n` random unique animals (`distinct` avoids alike silhouettes). Pociąg, Dobranoc, Farma, Chowany, Cienie, Autobusik and Buźki pick their animals from it on every launch, in memory only.

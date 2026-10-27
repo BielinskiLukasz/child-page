@@ -9,6 +9,7 @@
 //                         dg-happy is hidden with display="none" by default). Dogs only ever look calm or happy.
 (function () {
   var DARK = '#5b5675';
+  var MOUTH = '#9a8794';
   var SCALE = { small: 0.78, medium: 0.89, large: 1 };
 
   // len/h/leg: body length, height, leg height; hr: head radius; fur/fur2/ear: colours; ears: floppy|point|fold|puff;
@@ -33,6 +34,15 @@
   function r1(n) { return Math.round(n * 10) / 10; }
   function circ(x, y, r, c) { return '<circle cx="' + r1(x) + '" cy="' + r1(y) + '" r="' + r1(r) + '" fill="' + c + '"/>'; }
   function ell(x, y, rx, ry, c, extra) { return '<ellipse cx="' + r1(x) + '" cy="' + r1(y) + '" rx="' + r1(rx) + '" ry="' + r1(ry) + '" fill="' + c + '"' + (extra || '') + '/>'; }
+
+  // Mouths live inside the muzzle ellipse (centre mx, ny; radii sn x ry) and sit under the nose, so nothing pokes out of the outline.
+  // dg-calm: a short soft closed curve; dg-happy (hidden by default): a small open smile with a tongue.
+  function mouths(mx, ny, sn, ry) {
+    var xl = mx - sn * 0.3, xr = mx + sn * 0.55, xm = (xl + xr) / 2, y0 = ny + 1.2;
+    return '<path class="dg-calm" d="M' + r1(xl) + ' ' + r1(y0 + 0.4) + 'Q' + r1(xm) + ' ' + r1(y0 + 2.4) + ' ' + r1(xr) + ' ' + r1(y0 + 0.4) + '" fill="none" stroke="' + MOUTH + '" stroke-width="0.9" stroke-linecap="round"/>' +
+      '<g class="dg-happy" display="none"><path d="M' + r1(xl) + ' ' + r1(y0) + 'Q' + r1(xm) + ' ' + r1(y0 + 7) + ' ' + r1(xr) + ' ' + r1(y0) + 'Z" fill="#8a4a5e"/>' +
+      ell(xm, y0 + 2.1, (xr - xl) * 0.2, 1.2, '#f48aa8') + '</g>';
+  }
 
   function tailShape(b) {
     switch (b.tail) {
@@ -87,9 +97,7 @@
       (headDark ? ell(hx + 1, hy + 3, hr * 0.7, hr * 0.7, '#f6f4fa') : '') +
       ell(hx + nx - hr * 0.7 + hr * 0.7 + 3, ny - hr * 0.2, 3, 2.2, DARK) +
       circ(hx + hr * 0.3, hy - hr * 0.2, 2, DARK) + circ(hx + hr * 0.3 + 0.7, hy - hr * 0.2 - 0.7, 0.7, '#fff') +
-      '<path class="dg-calm" d="M' + r1(hx + hr * 0.5) + ' ' + r1(ny + 2.5) + 'Q' + r1(hx + hr * 0.9) + ' ' + r1(ny + 5) + ' ' + r1(hx + hr * 1.35 + sn * 0.4) + ' ' + r1(ny + 2.2) + '" fill="none" stroke="' + DARK + '" stroke-width="1.3" stroke-linecap="round"/>' +
-      '<g class="dg-happy" display="none"><path d="M' + r1(hx + hr * 0.5) + ' ' + r1(ny + 2) + 'Q' + r1(hx + hr * 0.9) + ' ' + r1(ny + 9) + ' ' + r1(hx + hr * 1.35 + sn * 0.4) + ' ' + r1(ny + 2) + 'Z" fill="#8a4a5e"/>' +
-      ell(hx + hr * 0.95, ny + 6, 2.6, 2.2, '#f48aa8') + '</g></g>';
+      mouths(hx + hr * 0.7, ny, sn, hr * 0.5) + '</g>';
     var inner = tail + '<g class="dg-legs">' + legs + '</g>' + body + head + ears;
     var tf = 'translate(60 92) scale(' + sc + ') translate(-60 -92)';
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" class="dg-svg" aria-hidden="true"><g transform="' + tf + '">' + inner + '</g></svg>';

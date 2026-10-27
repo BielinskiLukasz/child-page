@@ -331,8 +331,8 @@
           if (ix > -60 && ix < W + 60) { boat(ix, seaY - 2, ts, sw, Math.sin(t * 1.7 + fr * 9) * 3); }
         });
         ctx.strokeStyle = 'rgba(255,255,255,' + (0.7 * sw).toFixed(2) + ')'; ctx.lineWidth = 2;
-        for (var wv = 0; wv < 7; wv++) {
-          var wx = itemX(wv / 7, off * 1.0, lam * 7 / 6, 40) , wy = seaY + (wv % 3) * H * 0.03 + 14;
+        for (var wv = 0; wv < 6; wv++) {
+          var wx = itemX(wv / 6, off, lam, 40) , wy = seaY + (wv % 3) * H * 0.03 + 14;
           if (wx > -40 && wx < W + 40) { ctx.beginPath(); ctx.moveTo(wx - 14, wy); ctx.quadraticCurveTo(wx, wy - 6, wx + 14, wy); ctx.stroke(); }
         }
       }

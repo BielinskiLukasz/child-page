@@ -6,7 +6,7 @@
   var list = window.ACTIVITIES;
 
   function defaults() {
-    return list.map(function (a) { return { id: a.id, on: !a.defaultOff }; });
+    return list.map(function (a) { return { id: a.id, on: !a.defaultOff, fav: false }; });
   }
 
   // Saved entries for unknown activities are dropped; activities missing from the save are appended enabled.
@@ -16,11 +16,11 @@
       raw.forEach(function (e) {
         if (e && typeof e.id === 'string' && !seen[e.id] && list.some(function (a) { return a.id === e.id; })) {
           seen[e.id] = true;
-          out.push({ id: e.id, on: e.on !== false });
+          out.push({ id: e.id, on: e.on !== false, fav: e.fav === true });
         }
       });
     }
-    list.forEach(function (a) { if (!seen[a.id]) { out.push({ id: a.id, on: !a.defaultOff }); } });
+    list.forEach(function (a) { if (!seen[a.id]) { out.push({ id: a.id, on: !a.defaultOff, fav: false }); } });
     if (!out.some(function (e) { return e.on; })) { return defaults(); }
     return out;
   }
@@ -46,6 +46,17 @@
       return list.filter(function (a) { return a.id === e.id; })[0];
     });
   }
+  // Enabled favourites, in saved list order (a disabled favourite keeps its star but is not shown).
+  function favouriteActivities() {
+    return load().filter(function (e) { return e.on && e.fav; }).map(function (e) {
+      return list.filter(function (a) { return a.id === e.id; })[0];
+    });
+  }
+  function setFavourite(id, fav) {
+    var cfg = load();
+    cfg.forEach(function (e) { if (e.id === id) { e.fav = !!fav; } });
+    save(cfg);
+  }
   function setEnabled(id, on) {
     var cfg = load();
     if (!on && cfg.filter(function (e) { return e.on; }).length <= 1) { return false; }
@@ -64,7 +75,7 @@
   function reset() { save(defaults()); }
 
   window.MenuConfig = { get: get, isEnabled: isEnabled, enabledActivities: enabledActivities,
-    setEnabled: setEnabled, move: move, reset: reset };
+    favouriteActivities: favouriteActivities, setFavourite: setFavourite, setEnabled: setEnabled, move: move, reset: reset };
 
   // ---- Settings UI ----
   var box = document.getElementById('act-list');
@@ -113,6 +124,12 @@
       label.appendChild(cb);
       label.appendChild(span);
       li.appendChild(label);
+      var star = btn('act-move act-star' + (e.fav ? ' on' : ''), 'Ulubione: ' + name, e.fav ? '★' : '☆', false, function () {
+        setFavourite(e.id, !e.fav); msg.textContent = '';
+        render('[data-id="' + e.id + '"] .act-star');
+      });
+      star.setAttribute('aria-pressed', e.fav ? 'true' : 'false');
+      li.appendChild(star);
       li.appendChild(btn('act-move act-up', 'Przesuń w górę: ' + name, '▲', i === 0, function () {
         move(e.id, -1); msg.textContent = '';
         render('[data-id="' + e.id + '"] .act-up');

@@ -10,7 +10,7 @@ These facts apply to every activity; the activity documents link here instead of
 
 - **Loading and mounting.** `index.html` loads `js/activities.js` (the registry `window.ACTIVITIES`, each entry `{ id, name, icon, mount }`), the shared helpers, one script per activity, then `js/app.js`. An activity script replaces the placeholder `mount(container)` of its registry entry; `mount` returns an optional cleanup function. See [`js/activities.js`](../../js/activities.js) and [`js/app.js`](../../js/app.js).
 - **Navigation.** URL hash routing (`#<id>`); the Back button returns to the menu (browser Back also works). `app.js` calls the activity's cleanup function and empties the stage on every exit.
-- **Menu configuration.** [`js/menu-config.js`](../../js/menu-config.js) stores the enabled activities and their order in `localStorage` (key `swa.menu`); a parent edits it in the gated Settings. Disabled activities cannot be opened by any route. An entry can ship disabled with `defaultOff: true` (currently only Wiatraczki).
+- **Menu configuration.** [`js/menu-config.js`](../../js/menu-config.js) stores the enabled activities and their order in `localStorage` (key `swa.menu`); a parent edits it in the gated Settings. Each entry also carries a parent-only `fav` flag: enabled favourites show in an "Ulubione" section above the other tiles (not repeated below), and reset clears them. Disabled activities cannot be opened by any route. An entry can ship disabled with `defaultOff: true` (currently only Wiatraczki).
 - **Playtime limit.** [`js/playtime.js`](../../js/playtime.js) counts visible activity time against a parent-set daily limit (default 20 minutes) and replaces the running activity with a "later" screen when time is up. Stored locally as `{ limit, used, day }` (`swa.playtime`).
 - **No sound.** The application has no audio code or audio assets; activities are silent.
 - **Reduced motion.** [`css/style.css`](../../css/style.css) has a global `prefers-reduced-motion: reduce` rule that disables CSS animations and transitions. Activities that depend on motion for state changes drive them from a `requestAnimationFrame` loop instead; each document says which approach it uses.
@@ -21,7 +21,7 @@ These facts apply to every activity; the activity documents link here instead of
 
 ### Analytics status
 
-On `main` the application has an on-device usage-metrics module, `js/analytics.js` (`window.Analytics`), introduced by issue [#164](https://github.com/BielinskiLukasz/child-page/issues/164) and merged in pull request [#172](https://github.com/BielinskiLukasz/child-page/pull/172). It is the single place that writes analytics storage (`localStorage` key `swa.stats`: anonymous daily aggregates for 90 days plus all-time totals; no network, no per-event history, no personal data). `js/app.js` reports every activity start and end, and the module counts touches inside the stage, so **all 55 activities** get starts, active time, replays, quick exits (within 10 s) and touches without any code of their own. The following 13 activities also call the module themselves (to add an activity that starts calling `Analytics`, add one row here and to the README table):
+On `main` the application has an on-device usage-metrics module, `js/analytics.js` (`window.Analytics`), introduced by issue [#164](https://github.com/BielinskiLukasz/child-page/issues/164) and merged in pull request [#172](https://github.com/BielinskiLukasz/child-page/pull/172). It is the single place that writes analytics storage (`localStorage` key `swa.stats`: anonymous daily aggregates for 90 days plus all-time totals; no network, no per-event history, no personal data). `js/app.js` reports every activity start and end, and the module counts touches inside the stage, so **all 56 activities** get starts, active time, replays, quick exits (within 10 s) and touches without any code of their own. The following 13 activities also call the module themselves (to add an activity that starts calling `Analytics`, add one row here and to the README table):
 
 | Activity | Reports | Completion |
 |---|---|---|
@@ -35,6 +35,7 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Koparka** | each scoop and tip (`track('interaction', { variant })`) | Each full truck (`complete()`), open-ended |
 | **Zbuduj Rakietę** | each placed part and the launch (`track('interaction', { variant })`) | Each landing (`complete()`), open-ended |
 | **Zakupy** | each product put in the basket and each scan (`track('interaction', { variant })`, product id) | Each fully scanned list (`complete()`), open-ended |
+| **Lot na Smoku** | each steering touch, fire puff and lit lantern (`track('interaction', { variant })`) | None |
 
 Every other activity reports nothing itself and is open-ended. Exit-before-completion and highest level are defined only for the four levelled activities. The data is shown and exported (JSON) only in the parent-gated Settings under **Statystyki**, where it can also be reset. The "Analytics and metrics" section of each activity document states what is recorded for that activity.
 
@@ -99,5 +100,6 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 53 | [Zbuduj Rakietę](zbuduj-rakiete.md) | `zbuduj` | The child assembles a rocket from four parts (three variants each), launches it with a 3-2-1 countdown and watches it fly and land on the Moon, where an astronaut waves. | Complete |
 | 54 | [Plac Budowy](plac-budowy.md) | `plac` | A building site with four machines (crane, mixer, roller, dump truck); each different machine used builds one more stage of a small house, which glows and resets when finished. | Complete |
 | 55 | [Zakupy](zakupy.md) | `zakupy` | A shop where the child puts products in a basket, brings it to the counter and drags each item across a barcode scanner that flashes green while a numeral counts the scanned items; a receipt slides out and a new list of 1-5 items follows. | Complete |
+| 56 | [Lot na Smoku](smok.md) | `smok` | A friendly dragon with a rider flies over a scrolling land that changes between meadow, snow and sea; the child steers it with a finger and a tap makes it breathe a little fire to light drifting lanterns. | Complete |
 
 Template for new activities: [ACTIVITY_TEMPLATE.md](ACTIVITY_TEMPLATE.md).

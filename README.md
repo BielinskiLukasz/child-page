@@ -91,7 +91,18 @@ No backend, cookies, ads, third-party requests or tracking; no network request i
 ## Usage statistics
 `js/analytics.js` (`window.Analytics`) is the single module through which every activity reports usage; nothing is shown to the child. It keeps only **daily aggregates** for the last 90 days plus running all-time totals (localStorage key `swa.stats`), never per-event history, names, age, location, text or any device fingerprint. The per-session id is random and kept in memory only.
 
-Measured: sessions (a session ends when the app is closed or after 30 minutes hidden), active vs. inactive time (active = page visible and a touch/key/pointer less than 60 s ago), activity starts, active time, completions, replays (re-opening in the same session), exits before completion, quick exits (within 10 s), touches, the highest level reached in Puzzle, Pamięć, Kolorowe Kształty and Policz Razem, and letters shown/touched in Literki. Completion is defined only where an activity has a clear end (for example a finished Puzzle picture, all pairs found in Pamięć, a counted round in Policz Razem or a clean dog); the other activities are open-ended and report only touches. See [docs/activities/README.md](docs/activities/README.md) for the per-activity status.
+Measured: sessions (a session ends when the app is closed or after 30 minutes hidden), active vs. inactive time (active = page visible and a touch/key/pointer less than 60 s ago), activity starts, active time, completions, replays (re-opening in the same session), exits before completion, quick exits (within 10 s), touches, the highest level reached in the levelled activities, and **interaction variants** reported as aggregate counts only (for example the dog breed, the rocket part, the letter, the scoop or tip, the machine or the product). Nothing per-event, personal or networked is stored. See [docs/activities/README.md](docs/activities/README.md) for the per-activity status.
+
+Every activity gets starts, active time, replays, quick exits and touches automatically (group c). Beyond that, these activities call `window.Analytics` themselves:
+
+| Activity | What it reports | Completions |
+|---|---|---|
+| Puzzle, Pamięć, Kolorowe Kształty, Policz Razem | levels (`levelStart`, `levelComplete`) and `complete()` | (a) yes, with exit-before-completion and highest level |
+| Literki | letter shown (`levelStart`) and letter touched (`track('interaction')`) | (b) no, interaction variants only |
+| Plac Budowy | machine operated (`track('interaction')`) | (b) no, interaction variants only |
+| Psia Myjnia, Wyścig Piesków, Aport, Nakarm Pieska, Koparka, Zbuduj Rakietę, Zakupy | interaction variants (breed, scoop/tip, part/launch, product) plus `complete()` per round | (a) yes, per round, but the activity stays open-ended |
+
+All other activities use only the automatic tracking (c) and are open-ended. When an activity starts calling `Analytics`, add or update its row in this table and in the analytics status of [docs/activities/README.md](docs/activities/README.md).
 
 To view it: gear icon, parent gate, Settings, **Statystyki** (app metrics, ranking by active time, other rankings; filter: this session, today, 7 days, 30 days, all time). The same screen exports all stored aggregates as JSON (download or copy) and has "Wyzeruj statystyki" (with confirmation) to delete everything.
 

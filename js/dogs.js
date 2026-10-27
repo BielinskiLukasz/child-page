@@ -37,7 +37,7 @@
 
   // Mouths live inside the muzzle ellipse (centre mx, ny; radii sn x ry) and sit under the nose, so nothing pokes out of the outline.
   // dg-calm: a short soft closed curve; dg-happy (hidden by default): a small open smile with a tongue.
-  function mouths(mx, ny, sn, ry) {
+  function mouths(mx, ny, sn) {
     var xl = mx - sn * 0.3, xr = mx + sn * 0.55, xm = (xl + xr) / 2, y0 = ny + 1.2;
     return '<path class="dg-calm" d="M' + r1(xl) + ' ' + r1(y0 + 0.4) + 'Q' + r1(xm) + ' ' + r1(y0 + 2.4) + ' ' + r1(xr) + ' ' + r1(y0 + 0.4) + '" fill="none" stroke="' + MOUTH + '" stroke-width="0.9" stroke-linecap="round"/>' +
       '<g class="dg-happy" display="none"><path d="M' + r1(xl) + ' ' + r1(y0) + 'Q' + r1(xm) + ' ' + r1(y0 + 7) + ' ' + r1(xr) + ' ' + r1(y0) + 'Z" fill="#8a4a5e"/>' +
@@ -97,7 +97,7 @@
       (headDark ? ell(hx + 1, hy + 3, hr * 0.7, hr * 0.7, '#f6f4fa') : '') +
       ell(hx + nx - hr * 0.7 + hr * 0.7 + 3, ny - hr * 0.2, 3, 2.2, DARK) +
       circ(hx + hr * 0.3, hy - hr * 0.2, 2, DARK) + circ(hx + hr * 0.3 + 0.7, hy - hr * 0.2 - 0.7, 0.7, '#fff') +
-      mouths(hx + hr * 0.7, ny, sn, hr * 0.5) + '</g>';
+      mouths(hx + hr * 0.7, ny, sn) + '</g>';
     var inner = tail + '<g class="dg-legs">' + legs + '</g>' + body + head + ears;
     var tf = 'translate(60 92) scale(' + sc + ') translate(-60 -92)';
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" class="dg-svg" aria-hidden="true"><g transform="' + tf + '">' + inner + '</g></svg>';

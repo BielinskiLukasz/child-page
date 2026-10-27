@@ -4,6 +4,9 @@
 // finishing time, so all four finish within ~3 s of each other. Finished dogs wag their tails (happy face, Polish breed name small underneath);
 // when all are in, confetti falls for ~4 s and a new race with new breeds begins. Positions are fractions of the track (rotation-safe),
 // speed changes are slew-limited, one capped-dt rAF loop (pauses while hidden, stops on cleanup). Keyboard: Tab to a dog, Enter/Space cheers.
+// Legs: the four legs of the shared dog (dg-legs) are regrouped per leg at the start of a race and swung about the hip from the same frame
+// loop (trot: diagonal pairs alternate, 2-5 steps/s proportional to the dog's speed, small body bob); a run factor eases the swing in and out
+// (legs stand again within 0.35 s of finishing). Reduced motion: half the step rate and no bob.
 // Nothing is scored or stored. Usage metrics: track('interaction', {variant: breed}) on each cheer, complete() when a race is finished.
 (function () {
   var LANES = 4, T_MIN = 25, T_MAX = 35;
@@ -12,6 +15,9 @@
   var BLEND_FROM = 0.5, BLEND_TO = 0.9; // leader progress between which speeds are blended to a common finishing time
   var END_GAP_S = 2.5;                  // after the first finish nobody needs longer than this for the rest
   var CONFETTI = 36, CONFETTI_S = 4, FALL_S = 2.2, PUFFS = 12, PUFF_S = 0.55, SWAP_S = 0.7, WAG_HZ = 2.2;
+  var STEPS_PER_SPEED = 70, STEPS_MAX = 5;  // steps per second = speed (track fractions/s) * 70, never above 5
+  var RUN_IN_S = 0.3, RUN_OUT_S = 0.35;     // time for the leg swing to ease in at the start / out at the finish
+  var BOB = 0.03;                            // body bob height as a fraction of the dog height (limit 0.04)
   var COLORS = ['#f7a8c9', '#ffd98a', '#a8d8f0', '#b6e0aa', '#c9b8f2', '#f4a261'];
   var lastSet = '';
 
@@ -49,7 +55,7 @@
     for (k = 0; k < LANES; k++) {
       var le = laneEls[k], r = { lane: le, btn: le.querySelector('.wp-dog'), art: le.querySelector('.wp-art'), nameEl: le.querySelector('.wp-name'),
         puffWrap: le.querySelector('.wp-puffs'), puffs: [], dog: null, p: 0, v: 0, base: 0, boost: 0, boostT: 0, boostTarget: 0,
-        done: false, doneT: 0, wag: 0, happy: null, calm: null, tail: null, tailP: [0, 0], pw: 80, ph: 60 };
+        done: false, doneT: 0, wag: 0, happy: null, calm: null, tail: null, tailP: [0, 0], pw: 80, ph: 60, dh: 50, legs: [], run: 0, cyc: 0 };
       for (var q = 0; q < PUFFS; q++) {
         var pn = document.createElement('div');
         pn.className = 'wp-puff'; pn.style.display = 'none';
@@ -69,6 +75,41 @@
 
     var alive = true, raf = 0, last = 0, phase = 'run', phaseT = 0, fieldOp = 1, firstDone = false, wasReported = false;
     var trackW = 300;
+    var rmq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+
+    // Wrap each leg (rect + foot ellipse) of the shared dg-legs group in its own <g> so it can swing about the hip.
+    function setupLegs(r) {
+      r.legs = [];
+      var grp = r.art.querySelector('.dg-legs');
+      if (!grp) { return; }
+      var kids = [], c = grp.firstElementChild;
+      while (c) { kids.push(c); c = c.nextElementSibling; }
+      for (var i = 0; i + 1 < kids.length; i += 2) {
+        var rect = kids[i], len = +rect.getAttribute('height') - 4;
+        var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        grp.insertBefore(g, rect); g.appendChild(rect); g.appendChild(kids[i + 1]);
+        // hip = top of the visible leg (the 4 units above it hide under the body); short legs swing wider to stay visible
+        var amp = Math.max(18, Math.min(40, Math.asin(Math.min(1, 5 / Math.max(len, 1))) * 180 / Math.PI));
+        r.legs.push({ g: g, px: +rect.getAttribute('x') + 4, py: +rect.getAttribute('y') + 4, amp: amp, sign: (i / 2 === 1 || i / 2 === 2) ? -1 : 1 });
+      }
+    }
+    function poseLegs(r, dt) {
+      var calm = !!(rmq && rmq.matches), speed = Math.min(STEPS_MAX, r.v * STEPS_PER_SPEED);
+      r.run += (r.done ? -dt / RUN_OUT_S : dt / RUN_IN_S);
+      r.run = r.run < 0 ? 0 : r.run > 1 ? 1 : r.run;
+      if (r.run <= 0 && r.done) { if (r.legsOn) { r.legsOn = false; legsPose(r, 0, 0); } return; }
+      r.cyc += dt * speed * (calm ? 0.25 : 0.5);   // 2 steps per cycle; reduced motion halves the rate
+      if (r.cyc > 1e4) { r.cyc -= 1e4; }
+      r.legsOn = true;
+      legsPose(r, r.run * Math.sin(2 * Math.PI * r.cyc), calm ? 0 : r.run * Math.abs(Math.sin(2 * Math.PI * r.cyc)));
+    }
+    function legsPose(r, s, bob) {
+      for (var i = 0; i < r.legs.length; i++) {
+        var l = r.legs[i];
+        l.g.setAttribute('transform', s ? 'rotate(' + (s * l.sign * l.amp).toFixed(2) + ' ' + l.px + ' ' + l.py + ')' : '');
+      }
+      r.art.style.transform = bob ? 'translateY(' + (-bob * BOB * r.dh).toFixed(2) + 'px)' : '';
+    }
 
     function setMood(r, on) {
       if (!r.happy) { return; }
@@ -85,6 +126,7 @@
         r.art.innerHTML = window.Dogs.draw(d.id);
         r.calm = r.art.querySelector('.dg-calm'); r.happy = r.art.querySelector('.dg-happy'); r.tail = r.art.querySelector('.dg-tail');
         r.tailP = r.tail ? [+r.tail.getAttribute('data-px'), +r.tail.getAttribute('data-py')] : [0, 0];
+        setupLegs(r); r.run = 0; r.cyc = 0; r.legsOn = true; legsPose(r, 0, 0);
         setMood(r, false); rotTail(r, 0);
         r.nameEl.textContent = d.name;
         r.btn.setAttribute('aria-label', 'Piesek: ' + d.name + '. Dotknij lub naciśnij Enter, aby zachęcić do biegu.');
@@ -176,6 +218,7 @@
       if (phase === 'run' || phase === 'party') {
         step(dt);
         runners.forEach(function (r) {
+          poseLegs(r, dt);
           if (r.done) {
             r.doneT += dt;
             if (r.wag > 0) { r.wag = Math.max(0, r.wag - dt / 0.8); }
@@ -231,7 +274,7 @@
       var bw = Math.max(56, dw); // button stays a 56px touch target; art is centred inside
       runners.forEach(function (r) {
         r.lane.style.height = laneH + 'px';
-        r.pw = bw; r.ph = dh + 18;
+        r.pw = bw; r.ph = dh + 18; r.dh = dh;
         r.btn.style.width = bw + 'px'; r.art.style.width = dw + 'px'; r.btn.style.height = (dh + 18) + 'px';
         r.art.style.height = dh + 'px';
       });

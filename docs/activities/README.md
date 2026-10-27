@@ -138,4 +138,4 @@ Activities that are agreed but not built yet have a **placeholder**: a stub page
 
 Template for new activities: [ACTIVITY_TEMPLATE.md](ACTIVITY_TEMPLATE.md).
 
-**Adding an activity:** write its document from the template, add its row to this index (there is no count to bump; if it calls `Analytics`, update its analytics row), then add one linked one-line item (`N. [**Name**](docs/activities/<file>.md) – <one sentence, no numeric parameters>`) to the Activities list in the main [README](../../README.md) (the intro states no count). Details belong only in the document. An activity that already has a placeholder follows the rules below instead.
+**Adding an activity:** write its document from the template, add its row to this index (there is no count to bump; if it calls `Analytics`, update its analytics row), then add one linked one-line item (`N. [**Name**](docs/activities/<file>.md) – <one sentence, no numeric parameters>`) to the Activities list in the main [README](../../README.md) (the intro states no count). Details belong only in the document. An activity that already has a placeholder follows the rules above instead (see Planned activities).

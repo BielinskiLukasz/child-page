@@ -151,7 +151,7 @@ None currently planned.
 
 ## 20. Related activities and reusable components
 
-- [Latawiec](latawiec.md), [Balon](balon.md), [Samolot](samolot.md).
+- [Latawiec](latawiec.md), [Balon](balon.md), [Mały Samolot](maly-samolot.md).
 - No shared component is used besides `window.Analytics`.
 
 ## 21. Change history

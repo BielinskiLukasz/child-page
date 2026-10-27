@@ -38,7 +38,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 |---|---|
 | Happy time | `HAPPY_S = 2.5` s per dog; each dog has its own timer `t` (-1 when idle). |
 | Wag | Tail rotates up to `WAG_DEG = 16` degrees at `WAG_HZ = 2.2` Hz; ears rotate up to `EAR_DEG = 5` degrees at half that frequency. Both are scaled by `sin(pi * t / HAPPY_S)` so the motion eases in and out. |
-| Faces | Only `dg-calm` (closed smile) and `dg-happy` (open smile with tongue); no angry or sad face exists. |
+| Faces | Only `dg-calm` (small soft closed mouth under the nose) and `dg-happy` (small open smile with tongue), both drawn inside the muzzle outline; no angry or sad face exists. |
 | Size classes | `Dogs.SCALE`: small 0.78, medium 0.89, large 1. Small: Jamnik, Pudel, Corgi. Medium: Labrador, Husky, Buldog. Large: Owczarek, Dalmatyńczyk. |
 | Order | Fixed: Labrador, Jamnik, Husky, Pudel, Owczarek, Buldog, Corgi, Dalmatyńczyk. |
 | Failure, score | None; nothing is scored or stored. |

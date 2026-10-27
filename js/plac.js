@@ -223,7 +223,7 @@
 
     // ---- state ----------------------------------------------------------------------------------------------------
     var W = 320, H = 568, selected = 0;
-    var used = {}, usedN = 0, shown = [0, 0, 0, 0], colorI = 0, phase = 'build', phaseT = 0, glowV = 0, waveV = 0, waveT = 0;
+    var used = {}, usedN = 0, shown = [0, 0, 0, 0], colorI = 0, phase = 'build', phaseT = 0, glowV = 0, waveV = 0, waveT = 0, recolor = false;
     var alive = true, raf = 0, last = 0;
 
     function setHouseColor() {
@@ -265,8 +265,7 @@
       if (usedN >= 4) { phase = 'glow'; phaseT = 0; }
     }
     function resetSite() {
-      used = {}; usedN = 0; phase = 'build'; phaseT = 0; shown = [0, 0, 0, 0]; colorI = (colorI + 1 + Math.floor(Math.random() * (HOUSE_COLORS.length - 1))) % HOUSE_COLORS.length;
-      setHouseColor();
+      used = {}; usedN = 0; phase = 'build'; phaseT = 0; recolor = true; colorI = (colorI + 1 + Math.floor(Math.random() * (HOUSE_COLORS.length - 1))) % HOUSE_COLORS.length;
     }
     function step(dt) {
       ORDER.forEach(function (id) {
@@ -286,6 +285,7 @@
       });
       var targetStage = Math.min(usedN, 4), k;
       for (k = 0; k < 4; k++) { shown[k] = approach(shown[k], k < targetStage ? 1 : 0, dt / GROW_S); }
+      if (recolor && shown[0] + shown[1] + shown[2] + shown[3] < 1e-3) { recolor = false; setHouseColor(); }
       if (phase === 'glow') {
         phaseT += dt;
         glowV = phaseT < GLOW_S ? Math.min(1, phaseT / 0.4) * (0.75 + 0.25 * Math.sin(phaseT * 5)) : Math.max(0, glowV - dt / 0.4);
@@ -313,6 +313,7 @@
     }
     function busy() {
       var i;
+      if (recolor) { return true; }
       for (i = 0; i < ORDER.length; i++) { var m = machines[ORDER[i]]; if (m.t >= 0 || m.blend < 1) { return true; } }
       for (i = 0; i < 4; i++) { if (Math.abs(shown[i] - (i < usedN ? 1 : 0)) > 1e-3) { return true; } }
       return phase !== 'build' || glowV > 0.001 || waveV > 0.001;

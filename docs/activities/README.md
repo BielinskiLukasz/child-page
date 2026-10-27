@@ -28,13 +28,13 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Puzzle**, **Pamięć**, **Kolorowe Kształty**, **Policz Razem** | levels (`levelStart`, `levelComplete`) and completions (`complete`) | Defined; also exit before completion and highest level |
 | **Literki** | letter shown and touched (`track('interaction', { variant })`) | None |
 | **Plac Budowy** | machine operated (`track('interaction', { variant })`) | None |
-| **Psia Myjnia** | breed touched (`track('interaction', { variant })`) | Each clean dog (`complete`), open-ended |
-| **Wyścig Piesków** | breed cheered | Each finished race, open-ended |
-| **Aport** | breed on each throw or dog tap | Each completed fetch, open-ended |
-| **Nakarm Pieska** | breed on each give attempt | Each full dog, open-ended |
-| **Koparka** | each scoop and tip | Each full truck, open-ended |
-| **Zbuduj Rakietę** | each placed part and the launch | Each landing, open-ended |
-| **Zakupy** | each product put in the basket and each scan (product id) | Each fully scanned list, open-ended |
+| **Psia Myjnia** | breed touched (`track('interaction', { variant })`) | Each clean dog (`complete()`), open-ended |
+| **Wyścig Piesków** | breed cheered (`track('interaction', { variant })`) | Each finished race (`complete()`), open-ended |
+| **Aport** | breed on each throw or dog tap (`track('interaction', { variant })`) | Each completed fetch (`complete()`), open-ended |
+| **Nakarm Pieska** | breed on each give attempt (`track('interaction', { variant })`) | Each full dog (`complete()`), open-ended |
+| **Koparka** | each scoop and tip (`track('interaction', { variant })`) | Each full truck (`complete()`), open-ended |
+| **Zbuduj Rakietę** | each placed part and the launch (`track('interaction', { variant })`) | Each landing (`complete()`), open-ended |
+| **Zakupy** | each product put in the basket and each scan (`track('interaction', { variant })`, product id) | Each fully scanned list (`complete()`), open-ended |
 
 Every other activity reports nothing itself and is open-ended. Exit-before-completion and highest level are defined only for the four levelled activities. The data is shown and exported (JSON) only in the parent-gated Settings under **Statystyki**, where it can also be reset. The "Analytics and metrics" section of each activity document states what is recorded for that activity.
 

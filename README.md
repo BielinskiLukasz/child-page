@@ -94,7 +94,7 @@ No backend, cookies, ads, third-party requests or tracking; no network request i
 
 Measured: sessions (a session ends when the app is closed or after 30 minutes hidden), active vs. inactive time (active = page visible and a touch/key/pointer less than 60 s ago), activity starts, active time, completions, replays (re-opening in the same session), exits before completion, quick exits (within 10 s), touches, the highest level reached in the levelled activities, and **interaction variants** reported as aggregate counts only (for example the dog breed, the rocket part, the letter, the scoop or tip, the machine or the product). Nothing per-event, personal or networked is stored. See [docs/activities/README.md](docs/activities/README.md) for the per-activity status.
 
-Every activity gets starts, active time, replays, quick exits and touches automatically (group c). Beyond that, these activities call `window.Analytics` themselves:
+Every activity gets starts, active time, replays, quick exits and touches automatically (group c). Groups: (a) completion is defined, (b) interaction variants only, (c) automatic tracking only. Beyond that, these activities call `window.Analytics` themselves:
 
 | Activity | What it reports | Completions |
 |---|---|---|

@@ -818,3 +818,24 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .pj-drop { position: absolute; width: 10px; height: 14px; margin: -7px 0 0 -5px; border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
   background: #9fd0f0; pointer-events: none; }
 .pj-name { height: 24px; line-height: 24px; font-size: .85rem; color: #6b6585; opacity: 0; pointer-events: none; }
+
+/* Wyścig Piesków */
+.wp { position: fixed; inset: 0; overflow: hidden; touch-action: manipulation; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#d6edfb, #e9f6e4 55%, #cfe9bf); }
+.wp-field { position: absolute; display: flex; flex-direction: column; justify-content: center; overflow: hidden;
+  top: calc(var(--safe-t) + 64px); right: calc(var(--safe-r) + 12px);
+  bottom: calc(var(--safe-b) + 12px); left: calc(var(--safe-l) + 12px); }
+.wp-lane { position: relative; flex: none; border-bottom: 3px dashed rgba(255, 255, 255, .8); background: rgba(190, 226, 160, .35); }
+.wp-lane:nth-child(even) { background: rgba(170, 214, 140, .35); }
+.wp-finish { position: absolute; top: 0; bottom: 0; right: 0; width: 10px;
+  background: repeating-conic-gradient(#fff 0 25%, #5b5675 0 50%) 0 0 / 10px 10px; opacity: .85; }
+.wp-puffs { position: absolute; inset: 0; pointer-events: none; }
+.wp-puff { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: #efe3cf; pointer-events: none; }
+.wp-dog { position: absolute; left: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  padding: 0; border: 0; border-radius: 16px; background: transparent; cursor: pointer; touch-action: manipulation; font: inherit; color: inherit; }
+.wp-dog:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 0; }
+.wp-art { display: block; width: 100%; pointer-events: none; }
+.stage .wp-art svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.wp-name { height: 18px; line-height: 18px; font-size: .75rem; color: #6b6585; pointer-events: none; white-space: nowrap; }
+.wp-confetti { position: absolute; inset: 0; pointer-events: none; }
+.wp-conf { position: absolute; width: 10px; height: 14px; border-radius: 2px; pointer-events: none; opacity: 0; }

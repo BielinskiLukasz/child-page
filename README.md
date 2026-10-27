@@ -57,7 +57,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 48. [**Psia Myjnia**](docs/activities/psia-myjnia.md) – Scrub a muddy dog clean in a dog car wash and learn its breed name.
 49. [**Wyścig Piesków**](docs/activities/wyscig-pieskow.md) – Cheer on friendly dogs in a race where everyone finishes together.
 50. [**Aport**](docs/activities/aport.md) – Throw a ball in the park and watch a dog fetch it and wag its tail.
-51. [**Nakarm Pieska**](docs/activities/nakarm-pieska.md) – Feed a hungry dog with a bone, food or water, but not a carrot.
+51. [**Nakarm Pieska**](docs/activities/nakarm-pieska.md) – Feed a hungry dog from six random pictures, giving it only the foods it may eat.
 52. [**Koparka**](docs/activities/koparka.md) – Steer an excavator with a finger to scoop sand and tip it into a dump truck.
 53. [**Zbuduj Rakietę**](docs/activities/zbuduj-rakiete.md) – Build a rocket from parts, launch it and watch it land on the Moon.
 54. [**Plac Budowy**](docs/activities/plac-budowy.md) – Operate the building-site machines to build a small house stage by stage.

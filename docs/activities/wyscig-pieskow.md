@@ -40,7 +40,9 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Boost | A tap raises the boost target by +0.4, capped at +0.6, for 1 s after the last tap; the boost factor follows its target at 1.2 per second (no jump). |
 | Slew limit | The speed changes by at most 0.02 track fractions per second squared. |
 | Never decided | From the moment the leader passes 50% of the track each dog's speed is blended towards the speed that would finish at the group's mean remaining time (full blend at 90%). Once a dog has finished, the others are guaranteed a speed that finishes them within 2.5 s. In a Node simulation of 15 races the gap between the first and last dog was about 0.03-0.13 s. |
-| Finish | The dog stays at the finish, smiles (`dg-happy`), wags its tail at 2.2 Hz (+/-26 degrees). Tapping a finished dog only makes it wag more for 0.8 s. |
+| Running legs | While a dog runs its four legs swing about the hips as a trot (diagonal pairs alternate). Step rate = speed x 70 per second (about 2-3 steps/s at base speed, never above 5), so a boost speeds the legs up and back down smoothly. The body bobs up by at most 3% of the dog height. Swing angle is 18-40 degrees depending on leg length, so short-legged breeds (Jamnik, Corgi, Buldog) keep their legs attached and visible. |
+| Reduced motion (legs) | Step rate is halved and the bob is switched off; the legs still alternate. |
+| Finish | The dog stays at the finish, smiles (`dg-happy`), wags its tail at 2.2 Hz (+/-26 degrees). The running legs ease out to standing within 0.35 s of finishing (the wag and smile begin at once). Tapping a finished dog only makes it wag more for 0.8 s. |
 | Reward | Confetti: pool of 36 pieces, about 2.2 s fall each, staggered over 4 s. |
 | Faces | Only `dg-calm` and `dg-happy`; no angry or sad face exists. |
 | Failure, score | None; nothing is scored or stored. |
@@ -68,7 +70,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 - **Target sizes:** a dog button is at least 56 px high (dog plus name line) and normally much larger.
 - **Layout:** four lanes below the Back button, portrait and landscape from 320 x 568 to 1920 x 1080.
 - **Colour:** the finish is shown by the position at the strip, the happy mouth and the tail wag, not by colour alone.
-- **Reduced motion:** all movement is driven from JavaScript, so positions, smiles, wagging and confetti behave the same; no state exists only in a CSS keyframe.
+- **Reduced motion:** all movement is driven from JavaScript, so positions, smiles, wagging and confetti behave the same; the running legs alternate at half rate without the body bob; no state exists only in a CSS keyframe.
 - **Text:** none except the small parent-facing breed names.
 
 ## 7. Risks and limitations
@@ -79,7 +81,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 ## 8. Configuration
 
-No external configuration. Constants in [`js/wyscig.js`](../../js/wyscig.js): `LANES` (4), `T_MIN`/`T_MAX` (25/35), `BOOST_ADD` (0.4), `BOOST_MAX` (0.6), `BOOST_S` (1), `BOOST_SLEW` (1.2), `ACC` (0.02), `BLEND_FROM`/`BLEND_TO` (0.5/0.9), `END_GAP_S` (2.5), `CONFETTI` (36), `CONFETTI_S` (4), `FALL_S` (2.2), `PUFFS` (12 per lane), `PUFF_S`, `SWAP_S` (0.7), `WAG_HZ` (2.2). Changing them needs a code edit.
+No external configuration. Constants in [`js/wyscig.js`](../../js/wyscig.js): `LANES` (4), `T_MIN`/`T_MAX` (25/35), `BOOST_ADD` (0.4), `BOOST_MAX` (0.6), `BOOST_S` (1), `BOOST_SLEW` (1.2), `ACC` (0.02), `BLEND_FROM`/`BLEND_TO` (0.5/0.9), `END_GAP_S` (2.5), `CONFETTI` (36), `CONFETTI_S` (4), `FALL_S` (2.2), `PUFFS` (12 per lane), `PUFF_S`, `SWAP_S` (0.7), `WAG_HZ` (2.2), `STEPS_PER_SPEED` (70), `STEPS_MAX` (5), `RUN_IN_S`/`RUN_OUT_S` (0.3/0.35), `BOB` (0.03). Changing them needs a code edit.
 
 ## 9. Assets
 
@@ -109,6 +111,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 - **Rendering:** `div.wp > div.wp-field > 4 x div.wp-lane (finish strip, puff layer, button.wp-dog > art + name) + confetti layer`.
 - **State:** phase (`run`, `party`, `out`, `in`), per-dog progress fraction `p`, speed `v`, base speed, boost factor/target/timer, finished flag; puff and confetti pools.
 - **Loop:** one `requestAnimationFrame` loop with `dt` capped at 0.05 s, guarded by `!raf`, cancelled while the tab is hidden and restarted on `visibilitychange`; cleanup cancels it and removes listeners and DOM.
+- **Legs:** `setupLegs` wraps each leg (rect + foot) of the shared `dg-legs` group in its own `<g>` once per race; `poseLegs` runs in the same frame loop and sets one `rotate` per leg and one `translateY` on the art element (no per-frame DOM creation, no CSS animation). A run factor eases the swing in/out; the gait phase keeps accumulating across tab-hidden gaps (capped `dt`), so there is no jump.
 - **Persistence:** none. **Analytics:** section 13.
 
 ## 15. Responsive layout and coordinate system
@@ -136,6 +139,7 @@ No automated tests exist. Manual scenarios (none are claimed as done):
 
 - [ ] A race lasts 25-35 s with no taps and all four dogs finish within 3 s of each other.
 - [ ] Tapping a dog speeds it up smoothly for about a second; repeated taps do not make it jump or stop.
+- [ ] Legs alternate while running, faster during a boost, stand within 0.4 s at the finish; Jamnik/Corgi/Buldog legs stay attached; landscape 568 x 320 legs stay inside the lane.
 - [ ] Confetti for about 4 s, then a new race with a different set of breeds.
 - [ ] Rotate the device mid-race; the dogs keep their relative positions.
 - [ ] Keyboard: Tab to a dog, Enter/Space cheers it.
@@ -169,3 +173,4 @@ None currently planned.
 ## 21. Change history
 
 - Issue [#177](https://github.com/BielinskiLukasz/child-page/issues/177): initial activity.
+- Issue [#205](https://github.com/BielinskiLukasz/child-page/issues/205): running legs animation and body bob.

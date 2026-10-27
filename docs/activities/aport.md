@@ -25,7 +25,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 1. The child opens the tile; a dog of a random breed (not the one of the previous launch) sits at its starting spot with a ball resting next to it on the grass.
 2. Initially displayed: a sky strip with a sun, clouds and two trees above a green grass area; the dog briefly wags (calm face).
 3. Interactions: drag the ball and release it anywhere on the grass; tap the dog; keyboard alternative in section 6.
-4. Response: the ball lands at the release point after a 0.8 s arc; the dog runs to it on a curved path, picks it up (about 0.35 s or longer after a very short throw), brings it back to its starting spot, drops it beside itself, sits and wags for 2.5 s.
+4. Response: the ball lands at the release point after a 0.8 s arc; the dog runs to it on a curved path, lowers its head and catches the ball in its mouth (about 0.4 s, or longer after a very short throw), carries it back to its starting spot, drops it beside itself, sits and wags for 2.5 s.
 5. A new throw while the dog is running redirects it smoothly; tapping the dog switches to another random breed with a small sparkle.
 6. After 3 completed fetches the dog does a happy spin (0.9 s) and a heart rises; nothing counts or shows the number.
 7. There is no end and no restart step. Exit: Back button or browser Back.
@@ -38,7 +38,9 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Dog speed | Planned per throw from the round-trip length `L` (dog to ball to start): total time `T = clamp(1.6 + L / (0.3 W), 3.6, 5.2)` s, speed `1.1 L / (T - 1.4)`, never above 0.6 W per second (`W` = grass width); acceleration is 2.5 times the speed per second, the speed slews towards a new plan at most 0.25 W per second squared. |
 | Path | The heading is the direction to the target rotated by up to 0.55 rad (random side, reversed on the way back), fading to zero near the target; the velocity is slew-limited so the path is smooth. |
 | Redirect | A throw while the dog is running changes only its target; its velocity is kept. The ball can be picked up again from the grass until the dog has grabbed it. |
-| Pick-up and return | The dog stops at the ball with its mouth at it; the ball lifts to its mouth (0.35 s, extended up to 2.4 s after a very short throw so that a fetch takes about 3.6 s), then the dog returns, drops the ball beside its starting spot (0.3 s) and sits and wags. |
+| Pick-up and return | The dog stops so that its lowered mouth meets the ball; its head dips 30 degrees and comes up again over 0.4 s (`Dogs.mouthPoint` gives the per-breed mouth spot). The ball moves to the mouth in 0.2 s, shrinks to 60% and is drawn behind the dog, so the muzzle front covers part of it. It follows head, bob and facing at all times while the dog carries it. The hold lasts at least 0.4 s (up to 2.4 s after a very short throw so that a fetch takes about 3.6 s); then the dog returns, drops the ball beside its starting spot (0.3 s) and sits and wags. |
+| Throw or tap while carrying | Dragging the ball is ignored while it is held. A keyboard throw (Enter/Space) while the dog holds it lets the ball fly from the mouth to the ring and the dog redirects to it. Tapping the dog switches breed: the ball is released at the starting spot and the new breed sits there. |
+| Reduced motion | No head dip; the ball still moves from the grass to the mouth in 0.2 s and the sequence completes. |
 | Fetch time | In a Node simulation with a stub DOM, an undisturbed fetch took 3.6-5.4 s at 320 x 440, 544 x 244, 1000 x 600 and 1920 x 1080 grass sizes; the peak speed stayed below 0.6 W per second (0.57 at 320 px wide portrait). |
 | Breed switch | Tapping the dog picks another breed from `Dogs.LIST` (never the current one) and shows 8 sparkles for 0.6 s; the breed keeps its position and state. |
 | Reward | Every 3rd completed fetch: happy spin, hop and a heart rising for 2.2 s. The count restarts at 0 and is never shown. |
@@ -79,7 +81,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 ## 8. Configuration
 
-No external configuration. Constants at the top of [`js/aport.js`](../../js/aport.js): `FLY_S` (0.8), `GRAB_S` (0.35), `DROP_S` (0.3), `SPIN_S` (0.9), `HEART_S` (2.2), `WAG_S` (2.5), `SPARK_S` (0.6), `SPARKS` (8), `SPEED_CAP` (0.6), `HOME` (0.25, 0.76), `KEY_STEP` (0.06), `FETCHES_FOR_REWARD` (3). Changing them needs a code edit.
+No external configuration. Constants at the top of [`js/aport.js`](../../js/aport.js): `FLY_S` (0.8), `GRAB_S` (0.4), `CATCH_S` (0.2), `DIP_DEG` (30), `HELD` (0.6), `DROP_S` (0.3), `SPIN_S` (0.9), `HEART_S` (2.2), `WAG_S` (2.5), `SPARK_S` (0.6), `SPARKS` (8), `SPEED_CAP` (0.6), `HOME` (0.25, 0.76), `KEY_STEP` (0.06), `FETCHES_FOR_REWARD` (3). Changing them needs a code edit.
 
 ## 9. Assets
 
@@ -164,8 +166,9 @@ None currently planned.
 ## 20. Related activities and reusable components
 
 - [Psia Myjnia](psia-myjnia.md), [Wyścig Piesków](wyscig-pieskow.md), [Myjnia](myjnia.md), [Rasy Piesków](rasy-pieskow.md).
-- Shared component: [`js/dogs.js`](../../js/dogs.js) (`Dogs.LIST`, `Dogs.draw`).
+- Shared component: [`js/dogs.js`](../../js/dogs.js) (`Dogs.LIST`, `Dogs.draw`, `Dogs.mouthPoint`).
 
 ## 21. Change history
 
 - Issue [#178](https://github.com/BielinskiLukasz/child-page/issues/178): initial activity.
+- Issue [#206](https://github.com/BielinskiLukasz/child-page/issues/206): the dog catches the ball in its mouth and carries it back.

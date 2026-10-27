@@ -21,13 +21,13 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 ## 3. Activity flow
 
-1. The child opens the tile; an empty rocket outline with four dashed slots (nose, body, fins, engine) stands on a sky background and a tray holds 12 part pictures in a random order.
+1. The child opens the tile; an empty rocket outline with four dashed slots (nose, body, fins, engine) stands on a sky background and a tray holds 12 part pictures grouped by kind (nose, body, fins, engine: one column in portrait, one row in landscape).
 2. Interactions: the child drags a part onto its slot (a glowing outline appears when the part is over its slot); it snaps in with a soft pop and stays in the tray so it can be swapped for another variant.
 3. When all four slots are full a large glowing launch button appears beside the rocket.
 4. Tapping launch hides the tray and moves the rocket to the launch pad; the numerals 3, 2, 1 appear one second each.
 5. The rocket flies up for 9 s through the sky, which darkens into a starry night, the stars drift down and the Moon surface slides into view.
 6. The rocket lands on the Moon in 2 s; an astronaut appears next to it and waves for 4 s.
-7. The scene fades out and a new empty assembly with a reshuffled tray fades in. Exit: Back button or browser Back.
+7. The scene fades out and a new empty assembly with a tray with the variants reshuffled within each group fades in. Exit: Back button or browser Back.
 
 ## 4. Rules and behavior
 
@@ -83,7 +83,7 @@ No external asset files. Everything (parts, rocket, flame, sky, stars, Moon, gro
 
 ## 10. Randomization and variants
 
-The 12 tray parts are shuffled (`Rand.shuffle` when available) at the start of every round; stars are placed randomly on each open. The rocket variants are chosen by the child.
+The 12 tray parts are grouped by kind (nose, body, fins, engine; a column each in portrait, a row each in landscape); the three variants inside each group are shuffled (`Rand.shuffle` when available) at the start of every round; stars are placed randomly on each open. The rocket variants are chosen by the child.
 
 ## 11. Progression and difficulty
 
@@ -162,3 +162,4 @@ None currently planned.
 
 - Issue [#183](https://github.com/BielinskiLukasz/child-page/issues/183): initial activity.
 - Issue [#208](https://github.com/BielinskiLukasz/child-page/issues/208): placed parts and the rocket were invisible because the part groups in the rocket SVG were never filled; they are now filled on placement.
+- PR [#229](https://github.com/BielinskiLukasz/child-page/pull/229) feedback: tray parts are grouped by kind (column per kind in portrait, row per kind in landscape); variants shuffled within a group.

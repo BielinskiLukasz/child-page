@@ -13,6 +13,7 @@
   var COUNT_S = 1.0, FLY_S = 9.0, LAND_S = 2.0, ASTRO_S = 4.0, FADE_S = 0.5, BACK_S = 0.5, FLYIN_S = 0.2, POP_S = 0.3;
   var RM_COUNT_S = 0.5, RM_FLY_S = 1.2, RM_LAND_S = 0.4;
   var TOP_PAD = 56, MAX_DT = 0.05, SLOT_PAD = 20;
+  var TRAY_KINDS = ['nose', 'body', 'fins', 'engine'];   // tray group order, top of the rocket first
   var ORDER = ['fins', 'engine', 'body', 'nose'];   // drawing order (fins behind the body)
   // Slot rectangles in rocket units (the rocket is 120 x 240); a part's SVG uses its slot rectangle as viewBox.
   var SLOTS = {
@@ -116,13 +117,17 @@
       items.forEach(function (it) { if (it.node.parentNode) { it.node.parentNode.removeChild(it.node); } });
       items = [];
       var list = [];
-      ORDER.forEach(function (k) { for (var v = 0; v < 3; v++) { list.push({ kind: k, idx: v }); } });
-      shuffled(list).forEach(function (d) {
+      // Grouped by kind (tray column in portrait, row in landscape); the variants inside a group are shuffled.
+      TRAY_KINDS.forEach(function (k, g) {
+        var vs = shuffled([0, 1, 2]);
+        for (var v = 0; v < 3; v++) { list.push({ kind: k, idx: vs[v], g: g, v: v }); }
+      });
+      list.forEach(function (d) {
         var b = document.createElement('button');
         b.type = 'button'; b.className = 'zr-item'; b.innerHTML = partSvg(d.kind, d.idx);
         b.setAttribute('aria-label', 'Część rakiety: ' + ({ nose: 'dziób', body: 'kadłub', fins: 'stateczniki', engine: 'silnik' })[d.kind] + ' ' + (d.idx + 1) + '. Przeciągnij na rakietę lub naciśnij Enter.');
         root.appendChild(b);
-        var it = { kind: d.kind, idx: d.idx, node: b, hx: 0, hy: 0, x: 0, y: 0, x0: 0, y0: 0, mode: 'home', t: 0, scale: 1 };
+        var it = { kind: d.kind, idx: d.idx, node: b, hx: 0, hy: 0, x: 0, y: 0, x0: 0, y0: 0, mode: 'home', t: 0, scale: 1, g: d.g, v: d.v };
         items.push(it); wire(it);
       });
       layout();
@@ -153,8 +158,8 @@
       launch.style.width = launch.style.height = lsz + 'px';
       launch.dataset.x = String(rcx + 60 * kB + side / 2 - lsz / 2);
       launch.dataset.y = String(bBot - 120 * kB - lsz / 2);
-      items.forEach(function (it, n) {
-        var c = n % cols, rw = Math.floor(n / cols);
+      items.forEach(function (it) {
+        var c = land ? it.v : it.g, rw = land ? it.g : it.v;
         it.hx = trayX + 8 + (c + 0.5) * s; it.hy = trayY + 6 + (rw + 0.5) * s;
         it.node.style.width = it.node.style.height = s + 'px';
         if (it.mode === 'home' || it.mode === 'back') { it.mode = 'home'; it.x = it.hx; it.y = it.hy; }

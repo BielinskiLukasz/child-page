@@ -839,3 +839,27 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .wp-name { height: 18px; line-height: 18px; font-size: .75rem; color: #6b6585; pointer-events: none; white-space: nowrap; }
 .wp-confetti { position: absolute; inset: 0; pointer-events: none; }
 .wp-conf { position: absolute; width: 10px; height: 14px; border-radius: 2px; pointer-events: none; opacity: 0; }
+
+/* Aport */
+.ap { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfeaf8, #e6f4fb 60%); }
+.ap-sky { position: absolute; left: 0; right: 0; top: 0; width: 100%; height: max(24%, calc(var(--safe-t) + 64px)); display: block; }
+.ap-grass { position: absolute; left: 0; right: 0; bottom: 0; top: max(24%, calc(var(--safe-t) + 64px)); overflow: hidden;
+  background: linear-gradient(#bfe3a8, #a9d98f); border-radius: 24px 24px 0 0; }
+.ap-shadow { position: absolute; left: 0; top: 0; width: 36px; height: 10px; border-radius: 50%; background: #3d5a2f; opacity: .28; pointer-events: none; }
+.ap-dog { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  padding: 0; border: 0; border-radius: 16px; background: transparent; cursor: pointer; touch-action: manipulation; font: inherit; color: inherit; }
+.ap-dog:focus-visible, .ap-ball:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 0; }
+.ap-art { display: block; pointer-events: none; transform-origin: 50% 70%; }
+.stage .ap-art svg, .ap-art svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.ap-name { height: 18px; line-height: 18px; font-size: .75rem; color: #4d6a3e; pointer-events: none; white-space: nowrap; }
+.ap-ball { position: absolute; left: 0; top: 0; width: 56px; height: 56px; padding: 0; border: 0; border-radius: 50%; background: transparent;
+  cursor: grab; touch-action: none; display: flex; align-items: center; justify-content: center; }
+.ap-ball.ap-off { cursor: default; pointer-events: none; }
+.stage .ap-ball svg, .ap-ball svg { width: 40px; height: 40px; display: block; pointer-events: none; }
+.ap-cur { position: absolute; left: 0; top: 0; width: 48px; height: 48px; border: 4px dashed #8f7fd1; border-radius: 50%; opacity: 0; pointer-events: none; }
+.ap-kb .ap-cur { opacity: .8; }
+.ap-fx { position: absolute; inset: 0; pointer-events: none; }
+.ap-spark { position: absolute; left: 0; top: 0; width: 12px; height: 12px; background: #ffd24a; border-radius: 2px; opacity: 0; }
+.ap-heart { position: absolute; left: 0; top: 0; width: 44px; height: 41px; opacity: 0; pointer-events: none; }
+.stage .ap-heart svg, .ap-heart svg { width: 100%; height: 100%; display: block; }

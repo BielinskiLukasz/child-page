@@ -928,3 +928,44 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .pb-m { position: absolute; padding: 0; border: 0; border-radius: 18px; background: #fff8e8; box-shadow: 0 3px 0 #e2d4ae; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .pb-m:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
 .stage .pb-msvg, .pb-msvg { width: 100%; height: 100%; display: block; pointer-events: none; }
+
+/* Zakupy */
+.zk { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; background: #fdf1dc; }
+.zk-wall { position: absolute; inset: 0; background: linear-gradient(#fff4d9, #fde3c0); }
+.zk-floor { position: absolute; left: 0; right: 0; bottom: 0; background: #d9b48f; border-top: 8px solid #b98963; }
+.zk-top { position: absolute; left: 0; right: 0; top: 0; height: 12%; min-height: 48px; max-height: 64px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 12px 0 calc(var(--safe-l) + 72px); background: rgba(255, 255, 255, .55); }
+.zk-list { display: flex; gap: 8px; align-items: center; }
+.zk-li { display: block; background: #fff; border-radius: 10px; box-shadow: 0 1px 0 #e2d4ae; }
+.stage .zk-li svg, .zk-li svg { width: 100%; height: 100%; display: block; }
+.zk-num { min-width: 44px; text-align: center; font-size: 2rem; font-weight: 700; color: #6f62b0; line-height: 1; }
+.zk-shelves, .zk-scene { position: absolute; inset: 0; pointer-events: none; }
+.zk-plank { position: absolute; left: 6px; right: 6px; height: 8px; border-radius: 4px; background: #c79d75; box-shadow: 0 3px 0 #a8683f; }
+.zk-belt, .zk-bag { position: absolute; left: 8px; right: 8px; border-radius: 16px; }
+.zk-belt { background: #8d8aa3; box-shadow: inset 0 -6px 0 #6f6c85; }
+.zk-bag { background: rgba(255, 255, 255, .6); border: 3px dashed #c9b8f2; }
+.zk-scanner { position: absolute; height: 28px; border-radius: 14px; background: #5b5675; box-shadow: 0 3px 0 #3d3a4f; }
+.zk-laser { position: absolute; left: 10px; right: 10px; top: 12px; height: 4px; border-radius: 2px; background: #e8605a; opacity: .35; }
+.zk-scanner.zk-flash { box-shadow: 0 0 22px 8px rgba(63, 209, 107, .8); }
+.zk-prod, .zk-item, .zk-basket, .zk-reg { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: transparent; touch-action: none; cursor: grab; }
+.zk-prod { border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+.zk-item { border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+.stage .zk-prod svg, .zk-prod svg, .stage .zk-item svg, .zk-item svg { width: 92%; height: 92%; display: block; pointer-events: none; }
+.zk-item.zk-done { cursor: default; }
+.zk-lift { cursor: grabbing; filter: drop-shadow(0 8px 6px rgba(80, 60, 30, .35)); }
+.zk-basket { border-radius: 16px; }
+.zk-bart, .zk-bth { position: absolute; left: 0; right: 0; pointer-events: none; display: block; }
+.zk-bart { top: 0; bottom: 0; }
+.stage .zk-bart svg, .zk-bart svg { width: 100%; height: 100%; display: block; }
+.zk-bth { top: -22%; display: flex; justify-content: center; gap: 0; }
+.zk-bt { display: block; width: 22%; aspect-ratio: 64 / 50; }
+.stage .zk-bt svg, .zk-bt svg { width: 100%; height: 100%; display: block; }
+.zk-reg { border-radius: 14px; cursor: pointer; touch-action: manipulation; }
+.stage .zk-reg svg, .zk-reg svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.zk-basket.zk-over { outline: 5px solid #fff; outline-offset: 2px; box-shadow: 0 0 18px 8px rgba(255, 226, 122, .9); }
+.zk-prod:focus-visible, .zk-item:focus-visible, .zk-basket:focus-visible, .zk-reg:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+.zk-basket:disabled, .zk-reg:disabled { opacity: .55; cursor: default; }
+.zk-owner { position: absolute; left: 0; top: 0; pointer-events: none; }
+.stage .zk-owner svg, .zk-owner svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.zk-receipt { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; }
+.stage .zk-receipt svg, .zk-receipt svg { width: 100%; height: 100%; display: block; }

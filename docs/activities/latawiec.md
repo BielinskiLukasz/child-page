@@ -15,7 +15,7 @@ Source: [`js/latawiec.js`](../../js/latawiec.js), CSS prefix `lw-` in [`css/styl
 
 ## 2. Business purpose
 
-- Gives direct, continuous control: the kite goes where the finger goes, but always with a soft lag and a speed limit, so it never jumps.
+- Gives direct, continuous control: the kite goes where the finger goes, but always with a soft lag and a speed limit, so it never jumps (crossing the screen takes at least 3 seconds).
 - When the finger is lifted the kite does not stop abruptly; it drifts and settles into a slow figure-eight, so the scene stays alive without input.
 - It is the only scene in the playground group ([Karuzela](karuzela.md), [Zjeżdżalnia](zjezdzalnia.md), [Huśtawka](hustawka.md)) that tracks a finger position continuously.
 

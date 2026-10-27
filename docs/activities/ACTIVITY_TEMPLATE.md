@@ -6,6 +6,8 @@
 >
 > Shared platform behaviour (no sound, global reduced-motion rule, menu configuration, analytics status, absence of automated tests) is described once in [README.md](README.md#shared-platform-behaviour); link to it instead of repeating it, and only note activity-specific deviations.
 
+> When the activity is complete, add one linked one-line item to the main README Activities list, update its count word and add the row to the docs index ([README.md](README.md#activity-index)).
+
 ## 1. Overview
 
 *Include: display name, internal activity ID (`id` in `js/activities.js`), short description, activity category (calming, exploratory, matching, sorting, memory, counting, drawing, observation, coordination, cause and effect, open-ended play), target interaction type (tap, drag, trace, ...), current implementation status (e.g. Implemented; default state in the menu).*

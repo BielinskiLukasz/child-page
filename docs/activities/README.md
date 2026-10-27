@@ -103,3 +103,5 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 56 | [Lot na Smoku](smok.md) | `smok` | A friendly dragon with a rider flies over a scrolling land that changes between meadow, snow and sea; the child steers it with a finger and a tap makes it breathe a little fire to light drifting lanterns. | Complete |
 
 Template for new activities: [ACTIVITY_TEMPLATE.md](ACTIVITY_TEMPLATE.md).
+
+**Adding an activity:** write its document from the template, add its row to this index (and bump the activity count and analytics status below where they are stated), then add one linked one-line item (`N. [**Name**](docs/activities/<file>.md) – <one sentence, no numeric parameters>`) to the Activities list in the main [README](../../README.md) and update the count word in its intro. Details belong only in the document.

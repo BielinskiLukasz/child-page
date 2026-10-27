@@ -135,6 +135,7 @@ No automated tests exist. Manual scenarios (none are claimed as done):
 - [ ] Rotate the device in the building and flight phases.
 - [ ] Leave and reopen ten times quickly.
 - [ ] Small screens (320 x 568, 568 x 320) and 1920 x 1080; reduced motion.
+- [ ] Regression (#208, parts and rocket invisible): at 320 x 568, 390 x 844 and 568 x 320 drop a part on its slot; it is visible on the rocket in its own shape and colour (a second variant replaces it). A wrong drop stays visible while drifting back and ends in its tray spot. Launch right after the last part; the rocket is visible during the count, the whole flight and landing, and the astronaut appears. Repeat with reduced motion and with a rotation in each phase.
 
 The PR for issue [#183](https://github.com/BielinskiLukasz/child-page/issues/183) reports a Node simulation with a stub DOM (placement, wrong drops, launch, the full timeline, reset, reduced motion, cleanup); no visual check was possible.
 
@@ -160,3 +161,4 @@ None currently planned.
 ## 21. Change history
 
 - Issue [#183](https://github.com/BielinskiLukasz/child-page/issues/183): initial activity.
+- Issue [#208](https://github.com/BielinskiLukasz/child-page/issues/208): placed parts and the rocket were invisible because the part groups in the rocket SVG were never filled; they are now filled on placement.

@@ -252,6 +252,7 @@
     // ---- behaviour -------------------------------------------------------------------------------------------
     function place(it) {
       chosen[it.kind] = it.idx; pop[it.kind] = 0;
+      pEls[it.kind].innerHTML = PARTS[it.kind][it.idx];   // the part group is empty until a part is placed
       report(function (A) { A.track('interaction', { variant: SLOTS[it.kind].code + (it.idx + 1) }); });
       if (allFull() && lb <= 0) { lb = 0.0001; }
     }
@@ -264,7 +265,7 @@
       start();
     }
     function resetRound() {
-      ORDER.forEach(function (k) { chosen[k] = -1; pop[k] = 1; });
+      ORDER.forEach(function (k) { chosen[k] = -1; pop[k] = 1; pEls[k].innerHTML = ''; });
       lb = 0; trayA = 0; hot = ''; buildTray();
     }
     function enter(ph) { phase = ph; t = 0; }

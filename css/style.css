@@ -934,7 +934,7 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .zk-wall { position: absolute; inset: 0; background: linear-gradient(#fff4d9, #fde3c0); }
 .zk-floor { position: absolute; left: 0; right: 0; bottom: 0; background: #d9b48f; border-top: 8px solid #b98963; }
 .zk-top { position: absolute; left: 0; right: 0; top: 0; height: 12%; min-height: 48px; max-height: 64px; display: flex; align-items: center;
-  justify-content: space-between; padding: 0 12px; background: rgba(255, 255, 255, .55); }
+  justify-content: space-between; padding: 0 12px 0 calc(var(--safe-l) + 72px); background: rgba(255, 255, 255, .55); }
 .zk-list { display: flex; gap: 8px; align-items: center; }
 .zk-li { display: block; background: #fff; border-radius: 10px; box-shadow: 0 1px 0 #e2d4ae; }
 .stage .zk-li svg, .zk-li svg { width: 100%; height: 100%; display: block; }

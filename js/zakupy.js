@@ -118,7 +118,7 @@
       var r = root.getBoundingClientRect();
       W = Math.max(280, r.width); H = Math.max(240, r.height);
       topH = clamp(H * 0.12, TOP_MIN, TOP_MAX);
-      ls = clamp(topH * 0.62, 30, 40);
+      ls = Math.min(clamp(topH * 0.62, 30, 40), Math.max(24, Math.floor((W - 168) / 5))); // 5 list pictures + counter fit right of the Back button
       bsz = clamp(Math.min(W * 0.26, H * 0.17), 72, 104); regSz = clamp(bsz * 0.78, 56, 80); osz = clamp(bsz * 0.9, 64, 96);
       botH = Math.max(bsz, osz) + 16;
       midT = topH; midB = H - botH;

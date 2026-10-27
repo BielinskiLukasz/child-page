@@ -87,7 +87,7 @@ Pushing to `main` runs `.github/workflows/pages.yml`, which publishes to GitHub 
 Mandatory manual tests: Chrome desktop, Chrome Android, Safari iPhone/iPad. Edge and Firefox should work. Zoom is intentionally disabled to avoid accidental pinch-zoom.
 
 ## Privacy
-No backend, cookies, ads, third-party requests or tracking; no network request is made for analytics. The only things stored, locally on the device (localStorage), are the parent-configured daily playtime limit, the playtime used today (with its date), which activities are shown in the menu and in what order, and the anonymous usage statistics described below; none of it leaves the device. No audio.
+No backend, cookies, ads, third-party requests or tracking; no network request is made for analytics. The only things stored, locally on the device (localStorage), are the parent-configured daily playtime limit, the playtime used today (with its date), which activities are shown in the menu, in what order and which are favourites, and the anonymous usage statistics described below; none of it leaves the device. No audio.
 
 ## Usage statistics
 `js/analytics.js` (`window.Analytics`) is the single module through which every activity reports usage; nothing is shown to the child. It keeps only **daily aggregates** for the last 90 days plus running all-time totals (localStorage key `swa.stats`), never per-event history, names, age, location, text or any device fingerprint. The per-session id is random and kept in memory only.
@@ -101,6 +101,8 @@ A gear icon on the main menu opens a parent gate (a simple sum) and then Setting
 
 ## Menu activities
 In Settings (behind the same gate) a parent can enable or disable each activity and reorder them with up/down buttons; "Przywróć domyślne" restores all of them in the original order. At least one activity always stays enabled, and disabled activities cannot be opened by any route (a stored or typed `#hash` shows the menu).
+
+**Favourites.** Each Settings row also has a star toggle (filled ★ = favourite, outlined ☆ = not). Enabled favourites appear in an "Ulubione" section above the other tiles, in their saved list order, and are not repeated below; with no enabled favourites no heading is shown. A disabled activity is hidden even if starred and returns to the section when re-enabled. Only a parent can change favourites (the child has no control); they are stored locally with the menu configuration and "Przywróć domyślne" clears them. Starring is not reported to usage statistics.
 
 ## Randomisation helper
 `js/animals.js` (loaded after `random.js`) exposes `window.Animals`, the shared animal family drawn in one round-head style (13 animals: Miś, Króliczek, Kotek, Piesek, Myszka, Świnka, Lisek, Lew, Słoń, Panda, Żabka, Sowa, Koala): `Animals.head(id, opts)` returns the SVG markup, `Animals.pick(n, {distinct})` returns `n` random unique animals (`distinct` avoids alike silhouettes). Pociąg, Dobranoc, Farma, Chowany, Cienie, Autobusik and Buźki pick their animals from it on every launch, in memory only.

@@ -3,6 +3,8 @@
   var view = document.getElementById('activity-view');
   var stage = document.getElementById('stage');
   var tiles = document.getElementById('tiles');
+  var favTiles = document.getElementById('fav-tiles');
+  var favHead = document.getElementById('fav-head');
   var backBtn = document.getElementById('back');
   var cleanup = null;
   var currentId = null;
@@ -14,25 +16,36 @@
     return window.ACTIVITIES.filter(function (a) { return a.id === id; })[0];
   }
 
-  // Tiles are the enabled activities in the parent-configured order (see menu-config.js).
+  function addTile(parent, a) {
+    var li = document.createElement('li');
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'tile';
+    btn.innerHTML = a.icon + '<span></span>';
+    btn.lastChild.textContent = a.name;
+    btn.addEventListener('click', function () {
+      lastTile = btn;
+      menuScroll = window.pageYOffset || 0;
+      if (location.hash !== '#' + a.id) { pushedByApp = true; location.hash = a.id; }
+    });
+    li.appendChild(btn);
+    parent.appendChild(li);
+  }
+
+  // Tiles are the enabled activities in the parent-configured order (see menu-config.js); parent-starred
+  // ones go in the "Ulubione" section above and are not repeated below.
   function buildTiles() {
     tiles.textContent = '';
+    favTiles.textContent = '';
     lastTile = null;
+    var favs = window.MenuConfig.favouriteActivities();
+    var isFav = {};
+    favs.forEach(function (a) { isFav[a.id] = true; addTile(favTiles, a); });
     window.MenuConfig.enabledActivities().forEach(function (a) {
-      var li = document.createElement('li');
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'tile';
-      btn.innerHTML = a.icon + '<span></span>';
-      btn.lastChild.textContent = a.name;
-      btn.addEventListener('click', function () {
-        lastTile = btn;
-        menuScroll = window.pageYOffset || 0;
-        if (location.hash !== '#' + a.id) { pushedByApp = true; location.hash = a.id; }
-      });
-      li.appendChild(btn);
-      tiles.appendChild(li);
+      if (!isFav[a.id]) { addTile(tiles, a); }
     });
+    favHead.hidden = favTiles.hidden = favs.length === 0;
+    tiles.hidden = tiles.children.length === 0;
   }
   buildTiles();
   document.addEventListener('menuconfig', buildTiles);

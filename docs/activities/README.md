@@ -21,7 +21,7 @@ These facts apply to every activity; the activity documents link here instead of
 
 ### Analytics status
 
-On `main` the application has an on-device usage-metrics module, `js/analytics.js` (`window.Analytics`), introduced by issue [#164](https://github.com/BielinskiLukasz/child-page/issues/164) and merged in pull request [#172](https://github.com/BielinskiLukasz/child-page/pull/172). It is the single place that writes analytics storage (`localStorage` key `swa.stats`: anonymous daily aggregates for 90 days plus all-time totals; no network, no per-event history, no personal data). `js/app.js` reports every activity start and end, and the module counts touches inside the stage, so **all 56 activities** get starts, active time, replays, quick exits (within 10 s) and touches without any code of their own. The following activities also call the module themselves (to add an activity that starts calling `Analytics`, add one row here and to the README table):
+On `main` the application has an on-device usage-metrics module, `js/analytics.js` (`window.Analytics`), introduced by issue [#164](https://github.com/BielinskiLukasz/child-page/issues/164) and merged in pull request [#172](https://github.com/BielinskiLukasz/child-page/pull/172). It is the single place that writes analytics storage (`localStorage` key `swa.stats`: anonymous daily aggregates for 90 days plus all-time totals; no network, no per-event history, no personal data). `js/app.js` reports every activity start and end, and the module counts touches inside the stage, so **all activities listed in the index** get starts, active time, replays, quick exits (within 10 s) and touches without any code of their own. The following activities also call the module themselves (to add an activity that starts calling `Analytics`, add one row here and to the README table):
 
 | Activity | Reports | Completion |
 |---|---|---|
@@ -36,12 +36,24 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Zbuduj Rakietę** | each placed part and the launch (`track('interaction', { variant })`) | Each landing (`complete()`), open-ended |
 | **Zakupy** | each product put in the basket and each scan (`track('interaction', { variant })`, product id) | Each fully scanned list (`complete()`), open-ended |
 | **Lot na Smoku** | each steering touch, fire puff and lit lantern (`track('interaction', { variant })`) | None |
+| **Mieszanie Kolorów** (planned) | each blob drop (`track('interaction')`, variant = colour) | each mix (`complete()`), open-ended |
+| **Latarka** (planned) | each first reveal of an item (`track('interaction')`, variant = item); beam moves are not reported | each fully lit room (`complete()`) |
+| **Lustro** (planned) | each stroke (`track('interaction')`, variant = outline) | each glow-and-next picture (`complete()`), open-ended |
+| **Od Jajka do…** (planned) | each advance (`track('interaction')`, variant = cycle and stage) | each cycle that reaches its last stage (`complete()`) |
+| **Pizza** (planned) | each topping placement and the oven touch (`track('interaction')`, variant = topping) | each served pizza (`complete()`) |
+| **Ślady na Piasku** (planned) | each stroke start (`track('interaction')`, variant = track type) | each revealed picture (`complete()`) |
+| **Kulkowy Tor** (planned) | each ramp turn and each drop (`track('interaction')`, variant = ramp or ball) | each ball in the basket (`complete()`) |
+| **Nalej Wody** (planned) | each pour start (`track('interaction')`, variant = glass size) and each filled glass | each full set of glasses (`complete()`) |
+| **Wędkowanie** (planned) | each lower action (`track('interaction')`, variant = catch) | each five-catch set (`complete()`) |
+| **Mój Dzień** (planned) | each scene start (`track('interaction')`, variant = tile) | each set of four scenes seen (`complete()`) |
+| **Naklejki** (planned) | each placement (`track('interaction')`, variant = sticker) | none, open-ended |
+| **Rozmiar** (planned) | each nest (`track('interaction')`, variant = item size) | each completed stack (`complete()`) |
 
 Every other activity reports nothing itself and is open-ended. Exit-before-completion and highest level are defined only for the four levelled activities. The data is shown and exported (JSON) only in the parent-gated Settings under **Statystyki**, where it can also be reset. The "Analytics and metrics" section of each activity document states what is recorded for that activity.
 
 ## Activity index
 
-Documentation status: **Complete** = all 21 sections written from the current source; sections that could not be verified from code say `Not currently documented`. Order follows the menu default.
+Documentation status: **Complete** = all 21 sections written from the current source; sections that could not be verified from code say `Not currently documented`. Order follows the menu default; the number of a planned activity is reserved for it (see [Planned activities](#planned-activities)). The **Status** column is `Complete` for documented activities and `planned` for placeholders.
 
 | # | Activity | ID | Description | Status |
 |---|---|---|---|---|
@@ -101,7 +113,29 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 54 | [Plac Budowy](plac-budowy.md) | `plac` | A building site with four machines (crane, mixer, roller, dump truck); each different machine used builds one more stage of a small house, which glows and resets when finished. | Complete |
 | 55 | [Zakupy](zakupy.md) | `zakupy` | A shop where the child puts products in a basket, brings it to the counter and drags each item across a barcode scanner that flashes green while a numeral counts the scanned items; a receipt slides out and a new list of 1-5 items follows. | Complete |
 | 56 | [Lot na Smoku](smok.md) | `smok` | A friendly dragon with a rider flies over a scrolling land that changes between meadow, snow and sea; the child steers it with a finger and a tap makes it breathe a little fire to light drifting lanterns. | Complete |
+| 57 | [Mieszanie Kolorów](mieszanie-kolorow.md) | `mieszanie` | Three primary-colour blobs are dragged into a pot, where the colours mix into a new one. (planned) | planned |
+| 58 | [Latarka](latarka.md) | `latarka` | A torch beam that follows the finger reveals hidden animals and toys in a dark room. (planned) | planned |
+| 59 | [Lustro](lustro.md) | `lustro` | Painting on one half of a butterfly, house or tree is mirrored on the other half. (planned) | planned |
+| 60 | [Od Jajka do…](od-jajka-do.md) | `odjajka` | Touching a picture advances a four-stage life cycle (a random one of three), with dots to jump back to reached stages. (planned) | planned |
+| 61 | [Pizza](pizza.md) | `pizza` | A multi-step meal: flatten dough, spread sauce, place toppings, bake and serve a pizza. (planned) | planned |
+| 62 | [Ślady na Piasku](slady-na-piasku.md) | `slady` | Dragging over sand or snow leaves one of three kinds of tracks and uncovers a hidden picture. (planned) | planned |
+| 63 | [Kulkowy Tor](kulkowy-tor.md) | `kulkowy` | Four ramps the child turns steer a dropped ball down to a basket without it ever getting stuck. (planned) | planned |
+| 64 | [Nalej Wody](nalej-wody.md) | `nalej` | A jug is dragged over glasses of three sizes and pours water that never spills. (planned) | planned |
+| 65 | [Wędkowanie](wedkowanie.md) | `wedkowanie` | Holding a finger lowers a hook, releasing pulls up a catch (fish, boot, star or bottle) into a bucket. (planned) | planned |
+| 66 | [Mój Dzień](moj-dzien.md) | `mojdzien` | Four tiles (morning, meal, play, night) each open a short scene of an animal's day. (planned) | planned |
+| 67 | [Naklejki](naklejki.md) | `naklejki` | Twelve stickers are dragged and placed freely on a scene, with no target and no goal. (planned) | planned |
+| 68 | [Rozmiar](rozmiar.md) | `rozmiar` | Five items of different sizes are dragged into one another to form a nested stack. (planned) | planned |
+
+## Planned activities
+
+Activities that are agreed but not built yet have a **placeholder**: a stub page in this folder (`Status: planned (not implemented yet)`, issue link, planned id and CSS prefix, the 21 template headings), a main README list item marked "(planned)", an index row with status `planned`, and a row in both analytics tables. Status values: `planned` = placeholder only, nothing in `js/activities.js`; `Complete` = implemented and documented. The current batch is [#211](https://github.com/BielinskiLukasz/child-page/issues/211) Mieszanie Kolorów, [#212](https://github.com/BielinskiLukasz/child-page/issues/212) Latarka, [#213](https://github.com/BielinskiLukasz/child-page/issues/213) Lustro, [#214](https://github.com/BielinskiLukasz/child-page/issues/214) Od Jajka do…, [#215](https://github.com/BielinskiLukasz/child-page/issues/215) Pizza, [#216](https://github.com/BielinskiLukasz/child-page/issues/216) Ślady na Piasku, [#217](https://github.com/BielinskiLukasz/child-page/issues/217) Kulkowy Tor, [#218](https://github.com/BielinskiLukasz/child-page/issues/218) Nalej Wody, [#219](https://github.com/BielinskiLukasz/child-page/issues/219) Wędkowanie, [#220](https://github.com/BielinskiLukasz/child-page/issues/220) Mój Dzień, [#221](https://github.com/BielinskiLukasz/child-page/issues/221) Naklejki, [#222](https://github.com/BielinskiLukasz/child-page/issues/222) Rozmiar.
+
+**Filling a placeholder.** The implementing pull request edits only its own lines: its stub page (replace the body from the template, change the status line to `Status: implemented`), its main README list line (remove "(planned)", refine the sentence), its index row (status `Complete`, remove "(planned)" from the description) and its two analytics rows (remove "(planned)", correct what it reports). It changes no other activity's text and no shared counter (there is none: intros say "all activities listed"). Placeholders do not depend on implementation order; an activity built out of order keeps its reserved number.
+
+**Dropping or deferring an idea.** Remove its placeholder in one commit touching only its own lines (stub page, list item, index row, both analytics rows). Numbers are not closed up: the number stays a visible gap, so no other row changes. A new activity outside this batch is appended after the last row with the next free number.
+
+**Checks.** A planned item has no entry in `js/activities.js`, so any check that compares the docs index with the menu (see [#201](https://github.com/BielinskiLukasz/child-page/issues/201)) must skip rows whose status is `planned` and exclude them from the implemented count.
 
 Template for new activities: [ACTIVITY_TEMPLATE.md](ACTIVITY_TEMPLATE.md).
 
-**Adding an activity:** write its document from the template, add its row to this index (and bump the activity count and analytics status below where they are stated), then add one linked one-line item (`N. [**Name**](docs/activities/<file>.md) – <one sentence, no numeric parameters>`) to the Activities list in the main [README](../../README.md) and update the count word in its intro. Details belong only in the document.
+**Adding an activity:** write its document from the template, add its row to this index (there is no count to bump; if it calls `Analytics`, update its analytics row), then add one linked one-line item (`N. [**Name**](docs/activities/<file>.md) – <one sentence, no numeric parameters>`) to the Activities list in the main [README](../../README.md) (the intro states no count). Details belong only in the document. An activity that already has a placeholder follows the rules below instead.

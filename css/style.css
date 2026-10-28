@@ -1006,3 +1006,15 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .sm-lt:focus-visible, .sm-kb:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
 .stage .sm-svg, .sm-svg { position: absolute; left: 0; top: 0; display: block; overflow: visible; pointer-events: none; will-change: transform; }
 .sm-kb { position: absolute; left: 0; top: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; will-change: transform; -webkit-tap-highlight-color: transparent; }
+
+/* Latarka */
+.fl { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; cursor: none;
+  --fl-x: 50%; --fl-y: 50%; --fl-r: 90px; --fl-a: .85;
+  background: linear-gradient(#f6e3ef 0 62%, #e9d6b8 62% 66%, #f3e6cf 66%); }
+.fl:focus-visible { outline: 4px solid #8f7fd1; outline-offset: -4px; }
+.fl-dark { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at var(--fl-x) var(--fl-y), rgba(255, 238, 176, .22) 0, rgba(255, 238, 176, 0) var(--fl-r)),
+    radial-gradient(circle at var(--fl-x) var(--fl-y), rgba(26, 22, 56, 0) calc(var(--fl-r) * .45), rgba(26, 22, 56, var(--fl-a)) var(--fl-r)); }
+.fl-items { position: absolute; inset: 0; pointer-events: none; }
+.fl-item { position: absolute; display: block; opacity: 0; pointer-events: none; filter: drop-shadow(0 3px 3px rgba(61, 58, 79, .25)); }
+.stage .fl-item svg, .fl-item svg { width: 100%; height: 100%; display: block; overflow: visible; }

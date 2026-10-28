@@ -39,13 +39,13 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Rasy Piesków** | each dog touch and navigation with the breed (`track('interaction', { variant })`) | None |
 | **Mieszanie Kolorów** (planned) | each blob drop (`track('interaction')`, variant = colour) | each mix (`complete()`), open-ended |
 | **Latarka** | each first reveal of an item (`track('interaction', { variant })`, variant = item); beam moves are not reported | Each fully lit room (`complete()`), open-ended |
-| **Lustro** (planned) | each stroke (`track('interaction')`, variant = outline) | each glow-and-next picture (`complete()`), open-ended |
+| **Lustro** | each stroke (`track('interaction')`, variant = outline) | each glow-and-next picture (`complete()`), open-ended |
 | **Od Jajka do…** | each advance (`track('interaction')`, variant = cycle and stage) | each cycle that reaches its last stage (`complete()`) |
 | **Pizza** (planned) | each topping placement and the oven touch (`track('interaction')`, variant = topping) | each served pizza (`complete()`) |
 | **Ślady na Piasku** (planned) | each stroke start (`track('interaction')`, variant = track type) | each revealed picture (`complete()`) |
-| **Kulkowy Tor** (planned) | each ramp turn and each drop (`track('interaction')`, variant = ramp or ball) | each ball in the basket (`complete()`) |
+| **Kulkowy Tor** | each ramp turn and each drop (`track('interaction')`, variant = ramp or ball) | each ball in the basket (`complete()`) |
 | **Nalej Wody** (planned) | each pour start (`track('interaction')`, variant = glass size) and each filled glass | each full set of glasses (`complete()`) |
-| **Wędkowanie** (planned) | each lower action (`track('interaction')`, variant = catch) | each five-catch set (`complete()`) |
+| **Wędkowanie** | each lowering (`track('interaction', { variant })`, variant = catch kind) | Each five-catch set (`complete()`), open-ended |
 | **Mój Dzień** (planned) | each scene start (`track('interaction')`, variant = tile) | each set of four scenes seen (`complete()`) |
 | **Naklejki** (planned) | each placement (`track('interaction')`, variant = sticker) | none, open-ended |
 | **Rozmiar** (planned) | each nest (`track('interaction')`, variant = item size) | each completed stack (`complete()`) |
@@ -116,13 +116,13 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 56 | [Lot na Smoku](smok.md) | `smok` | A friendly dragon with a rider flies over a scrolling land that changes between meadow, snow and sea; the child steers it with a finger and a tap makes it breathe a little fire to light drifting lanterns. | Complete |
 | 57 | [Mieszanie Kolorów](mieszanie-kolorow.md) | `mieszanie` | Three primary-colour blobs are dragged into a pot, where the colours mix into a new one. (planned) | planned |
 | 58 | [Latarka](latarka.md) | `latarka` | A torch beam that follows the finger reveals hidden animals and toys in a dark room; when all six are found the room lights up and a new one follows. | Complete |
-| 59 | [Lustro](lustro.md) | `lustro` | Painting on one half of a butterfly, house or tree is mirrored on the other half. (planned) | planned |
+| 59 | [Lustro](lustro.md) | `lustro` | Painting on one half of a butterfly, house or tree is mirrored on the other half. | Complete |
 | 60 | [Od Jajka do…](od-jajka-do.md) | `odjajka` | Touching a picture advances a four-stage life cycle (a random one of three), with dots to jump back to reached stages. | Complete |
 | 61 | [Pizza](pizza.md) | `pizza` | A multi-step meal: flatten dough, spread sauce, place toppings, bake and serve a pizza. (planned) | planned |
 | 62 | [Ślady na Piasku](slady-na-piasku.md) | `slady` | Dragging over sand or snow leaves one of three kinds of tracks and uncovers a hidden picture. (planned) | planned |
-| 63 | [Kulkowy Tor](kulkowy-tor.md) | `kulkowy` | Four ramps the child turns steer a dropped ball down to a basket without it ever getting stuck. (planned) | planned |
+| 63 | [Kulkowy Tor](kulkowy-tor.md) | `kulkowy` | Four ramps the child turns steer a dropped ball down to a basket without it ever getting stuck. | Complete |
 | 64 | [Nalej Wody](nalej-wody.md) | `nalej` | A jug is dragged over glasses of three sizes and pours water that never spills. (planned) | planned |
-| 65 | [Wędkowanie](wedkowanie.md) | `wedkowanie` | Holding a finger lowers a hook, releasing pulls up a catch (fish, boot, star or bottle) into a bucket. (planned) | planned |
+| 65 | [Wędkowanie](wedkowanie.md) | `wedkowanie` | Holding a finger lowers a hook, releasing pulls up a catch (fish, boot, star or bottle) into a bucket; five catches make the bucket glow and a new pond fill. | Complete |
 | 66 | [Mój Dzień](moj-dzien.md) | `mojdzien` | Four tiles (morning, meal, play, night) each open a short scene of an animal's day. (planned) | planned |
 | 67 | [Naklejki](naklejki.md) | `naklejki` | Twelve stickers are dragged and placed freely on a scene, with no target and no goal. (planned) | planned |
 | 68 | [Rozmiar](rozmiar.md) | `rozmiar` | Five items of different sizes are dragged into one another to form a nested stack. (planned) | planned |

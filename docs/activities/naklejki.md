@@ -27,7 +27,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 ## 3. Activity flow
 
-1. A scene (meadow, sea or sky, chosen at random) fills most of the screen; below it (portrait) or to its right (landscape) is a tray of twelve stickers, each 64 px.
+1. A scene (meadow, sea or sky, chosen at random) fills most of the screen; below it (portrait) or to its right (landscape) is a tray of twelve stickers, each 64 px (96 px once placed in the scene).
 2. The child drags a sticker onto the scene and lets go. It appears with a short pop and then keeps a gentle loop (sway, float, twinkle, ...).
 3. The same sticker can be placed again and again, up to 20 stickers on the scene. When 20 are placed the tray fades and gets a dashed outline, and further drops simply return to the tray.
 4. Dragging a placed sticker moves it; letting go on the tray removes it; tapping it makes it wiggle once.
@@ -58,7 +58,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 ## 6. Accessibility and usability
 
 - Input: touch, mouse, keyboard. Tray stickers and placed stickers are buttons (Tab). On a tray sticker Enter/Space places it in the centre of the scene and moves the focus to it; on a placed sticker arrows move it (5% of the free range per press), Enter/Space wiggles it and Delete/Backspace removes it.
-- Targets: tray stickers and placed stickers are 64 px, the new-scene button 56 px; the scene starts 72 px below the top so the fixed Back button is never covered.
+- Targets: tray stickers are 64 px and placed stickers 96 px, the new-scene button 56 px; the scene starts 72 px below the top so the fixed Back button is never covered.
 - Colour is not the only cue: every sticker has its own shape; the "full" state is shown by a faded tray with a dashed outline.
 - Reduced motion: the loops and the pop are CSS animations that the global rule disables; every state (placed, removed, new scene) is still reached through timers and base styles. Every loop is 1.4 s or longer (nothing flashes; the sun turns once per 14 s).
 - Only the first pointer drags; a second finger is ignored.
@@ -71,7 +71,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 ## 8. Configuration
 
-No external configuration. Constants at the top of `js/naklejki.js`: `SIZE` (64), `MAX` (20), `FADE_MS` (800), `TAP_PX` (6), `STEP` (0.05), `RETURN_MS` (260) and the `KINDS` list (picture, Polish label, loop motion).
+No external configuration. Constants at the top of `js/naklejki.js`: `SIZE` (96, placed sticker), `MAX` (20), `FADE_MS` (800), `TAP_PX` (6), `STEP` (0.05), `RETURN_MS` (260) and the `KINDS` list (picture, Polish label, loop motion).
 
 ## 9. Assets
 
@@ -102,7 +102,7 @@ Calls are wrapped in try/catch; nothing is stored by the activity.
 
 - **Entry point:** `mount(container)` overrides `mount` of the `naklejki` entry; the root is attached with `container.appendChild` before anything is measured; it returns a cleanup function that removes listeners and timers.
 - **Rendering:** `div.st > div.st-scene (two background layers + div.st-items)`, `div.st-tray` of twelve buttons, `button.st-new`. Placed stickers are `button.st-item` with three nested spans (pop, wiggle, loop) so the animations do not fight. SVG sizing uses `.stage .st-svg`.
-- **Model:** each sticker is `{kind, fx, fy}` with `fx, fy` in 0..1 of the free range (`left = (100% - 64px) * fx`), so no resize code is needed.
+- **Model:** each sticker is `{kind, fx, fy}` with `fx, fy` in 0..1 of the free range (`left = (100% - 96px) * fx`), so no resize code is needed.
 - **Drag:** a pointerdown on a sticker arms a drag; after 6 px a fixed-position ghost copy follows the pointer (the placed original is hidden); on release the ghost centre decides: scene = place/move, tray = remove, elsewhere = fly back.
 
 ## 15. Responsive layout and coordinate system

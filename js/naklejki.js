@@ -1,4 +1,4 @@
-// Activity "Naklejki": a tray of twelve stickers (64 px each) and a big scene (meadow, sea or sky, a random order in which every one comes
+// Activity "Naklejki": a tray of twelve stickers (64 px each, 96 px once placed) and a big scene (meadow, sea or sky, a random order in which every one comes
 // once before any repeats). A sticker dragged from the tray and released on the scene is placed with a pop and then keeps a gentle looping
 // motion (every cycle is 1.4 s or longer); the same sticker can be placed many times, up to 20 on the scene. Releasing on the tray (or
 // anywhere else) sends it back; a tap on a placed sticker makes it wiggle once; dragging a placed sticker onto the tray removes it. The round
@@ -9,7 +9,7 @@
 // everything is placed and shown, just without the movement.
 // Usage metrics: track('interaction', {variant: '<sticker>'}) per placement from the tray; there is no completion.
 (function () {
-  var SIZE = 64, MAX = 20, FADE_MS = 800, TAP_PX = 6, STEP = 0.05, RETURN_MS = 260;
+  var SIZE = 96, MAX = 20, FADE_MS = 800, TAP_PX = 6, STEP = 0.05, RETURN_MS = 260;
   var SCENES = ['meadow', 'sea', 'sky'];
   var lastScene = null; // last background shown in this page session (so a new launch starts on a different one)
 
@@ -57,7 +57,7 @@
     var items = [];                  // { kind, fx, fy, el }
     var queue = [], current = null;
     var drag = null;                 // active pointer drag: { pid, kind, item, sx, sy, ox, oy, ghost, from }
-    var busy = false, timers = [], ghostsLeft = [], alive = true;
+    var busy = false, timers = [], alive = true;
 
     function later(fn, ms) {
       var t = setTimeout(function () { timers.splice(timers.indexOf(t), 1); fn(); }, ms);
@@ -118,7 +118,7 @@
       items.push(it);
       var a = el.querySelector('.st-a');
       a.classList.add('st-pop');
-      a.addEventListener('animationend', function () { a.classList.remove('st-pop'); });
+      later(function () { a.classList.remove('st-pop'); }, 400);   // animationend never fires under reduced motion
       refreshFull();
       return it;
     }
@@ -133,7 +133,7 @@
       b.classList.remove('st-wig');
       void b.offsetWidth;
       b.classList.add('st-wig');
-      b.addEventListener('animationend', function done() { b.classList.remove('st-wig'); b.removeEventListener('animationend', done); });
+      later(function () { b.classList.remove('st-wig'); }, 550);   // animationend never fires under reduced motion
     }
     function itemOf(el) {
       for (var i = 0; i < items.length; i++) { if (items[i].el === el) { return items[i]; } }
@@ -187,11 +187,9 @@
     }
     function flyBack(g, rect, done) {
       g.style.transition = 'transform ' + RETURN_MS + 'ms ease-out';
-      g.style.transform = 'translate(' + rect.left + 'px,' + rect.top + 'px)';
-      ghostsLeft.push(g);
+      g.style.transform = 'translate(' + (rect.left + (rect.width - SIZE) / 2) + 'px,' + (rect.top + (rect.height - SIZE) / 2) + 'px)';
       later(function () {
         if (g.parentNode) { g.parentNode.removeChild(g); }
-        ghostsLeft.splice(ghostsLeft.indexOf(g), 1);
         if (done) { done(); }
       }, RETURN_MS);
     }

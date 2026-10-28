@@ -70,7 +70,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 61. [**Pizza**](docs/activities/pizza.md) – Make a pizza step by step: roll the dough, add sauce and toppings, bake it. (planned)
 62. [**Ślady na Piasku**](docs/activities/slady-na-piasku.md) – Leave paw prints, footprints or a wavy line on sand or snow to uncover a picture. (planned)
 63. [**Kulkowy Tor**](docs/activities/kulkowy-tor.md) – Turn the ramps and drop a ball to send it down to the basket. (planned)
-64. [**Nalej Wody**](docs/activities/nalej-wody.md) – Pour water from a jug into glasses of different sizes without spilling. (planned)
+64. [**Nalej Wody**](docs/activities/nalej-wody.md) – Pour water from a jug into glasses of different sizes without spilling.
 65. [**Wędkowanie**](docs/activities/wedkowanie.md) – Hold to lower the hook, release to pull up a catch into the bucket. (planned)
 66. [**Mój Dzień**](docs/activities/moj-dzien.md) – Touch morning, meal, play and night tiles to see an animal's day. (planned)
 67. [**Naklejki**](docs/activities/naklejki.md) – Place stickers anywhere on a scene to make a picture. (planned)
@@ -123,7 +123,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Pizza (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Ślady na Piasku (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Kulkowy Tor (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
-| Nalej Wody (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
+| Nalej Wody | interaction variants (glass size at each pour start, `<size>-full` per filled glass) plus `complete()` per full set | (a) yes, per full set, but the activity stays open-ended |
 | Wędkowanie (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Mój Dzień (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Naklejki (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |

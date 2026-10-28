@@ -21,13 +21,13 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 ## 3. Activity flow
 
-1. The child opens the tile; an empty rocket outline with four dashed slots (nose, body, fins, engine) stands on a sky background and a tray holds 12 part pictures in a random order.
+1. The child opens the tile; an empty rocket outline with four dashed slots (nose, body, fins, engine) stands on a sky background and a tray holds 12 part pictures grouped by kind (nose, body, fins, engine: one column in portrait, one row in landscape).
 2. Interactions: the child drags a part onto its slot (a glowing outline appears when the part is over its slot); it snaps in with a soft pop and stays in the tray so it can be swapped for another variant.
 3. When all four slots are full a large glowing launch button appears beside the rocket.
 4. Tapping launch hides the tray and moves the rocket to the launch pad; the numerals 3, 2, 1 appear one second each.
-5. The rocket flies up for 9 s through the sky, which darkens into a starry night, the stars drift down and the Moon surface slides into view.
+5. The rocket flies up for 9 s through the sky, which first stays blue, then darkens into a starry night; only once the sky is dark does the Moon surface slide in from the top.
 6. The rocket lands on the Moon in 2 s; an astronaut appears next to it and waves for 4 s.
-7. The scene fades out and a new empty assembly with a reshuffled tray fades in. Exit: Back button or browser Back.
+7. The scene fades out and a new empty assembly with a tray with the variants reshuffled within each group fades in. Exit: Back button or browser Back.
 
 ## 4. Rules and behavior
 
@@ -83,7 +83,7 @@ No external asset files. Everything (parts, rocket, flame, sky, stars, Moon, gro
 
 ## 10. Randomization and variants
 
-The 12 tray parts are shuffled (`Rand.shuffle` when available) at the start of every round; stars are placed randomly on each open. The rocket variants are chosen by the child.
+The 12 tray parts are grouped by kind (nose, body, fins, engine; a column each in portrait, a row each in landscape); the three variants inside each group are shuffled (`Rand.shuffle` when available) at the start of every round; stars are placed randomly on each open. The rocket variants are chosen by the child.
 
 ## 11. Progression and difficulty
 
@@ -135,6 +135,7 @@ No automated tests exist. Manual scenarios (none are claimed as done):
 - [ ] Rotate the device in the building and flight phases.
 - [ ] Leave and reopen ten times quickly.
 - [ ] Small screens (320 x 568, 568 x 320) and 1920 x 1080; reduced motion.
+- [ ] Regression (#208, parts and rocket invisible): at 320 x 568, 390 x 844 and 568 x 320 drop a part on its slot; it is visible on the rocket in its own shape and colour (a second variant replaces it). A wrong drop stays visible while drifting back and ends in its tray spot. Launch right after the last part; the rocket is visible during the count, the whole flight and landing, and the astronaut appears. Repeat with reduced motion and with a rotation in each phase.
 
 The PR for issue [#183](https://github.com/BielinskiLukasz/child-page/issues/183) reports a Node simulation with a stub DOM (placement, wrong drops, launch, the full timeline, reset, reduced motion, cleanup); no visual check was possible.
 
@@ -160,3 +161,6 @@ None currently planned.
 ## 21. Change history
 
 - Issue [#183](https://github.com/BielinskiLukasz/child-page/issues/183): initial activity.
+- Issue [#208](https://github.com/BielinskiLukasz/child-page/issues/208): placed parts and the rocket were invisible because the part groups in the rocket SVG were never filled; they are now filled on placement.
+- PR [#229](https://github.com/BielinskiLukasz/child-page/pull/229) feedback: tray parts are grouped by kind (column per kind in portrait, row per kind in landscape); variants shuffled within a group.
+- PR [#229](https://github.com/BielinskiLukasz/child-page/pull/229) feedback: the Moon surface appeared right after take-off (it started over the screen and covered the sky); the sky now stays blue, darkens into stars (progress 0.2-0.65), and the Moon slides in from above the screen only after progress 0.7.

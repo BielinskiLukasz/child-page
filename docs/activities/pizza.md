@@ -17,7 +17,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Description | The child rolls out dough, spreads sauce, drags on toppings and bakes the pizza; a friendly animal eats it. |
 | Category | Free creative play; multi-step; drag and drop |
 | Interaction type | Dragging (touch, mouse) with a keyboard alternative for every action |
-| Status | Implemented; enabled in the menu by default (appended last, no `defaultOff`) |
+| Status | Implemented; disabled in the menu by default (`defaultOff: true`), a parent enables it in Settings |
 | Source | [`js/pizza.js`](../../js/pizza.js), styles with prefix `pi-` in [`css/style.css`](../../css/style.css) |
 
 ## 2. Business purpose

@@ -1006,3 +1006,9 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .sm-lt:focus-visible, .sm-kb:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
 .stage .sm-svg, .sm-svg { position: absolute; left: 0; top: 0; display: block; overflow: visible; pointer-events: none; will-change: transform; }
 .sm-kb { position: absolute; left: 0; top: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; will-change: transform; -webkit-tap-highlight-color: transparent; }
+
+/* Wędkowanie */
+.wd { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; background: #cfeaf8; }
+.stage .wd-svg, .wd-svg { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; }
+.wd-rod { position: absolute; left: 0; top: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; pointer-events: none; }
+.wd-rod:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }

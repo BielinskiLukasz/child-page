@@ -1006,3 +1006,16 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .sm-lt:focus-visible, .sm-kb:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
 .stage .sm-svg, .sm-svg { position: absolute; left: 0; top: 0; display: block; overflow: visible; pointer-events: none; will-change: transform; }
 .sm-kb { position: absolute; left: 0; top: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; will-change: transform; -webkit-tap-highlight-color: transparent; }
+
+/* Mój Dzień */
+.md { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; overflow: hidden;
+  padding: calc(var(--safe-t) + 56px) calc(var(--safe-r) + 8px) calc(var(--safe-b) + 8px) calc(var(--safe-l) + 8px);
+  background: #eaf3fb; box-sizing: border-box; }
+.md-sky { position: relative; flex: 1 1 0; min-height: 0; width: 100%; max-width: 640px; border-radius: 24px; overflow: hidden; background: #cfe8f7; }
+.stage .md-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; overflow: visible; }
+.md-tiles { display: grid; grid-template-columns: repeat(4, minmax(72px, 1fr)); gap: 4px; width: 100%; max-width: 424px; flex: none; }
+.stage .md-tile { aspect-ratio: 1; min-width: 72px; min-height: 72px; padding: 0; border: 0; border-radius: 20px; cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.stage .md-tile svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.md-tile:focus-visible { outline: 4px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 7px #8f7fd1; }
+@media (max-height: 420px) { .md-tiles { max-width: 320px; } }

@@ -72,7 +72,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 63. [**Kulkowy Tor**](docs/activities/kulkowy-tor.md) – Turn the ramps and drop a ball to send it down to the basket. (planned)
 64. [**Nalej Wody**](docs/activities/nalej-wody.md) – Pour water from a jug into glasses of different sizes without spilling. (planned)
 65. [**Wędkowanie**](docs/activities/wedkowanie.md) – Hold to lower the hook, release to pull up a catch into the bucket. (planned)
-66. [**Mój Dzień**](docs/activities/moj-dzien.md) – Touch morning, meal, play and night tiles to see an animal's day. (planned)
+66. [**Mój Dzień**](docs/activities/moj-dzien.md) – Touch morning, meal, play and night tiles to see an animal's day.
 67. [**Naklejki**](docs/activities/naklejki.md) – Place stickers anywhere on a scene to make a picture. (planned)
 68. [**Rozmiar**](docs/activities/rozmiar.md) – Nest five items from the smallest to the biggest. (planned)
 
@@ -125,7 +125,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Kulkowy Tor (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Nalej Wody (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Wędkowanie (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
-| Mój Dzień (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
+| Mój Dzień | each scene start (`interaction`, variant = tile) | each set of four scenes seen (`complete()`) |
 | Naklejki (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Rozmiar (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 

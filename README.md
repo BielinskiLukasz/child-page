@@ -73,7 +73,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 64. [**Nalej Wody**](docs/activities/nalej-wody.md) – Pour water from a jug into glasses of different sizes without spilling.
 65. [**Wędkowanie**](docs/activities/wedkowanie.md) – Hold a finger to lower the hook, release to pull up a fish, boot, star or bottle into the bucket.
 66. [**Mój Dzień**](docs/activities/moj-dzien.md) – Touch morning, meal, play and night tiles to see an animal's day. (planned)
-67. [**Naklejki**](docs/activities/naklejki.md) – Place stickers anywhere on a scene to make a picture. (planned)
+67. [**Naklejki**](docs/activities/naklejki.md) – Place stickers anywhere on a scene to make a picture.
 68. [**Rozmiar**](docs/activities/rozmiar.md) – Nest five items from the smallest to the biggest.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
@@ -125,7 +125,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Nalej Wody | interaction variants (glass size at each pour start, `<size>-full` per filled glass) plus `complete()` per full set | (a) yes, per full set, but the activity stays open-ended |
 | Wędkowanie | catch kind per lowering (`track('interaction')`) plus `complete()` per five catches | (a) yes, per set of five, but the activity stays open-ended |
 | Mój Dzień (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
-| Naklejki (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
+| Naklejki | interaction variant = sticker, per placement | (b) no, the activity is open-ended |
 | Rozmiar | interaction variants (item size) plus `complete()` per stack | (a) yes, per stack, but the activity stays open-ended |
 
 All other activities use only the automatic tracking (c) and are open-ended. When an activity starts calling `Analytics`, add or update its row in this table and in the analytics status of [docs/activities/README.md](docs/activities/README.md).

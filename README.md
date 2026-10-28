@@ -114,7 +114,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 |---|---|---|
 | Puzzle, Pamięć, Kolorowe Kształty, Policz Razem | levels (`levelStart`, `levelComplete`) and `complete()` | (a) yes, with exit-before-completion and highest level |
 | Literki | letter shown (`levelStart`) and letter touched (`track('interaction')`) | (b) no, interaction variants only |
-| Plac Budowy, Lot na Smoku | machine operated / steering touch, fire puff and lit lantern (`track('interaction')`) | (b) no, interaction variants only |
+| Plac Budowy, Lot na Smoku, Rasy Piesków | machine operated / steering touch, fire puff and lit lantern / dog touch and navigation with the breed (`track('interaction')`) | (b) no, interaction variants only |
 | Psia Myjnia, Wyścig Piesków, Aport, Nakarm Pieska, Koparka, Zbuduj Rakietę, Zakupy | interaction variants (breed, scoop/tip, part/launch, product) plus `complete()` per round | (a) yes, per round, but the activity stays open-ended |
 | Mieszanie Kolorów (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Latarka (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |

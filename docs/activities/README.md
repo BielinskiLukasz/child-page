@@ -36,6 +36,7 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Zbuduj Rakietę** | each placed part and the launch (`track('interaction', { variant })`) | Each landing (`complete()`), open-ended |
 | **Zakupy** | each product put in the basket and each scan (`track('interaction', { variant })`, product id) | Each fully scanned list (`complete()`), open-ended |
 | **Lot na Smoku** | each steering touch, fire puff and lit lantern (`track('interaction', { variant })`) | None |
+| **Rasy Piesków** | each dog touch and navigation with the breed (`track('interaction', { variant })`) | None |
 | **Mieszanie Kolorów** (planned) | each blob drop (`track('interaction')`, variant = colour) | each mix (`complete()`), open-ended |
 | **Latarka** (planned) | each first reveal of an item (`track('interaction')`, variant = item); beam moves are not reported | each fully lit room (`complete()`) |
 | **Lustro** (planned) | each stroke (`track('interaction')`, variant = outline) | each glow-and-next picture (`complete()`), open-ended |
@@ -103,7 +104,7 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 44 | [Zegar z Kukułką](zegar-z-kukulka.md) | `kukulka` | A wooden cuckoo clock with three doors where a bird, a mouse and a bear peek out, plus turnable clock hands and a swinging pendulum. | Complete |
 | 45 | [Wiatraczki](wiatraczki.md) | `wiatraczki` | A meadow with nine different pinwheels that spin when tapped or swept by a finger gust, with a swaying windsock (disabled in the menu by default). | Complete |
 | 46 | [Kąpiel Zwierzątek](kapiel-zwierzatek.md) | `kapiel` | A spa for a random animal in three gentle finger-drag stages (scrub mud, shower off foam, towel-dry), ending with a small accessory and a glow. | Complete |
-| 47 | [Rasy Piesków](rasy-pieskow.md) | `rasy` | A gallery of eight dog breeds drawn at their relative sizes with Polish names; touching a dog makes it smile, wag its tail and flutter its ears. | Complete |
+| 47 | [Rasy Piesków](rasy-pieskow.md) | `rasy` | One dog at a time (eight breeds, random order, arrows or swipe) with its Polish name; it blinks and does idle actions, and a touch gives a random wag, jump, spin, bark, roll or paw. | Complete |
 | 48 | [Psia Myjnia](psia-myjnia.md) | `psiamyjnia` | A dog-only car wash: a muddy dog of a random breed is scrubbed clean with a finger, shakes, glows and shows its Polish name; the next breed arrives about 4 s later. | Complete |
 | 49 | [Wyścig Piesków](wyscig-pieskow.md) | `wyscig` | A friendly race of four random dog breeds: the child cheers dogs with taps for a short speed boost, all four finish together, wag, and confetti starts the next race. | Complete |
 | 50 | [Aport](aport.md) | `aport` | A park where the child drags and throws a ball and a random-breed dog fetches it, sits and wags; three fetches in a row earn a happy spin and a heart. | Complete |

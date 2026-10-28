@@ -1006,3 +1006,24 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .sm-lt:focus-visible, .sm-kb:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
 .stage .sm-svg, .sm-svg { position: absolute; left: 0; top: 0; display: block; overflow: visible; pointer-events: none; will-change: transform; }
 .sm-kb { position: absolute; left: 0; top: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; will-change: transform; -webkit-tap-highlight-color: transparent; }
+
+/* Pizza */
+.pi { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; background: #fbf1df; }
+.pi-wrap { position: absolute; top: var(--safe-t); left: var(--safe-l); right: var(--safe-r); bottom: var(--safe-b); }
+.pi-board { position: absolute; touch-action: none; cursor: pointer; border-radius: 50%; outline-offset: 3px; -webkit-tap-highlight-color: transparent; }
+.pi-board:focus-visible, .pi-tb:focus-visible, .pi-oven:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+.stage .pi-svg, .pi-svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.pi-cust { position: absolute; z-index: 3; pointer-events: none; opacity: 0; transition: opacity .5s linear; }
+.pi-cust.pi-in { opacity: 1; }
+.stage .pi-csvg, .pi-csvg { width: 100%; height: 100%; display: block; overflow: visible; }
+.pi-tray { position: absolute; width: 204px; height: 132px; display: grid; grid-template-columns: repeat(3, 64px); grid-auto-rows: 64px; gap: 4px; justify-content: center; align-content: center;
+  padding: 0; border-radius: 16px; background: #fff; box-shadow: 0 2px 8px rgba(120, 110, 160, .25); visibility: hidden; opacity: 0; transition: opacity .4s linear; }
+.pi-tray.pi-show { visibility: visible; opacity: 1; }
+.pi-tray.pi-full { opacity: .55; outline: 3px dashed #8f7fd1; }
+.pi-tb { width: 64px; height: 64px; padding: 0; border: 0; border-radius: 12px; background: #f6f2fb; cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.stage .pi-ico, .pi-ico { width: 100%; height: 100%; display: block; pointer-events: none; }
+.pi-ghost { position: fixed; left: 0; top: 0; z-index: 20; width: 64px; height: 64px; pointer-events: none; will-change: transform; filter: drop-shadow(0 4px 6px rgba(60, 50, 100, .3)); }
+.pi-oven { position: absolute; width: 72px; height: 72px; padding: 4px; border: 0; border-radius: 18px; background: #fff; cursor: pointer; visibility: hidden; opacity: 0;
+  box-shadow: 0 2px 8px rgba(120, 110, 160, .3); transition: opacity .4s linear; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.pi-oven.pi-show { visibility: visible; opacity: 1; }
+.stage .pi-ovsvg, .pi-ovsvg { width: 100%; height: 100%; display: block; pointer-events: none; }

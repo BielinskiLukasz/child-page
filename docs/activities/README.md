@@ -46,7 +46,7 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Kulkowy Tor** | each ramp turn and each drop (`track('interaction')`, variant = ramp or ball) | each ball in the basket (`complete()`) |
 | **Nalej Wody** | each pour start (`track('interaction')`, variant = glass size) and each filled glass | each full set of glasses (`complete()`) |
 | **Wędkowanie** | each lowering (`track('interaction', { variant })`, variant = catch kind) | Each five-catch set (`complete()`), open-ended |
-| **Mój Dzień** (planned) | each scene start (`track('interaction')`, variant = tile) | each set of four scenes seen (`complete()`) |
+| **Mój Dzień** | each scene start (`track('interaction')`, variant = tile) | each set of four scenes seen (`complete()`) |
 | **Naklejki** | each placement (`track('interaction')`, variant = sticker) | none, open-ended |
 | **Rozmiar** | each nest (`track('interaction')`, variant = item size) | each completed stack (`complete()`) |
 
@@ -123,7 +123,7 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 63 | [Kulkowy Tor](kulkowy-tor.md) | `kulkowy` | Four ramps the child turns steer a dropped ball down to a basket without it ever getting stuck. | Complete |
 | 64 | [Nalej Wody](nalej-wody.md) | `nalej` | A jug is dragged over glasses of three sizes and pours water that never spills. | Complete |
 | 65 | [Wędkowanie](wedkowanie.md) | `wedkowanie` | Holding a finger lowers a hook, releasing pulls up a catch (fish, boot, star or bottle) into a bucket; five catches make the bucket glow and a new pond fill. | Complete |
-| 66 | [Mój Dzień](moj-dzien.md) | `mojdzien` | Four tiles (morning, meal, play, night) each open a short scene of an animal's day. (planned) | planned |
+| 66 | [Mój Dzień](moj-dzien.md) | `mojdzien` | Four tiles (morning, meal, play, night) each open a short scene of an animal's day. | Complete |
 | 67 | [Naklejki](naklejki.md) | `naklejki` | Twelve stickers are dragged and placed freely on a scene, with no target and no goal. | Complete |
 | 68 | [Rozmiar](rozmiar.md) | `rozmiar` | Five items of different sizes are dragged into one another to form a nested stack. | Complete |
 

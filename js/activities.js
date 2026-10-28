@@ -146,6 +146,8 @@
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#fde9c8"/><circle cx="32" cy="32" r="22" fill="#e9c27f"/><circle cx="32" cy="32" r="17" fill="#d8422f"/><circle cx="25" cy="26" r="5" fill="#ffd54a"/><circle cx="38" cy="30" r="4" fill="#6fbf4a"/><circle cx="30" cy="39" r="4.5" fill="#3d3a4f"/><circle cx="41" cy="40" r="3" fill="#f7e8d6"/><circle cx="24" cy="36" r="2.5" fill="#fff0d0"/>', '#fde9c8') },
     { id: 'mieszanie', name: 'Mieszanie Kolorów',
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#fdf1d8"/><path d="M12 28Q10 52 24 56H40Q54 52 52 28Z" fill="#f4f2fb" stroke="#8d89a3" stroke-width="3"/><path d="M13 36Q11 52 24 55H40Q53 52 51 36Z" fill="#5cb85c"/><ellipse cx="32" cy="28" rx="20" ry="5" fill="#e4e0f1" stroke="#8d89a3" stroke-width="3"/><circle cx="20" cy="13" r="7" fill="#f7d54a"/><circle cx="44" cy="13" r="7" fill="#4f8fe0"/><circle cx="20" cy="13" r="2" fill="#fff"/><circle cx="42" cy="13" r="1.8" fill="#fff"/><circle cx="46" cy="13" r="1.8" fill="#fff"/>', '#fdf1d8') },
+    { id: 'mojdzien', name: 'Mój Dzień',
+      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#d8ecfb"/><rect x="8" y="8" width="22" height="22" rx="6" fill="#ffe9a8"/><circle cx="19" cy="19" r="5" fill="#ffb938"/><rect x="34" y="8" width="22" height="22" rx="6" fill="#f7c9d6"/><path d="M38 20h14q0 8-5 8h-4q-5 0-5-8z" fill="#e8605a"/><rect x="8" y="34" width="22" height="22" rx="6" fill="#c9e8c0"/><circle cx="19" cy="45" r="7" fill="#4fa3e0"/><rect x="34" y="34" width="22" height="22" rx="6" fill="#b9b3e0"/><path d="M47 38a8 8 0 1 0 5 12a6.5 6.5 0 0 1-5-12z" fill="#ffe9a8"/>', '#d8ecfb') },
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

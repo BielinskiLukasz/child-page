@@ -4,11 +4,13 @@
 // Then the pot empties over 1 s and the next round starts. When all three different mixes have been made once, a friendly animal in that colour
 // appears beside the pot for the 3 s glow. Keyboard: Tab to a blob, Enter/Space drops it into the pot.
 // One capped-dt rAF loop holds every state (nothing lives only in CSS keyframes), pauses while hidden and stops when idle.
-// Nothing is scored or stored. Usage metrics: track('interaction', {variant: colour}) per drop, complete() per mix; open-ended.
+// Every new mixed colour is remembered as an extra blob on a second shelf (the last SAVED_MAX, oldest replaced, in memory only) and can be mixed again:
+// the three primary pairs give orange/green/purple, any other pair gives the average colour with its own white mark. Nothing is scored or persisted.
+// Usage metrics: track('interaction', {variant: colour}) per accepted drop, complete() per mix; open-ended.
 (function () {
-  var MIX_S = 1.5, GLOW_S = 3.0, EMPTY_S = 1.0, BACK_S = 0.5, FLY_S = 0.25, FADE_S = 0.5, SPLASH_S = 0.7, SAME_S = 1.0;
+  var MIX_S = 1.5, GLOW_S = 3.0, EMPTY_S = 1.0, BACK_S = 0.5, FLY_S = 0.25, FADE_S = 0.5, SPLASH_S = 0.7, SAME_S = 1.0, SAVED_MAX = 4;
   var RGB = { red: [238, 90, 90], yellow: [247, 213, 74], blue: [79, 143, 224], orange: [245, 154, 59], green: [92, 184, 92], purple: [154, 99, 201] };
-  var NAMES = { red: 'Czerwona', yellow: 'Żółta', blue: 'Niebieska' };
+  var NAMES = { red: 'Czerwona', yellow: 'Żółta', blue: 'Niebieska', orange: 'Pomarańczowa', green: 'Zielona', purple: 'Fioletowa' };
   var MIX = { 'red+yellow': 'orange', 'blue+yellow': 'green', 'blue+red': 'purple' };
   var BASE = ['red', 'yellow', 'blue'];
   var BLOB_D = 'M32 6C50 6 58 22 56 36C54 52 42 58 30 58C14 58 6 46 8 32C10 18 18 6 32 6Z';
@@ -22,10 +24,18 @@
     green: '<path d="M13 38L23 27L33 40L43 27L52 37" ' + LINE + '/>',
     purple: '<circle cx="32" cy="34" r="13" ' + LINE + '/><circle cx="32" cy="34" r="3" fill="#fff"/>'
   };
-  function blobSvg(id) {
-    var c = RGB[id];
+  var EXTRA_MARKS = [
+    '<rect x="24" y="26" width="16" height="16" rx="3" ' + MARK + '/>',
+    '<path d="M32 24L42 42H22Z" ' + MARK + ' stroke-linejoin="round"/>',
+    '<path d="M32 22L43 34L32 46L21 34Z" ' + MARK + ' stroke-linejoin="round"/>',
+    '<path d="M32 23V45M21 34H43" ' + LINE + '/>',
+    '<path d="M14 36Q23 24 32 36T50 36" ' + LINE + '/>',
+    '<path d="M20 29Q32 49 44 29" ' + LINE + '/>'
+  ];
+  function blobSvg(id, ex) {
+    var c = ex && ex[id] ? ex[id].rgb : RGB[id], pat = ex && ex[id] ? ex[id].pat : PATTERN[id];
     return '<svg class="mx-svg" viewBox="0 0 64 64" aria-hidden="true"><path d="' + BLOB_D + '" fill="rgb(' + c.join(',') + ')" stroke="rgba(61,58,79,.3)" stroke-width="2"/>' +
-      '<ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#fff" opacity=".45" transform="rotate(-25 22 17)"/>' + PATTERN[id] + '</svg>';
+      '<ellipse cx="22" cy="17" rx="6" ry="3.5" fill="#fff" opacity=".45" transform="rotate(-25 22 17)"/>' + pat + '</svg>';
   }
   var EYES = '<circle cx="39" cy="48" r="3" fill="#3d3a4f"/><circle cx="61" cy="48" r="3" fill="#3d3a4f"/><path d="M43 60Q50 67 57 60" fill="none" stroke="#3d3a4f" stroke-width="2.5" stroke-linecap="round"/>';
   var ANIMALS = {
@@ -47,28 +57,35 @@
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
   function ease(t) { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); }
   function report(fn) { try { if (window.Analytics) { fn(window.Analytics); } } catch (e) { /* metrics must never break the activity */ } }
+  function dist(a, b) { return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]); }
   function css(c) { return 'rgb(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ')'; }
 
   function mount(container) {
     container.style.display = 'block';
     var root = document.createElement('div');
     root.className = 'mx';
-    root.innerHTML = '<div class="mx-shelf"></div><div class="mx-glow"></div><div class="mx-pot">' + POT_SVG + '</div>' +
+    root.tabIndex = -1;   // keeps focus on the activity when a replaced blob is removed
+    root.innerHTML = '<div class="mx-shelf2"></div><div class="mx-shelf"></div><div class="mx-glow"></div><div class="mx-pot">' + POT_SVG + '</div>' +
       '<div class="mx-res"></div><div class="mx-animal"></div><div class="mx-splash"></div>';
     container.appendChild(root);
-    var shelf = root.querySelector('.mx-shelf'), glow = root.querySelector('.mx-glow'), potEl = root.querySelector('.mx-pot');
+    var shelf = root.querySelector('.mx-shelf'), shelf2 = root.querySelector('.mx-shelf2'), glow = root.querySelector('.mx-glow'), potEl = root.querySelector('.mx-pot');
     var liq = root.querySelector('.mx-liq'), surf = root.querySelector('.mx-surf');
     var resEl = root.querySelector('.mx-res'), animalEl = root.querySelector('.mx-animal'), splashEl = root.querySelector('.mx-splash');
 
-    var items = BASE.map(function (id) {
+    var extra = {}, extraN = 0;   // mixed colours beyond the six built in: id -> { rgb, pat }
+    var items = [];
+    function rgbOf(id) { return extra[id] ? extra[id].rgb : RGB[id]; }
+    function addBlob(id, saved) {
       var b = document.createElement('button');
-      b.type = 'button'; b.className = 'mx-blob'; b.innerHTML = blobSvg(id);
-      b.setAttribute('aria-label', NAMES[id] + ' plama. Przeciągnij do garnka lub naciśnij Enter.');
+      b.type = 'button'; b.className = 'mx-blob'; b.innerHTML = blobSvg(id, extra);
+      b.setAttribute('aria-label', (NAMES[id] || 'Nowy kolor') + ' plama. Przeciągnij do garnka lub naciśnij Enter.');
       root.appendChild(b);
-      return { id: id, node: b, hx: 0, hy: 0, x: 0, y: 0, mode: 'home', t: 0, x0: 0, y0: 0, alpha: 1, fade: 0, scale: 1 };
-    });
+      var it = { id: id, node: b, saved: saved, sz: 80, hx: 0, hy: 0, x: 0, y: 0, mode: 'home', t: 0, x0: 0, y0: 0, alpha: 1, fade: 0, scale: 1 };
+      items.push(it); bind(it);
+      return it;
+    }
 
-    var W = 320, H = 568, bs = 80, shelfH = 100, pot = { x: 0, y: 0, w: 160, h: 136 };
+    var W = 320, H = 568, bs = 80, sbs = 56, shelfH = 100, stripH = 0, colW = 0, pot = { x: 0, y: 0, w: 160, h: 136 };
     // pot state: phase open|mix|glow|empty; first = colour already inside; lv = fill level 0..1 (tweened); col = liquid colour (numeric, tweened)
     var P = { phase: 'open', t: 0, first: null, result: null, set: {}, animal: null, same: -1,
       lv: 0, lv0: 0, lv1: 0, lvT: 1, lvD: 0.3, col: [255, 255, 255], c0: [255, 255, 255], c1: [255, 255, 255], cT: 1, cD: 0.25 };
@@ -81,23 +98,34 @@
     function layout() {
       var r = root.getBoundingClientRect();
       W = Math.max(280, r.width); H = Math.max(240, r.height);
-      bs = H < 400 ? 72 : clamp(Math.min(W / 3.6, 100), 80, 100);
-      shelfH = bs + 22;
-      var areaTop = 56, areaH = H - shelfH - areaTop;
+      var tall = H >= 400;
+      sbs = clamp(Math.min(W / SAVED_MAX - 8, 64), 56, 64);
+      colW = tall ? 0 : sbs + 16;   // landscape: saved blobs stand in a column at the right edge
+      var AW = W - colW;
+      bs = H < 400 ? 72 : clamp(Math.min(AW / 3.6, 100), 80, 100);
+      shelfH = bs + 22; stripH = tall ? sbs + 16 : 0;
+      var areaTop = 56, areaH = H - shelfH - stripH - areaTop;
       var pw = Math.min(W * 0.5, (areaH - 8) * 200 / 170);
       pw = Math.max(pw, Math.min(W * 0.31, areaH * 200 / 170));
-      pot.w = pw; pot.h = pw * 170 / 200; pot.x = (W - pw) / 2; pot.y = H - shelfH - 8 - pot.h;
+      pot.w = pw; pot.h = pw * 170 / 200; pot.x = (AW - pw) / 2; pot.y = H - shelfH - stripH - 8 - pot.h;
       shelf.style.height = shelfH + 'px';
+      shelf2.style.height = stripH + 'px'; shelf2.style.bottom = shelfH + 'px'; shelf2.style.display = stripH ? 'block' : 'none';
       potEl.style.width = pot.w + 'px'; potEl.style.height = pot.h + 'px';
       potEl.style.transform = 'translate(' + pot.x.toFixed(1) + 'px,' + pot.y.toFixed(1) + 'px)';
       var rs = clamp(pot.w * 0.5, 56, 130);
       resEl.style.width = resEl.style.height = rs + 'px';
-      var an = clamp(Math.min(pot.w * 0.55, (W - pot.w) / 2 - 6), 56, 120);
+      var an = clamp(Math.min(pot.w * 0.55, (AW - pot.w) / 2 - 6), 56, 120);
       animalEl.style.width = animalEl.style.height = an + 'px';
-      var slot = W / items.length;
+      var slot = AW / BASE.length, si = 0;
       items.forEach(function (it, i) {
-        it.hx = slot * (i + 0.5); it.hy = H - shelfH / 2 - 4;
-        it.node.style.width = it.node.style.height = bs + 'px';
+        if (!it.saved) { it.sz = bs; it.hx = slot * (i + 0.5); it.hy = H - shelfH / 2 - 4; }
+        else {
+          it.sz = sbs;
+          if (tall) { it.hx = W / SAVED_MAX * (si + 0.5); it.hy = H - shelfH - stripH / 2; }
+          else { it.hx = AW + colW / 2; it.hy = 12 + si * (sbs + 6) + sbs / 2; }
+          si++;
+        }
+        it.node.style.width = it.node.style.height = it.sz + 'px';
         if (it.mode === 'home' || it.mode === 'back') { it.mode = 'home'; it.x = it.hx; it.y = it.hy; }
       });
       render();
@@ -128,7 +156,7 @@
       var aa = P.animal ? (P.phase === 'glow' ? ease(P.t / 0.4) * (1 - ease((P.t - (GLOW_S - 0.4)) / 0.4)) : P.phase === 'mix' ? 0 : P.phase === 'empty' ? 0 : 0) : 0;
       var as = parseFloat(animalEl.style.width) || 80;
       animalEl.style.opacity = aa.toFixed(3); animalEl.style.visibility = aa <= 0.001 ? 'hidden' : 'visible';
-      var ax = pot.x + pot.w + 4; if (ax + as > W - 2) { ax = W - 2 - as; }
+      var ax = pot.x + pot.w + 4; if (ax + as > W - colW - 2) { ax = W - colW - 2 - as; }
       animalEl.style.transform = 'translate(' + ax.toFixed(1) + 'px,' + (pot.y + pot.h - as - Math.sin(bobT * 2.4) * 3 - (1 - aa) * 8).toFixed(1) + 'px)';
       // splash
       if (splash.t >= 0) {
@@ -142,41 +170,65 @@
       potEl.classList.toggle('mx-over', over);
       items.forEach(function (it) {
         it.node.style.opacity = it.alpha.toFixed(3);
-        it.node.style.visibility = it.alpha <= 0.001 ? 'hidden' : 'visible';
-        it.node.style.transform = 'translate(' + (it.x - bs / 2).toFixed(1) + 'px,' + (it.y - bs / 2 - (it.mode === 'drag' ? 10 : 0)).toFixed(1) + 'px) scale(' + it.scale.toFixed(3) + ')';
+        it.node.style.transform = 'translate(' + (it.x - it.sz / 2).toFixed(1) + 'px,' + (it.y - it.sz / 2 - (it.mode === 'drag' ? 10 : 0)).toFixed(1) + 'px) scale(' + it.scale.toFixed(3) + ')';
         it.node.classList.toggle('mx-lift', it.mode === 'drag');
       });
     }
 
     function setResult(id) {
-      P.result = id; resEl.innerHTML = blobSvg(id);
+      P.result = id; resEl.innerHTML = blobSvg(id, extra);
       resEl.setAttribute('role', 'img'); resEl.setAttribute('aria-label', 'Nowy kolor');
     }
     function startGlow() {
       P.phase = 'glow'; P.t = 0; P.same = -1;
       report(function (A) { A.complete(); });
-      P.set[P.result] = true; P.animal = null;
-      if (P.set.orange && P.set.green && P.set.purple) { P.animal = P.result; animalEl.innerHTML = ANIMALS[P.result]; P.set = {}; }
+      if (ANIMALS[P.result]) { P.set[P.result] = true; }
+      remember(P.result);
+      P.animal = null;
+      if (P.set.orange && P.set.green && P.set.purple && ANIMALS[P.result]) { P.animal = P.result; animalEl.innerHTML = ANIMALS[P.result]; P.set = {}; }
+    }
+    function remember(id) {
+      // a new mixed colour joins the second shelf; the oldest is replaced once SAVED_MAX are there
+      if (BASE.indexOf(id) >= 0 || items.some(function (o) { return o.id === id; })) { return; }
+      var saved = items.filter(function (o) { return o.saved; });
+      if (saved.length >= SAVED_MAX) {
+        var old = saved.filter(function (o) { return o.mode === 'home' && o !== (drag && drag.it); })[0];
+        if (!old) { return; }
+        if (document.activeElement === old.node) { root.focus(); }
+        items.splice(items.indexOf(old), 1); root.removeChild(old.node);
+      }
+      var it = addBlob(id, true);
+      it.alpha = 0; it.fade = 0.0001;
+      layout();
+    }
+    function mixResult(a, b) {
+      var key = [a, b].sort().join('+');
+      if (MIX[key]) { return MIX[key]; }
+      var ra = rgbOf(a), rb = rgbOf(b), m = [0, 1, 2].map(function (k) { return Math.round((ra[k] + rb[k]) / 2); }), id = null;
+      Object.keys(RGB).concat(Object.keys(extra)).forEach(function (k) { if (!id && dist(rgbOf(k), m) < 24) { id = k; } });
+      if (id) { return id; }
+      id = 'x' + m.join('_');
+      extra[id] = { rgb: m, pat: EXTRA_MARKS[extraN++ % EXTRA_MARKS.length] };
+      return id;
     }
     function drop(it) {
-      report(function (A) { A.track('interaction', { variant: it.id }); });
       if (P.phase !== 'open' || it.mode === 'fly') { giveBack(it); return; }
-      var m = mouth(), c = RGB[it.id];
+      report(function (A) { A.track('interaction', { variant: NAMES[it.id] ? it.id : 'mixed' }); });
+      var m = mouth(), c = rgbOf(it.id);
       it.mode = 'fly'; it.t = 0; it.x0 = it.x; it.y0 = it.y;
       splash.col = c; splash.x = m[0]; splash.y = m[1] + pot.h * 0.05; splash.t = -FLY_S;
       if (!P.first) { P.first = it.id; tweenCol(c, 0.3); tweenLv(0.4, 0.3); }
       else if (P.first === it.id) { tweenLv(0.55, 0.3); P.same = -FLY_S; }
       else {
-        var key = [P.first, it.id].sort().join('+');
-        setResult(MIX[key]);
-        P.phase = 'mix'; P.t = 0; tweenLv(0.55, 0.3); tweenCol(RGB[P.result], MIX_S);
+        setResult(mixResult(P.first, it.id));
+        P.phase = 'mix'; P.t = 0; tweenLv(0.55, 0.3); tweenCol(rgbOf(P.result), MIX_S);
       }
     }
     function giveBack(it) { it.mode = 'back'; it.t = 0; it.x0 = it.x; it.y0 = it.y; }
 
     function step(dt) {
       bobT += dt; P.t += dt;
-      if (P.phase === 'mix' && P.t >= MIX_S) { P.col = RGB[P.result].slice(); startGlow(); }
+      if (P.phase === 'mix' && P.t >= MIX_S) { P.col = rgbOf(P.result).slice(); startGlow(); }
       else if (P.phase === 'glow' && P.t >= GLOW_S) { P.phase = 'empty'; P.t = 0; tweenLv(0, EMPTY_S); }
       else if (P.phase === 'empty' && P.t >= EMPTY_S) { P.phase = 'open'; P.t = 0; P.first = null; P.result = null; P.animal = null; P.lv = 0; P.lvT = 1; P.col = [255, 255, 255]; P.cT = 1; }
       if (P.lvT < 1) { P.lvT = Math.min(1, P.lvT + dt / P.lvD); P.lv = P.lv0 + (P.lv1 - P.lv0) * ease(P.lvT); }
@@ -217,10 +269,10 @@
     function onResize() { layout(); start(); }
 
     function localPt(e) { var r = root.getBoundingClientRect(); return [clamp(e.clientX - r.left, 0, W), clamp(e.clientY - r.top, 0, H)]; }
-    items.forEach(function (it) {
+    function bind(it) {
       var b = it.node;
       b.addEventListener('pointerdown', function (e) {
-        if (drag || it.mode !== 'home' && it.mode !== 'back') { return; }
+        if (drag || it.alpha < 0.5 || it.mode !== 'home' && it.mode !== 'back') { return; }
         drag = { id: e.pointerId, it: it };
         it.mode = 'drag'; try { b.setPointerCapture(e.pointerId); } catch (x) { /* unsupported */ }
         var p = localPt(e); it.x = p[0]; it.y = p[1]; render(); e.preventDefault();
@@ -241,11 +293,12 @@
         drag = null; giveBack(it); render(); start();
       });
       b.addEventListener('click', function (e) {
-        if (e.detail !== 0 || it.mode !== 'home' && it.mode !== 'back') { return; }   // pointer taps are handled above
+        if (e.detail !== 0 || it.alpha < 0.5 || it.mode !== 'home' && it.mode !== 'back') { return; }   // pointer taps are handled above
         var m = mouth(); it.x = m[0]; it.y = m[1] + 20; drop(it); render(); start();
       });
-    });
+    }
 
+    BASE.forEach(function (id) { addBlob(id, false); });
     window.addEventListener('resize', onResize);
     window.addEventListener('orientationchange', onResize);
     document.addEventListener('visibilitychange', onVis);

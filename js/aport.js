@@ -8,7 +8,8 @@
 // Nothing is scored or stored. Usage metrics: track('interaction', {variant: breed}) per throw and per dog tap, complete() per fetch;
 // the activity stays open-ended.
 (function () {
-  var FLY_S = 0.8, GRAB_S = 0.35, DROP_S = 0.3, SPIN_S = 0.9, HEART_S = 2.2, WAG_S = 2.5, SPARK_S = 0.6, SPARKS = 8;
+  var FLY_S = 0.8, GRAB_S = 0.4, DROP_S = 0.3, SPIN_S = 0.9, HEART_S = 2.2, WAG_S = 2.5, SPARK_S = 0.6, SPARKS = 8;
+  var DIP_DEG = 30, CATCH_S = 0.2, HELD = 0.6;   // head dip at the catch, ball-to-mouth time, size of the held ball
   var SPEED_CAP = 0.6;                 // of the grass width per second
   var HOME = { x: 0.25, y: 0.76 };     // dog's starting spot (fractions of the grass)
   var KEY_STEP = 0.06, FETCHES_FOR_REWARD = 3, BALL = 56, NAME_H = 18;
@@ -55,7 +56,7 @@
 
     var W = 300, H = 400, dw = 90, dh = 75;
     var dog = { fx: HOME.x, fy: HOME.y, vx: 0, vy: 0, phase: 'sit', sx: 1, face: 1, breed: null, tx: 0, ty: 0, bias: 0.5, d0: 100, vmax: 100, vmaxT: 100,
-      wagT: 0, wagPhase: 0, spinT: 0, runT: 0, happy: false, grabT: 0, grabDur: GRAB_S, fetchT: 0, fetches: 0, tail: null, tailP: [0, 0], calm: null, hap: null };
+      wagT: 0, wagPhase: 0, spinT: 0, runT: 0, happy: false, grabT: 0, grabDur: GRAB_S, fetchT: 0, fetches: 0, tail: null, tailP: [0, 0], calm: null, hap: null, head: null, dip: 0 };
     var ball = { fx: 0, fy: 0, mode: 'lying', rest: true, t: 0, x0: 0, y0: 0, x1: 0, y1: 0, h: 0, cx: 0, cy: 0, lift: 0, dropX: 0, dropY: 0 };
     var key = { fx: 0.7, fy: 0.55 };
     var sparkT = -1, sparkX = 0, sparkY = 0, heartT = -1, heartX = 0, heartY = 0;
@@ -70,7 +71,7 @@
     function setBreed(d) {
       dog.breed = d; lastBreed = d.id;
       art.innerHTML = window.Dogs.draw(d.id);
-      dog.calm = art.querySelector('.dg-calm'); dog.hap = art.querySelector('.dg-happy'); dog.tail = art.querySelector('.dg-tail');
+      dog.calm = art.querySelector('.dg-calm'); dog.hap = art.querySelector('.dg-happy'); dog.tail = art.querySelector('.dg-tail'); dog.head = art.querySelector('.dg-head'); dog.lastTilt = NaN;
       dog.tailP = dog.tail ? [+dog.tail.getAttribute('data-px'), +dog.tail.getAttribute('data-py')] : [0, 0];
       nameEl.textContent = d.name;
       dogBtn.setAttribute('aria-label', 'Piesek: ' + d.name + '. Dotknij lub naciśnij Enter, aby zmienić rasę.');
@@ -97,30 +98,45 @@
     }
 
     // ---- rendering ------------------------------------------------------------------------------------------
-    function mouthPx() { var d = dogPx(); return [d[0] + dog.face * dw * 0.42, d[1] - dh * 0.3]; }
+    // Held-ball spot for a head tilt of deg (0 = level), in grass px: viewBox point -> art px -> mirrored by the current facing, plus bob.
+    function mouthAt(deg, sx, bob) {
+      var m = window.Dogs.mouthPoint(dog.breed.id, deg), d = dogPx();
+      return [d[0] + (m.x / 120 * dw - dw / 2) * sx, d[1] - dh * 0.3 + (m.y / 100 * dh - dh * 0.7) + bob];
+    }
+    function bobNow() { return dog.phase === 'run' || dog.phase === 'back' ? -Math.abs(Math.sin(dog.runT * 11)) * Math.min(1, Math.hypot(dog.vx, dog.vy) / 60) * 4 : 0; }
+    function mouthPx() { return mouthAt(dog.dip, dog.sx, bobNow()); }
+    function tiltHead(deg) {
+      if (!dog.head || deg === dog.lastTilt) { return; }
+      dog.lastTilt = deg;
+      var m = window.Dogs.mouthPoint(dog.breed.id, 0);
+      dog.head.setAttribute('transform', deg ? 'rotate(' + deg.toFixed(2) + ' ' + m.px + ' ' + m.py + ')' : '');
+    }
     function render() {
       var d = dogPx(), bw = +dogBtn.dataset.bw || 56;
       dogBtn.style.transform = 'translate(' + (d[0] - bw / 2).toFixed(1) + 'px,' + (d[1] - dh).toFixed(1) + 'px)';
-      var bob = dog.phase === 'run' || dog.phase === 'back' ? -Math.abs(Math.sin(dog.runT * 11)) * Math.min(1, Math.hypot(dog.vx, dog.vy) / 60) * 4 : 0;
+      var bob = bobNow();
+      tiltHead(dog.dip);
       var spin = dog.phase === 'spin' ? dog.spinT / SPIN_S : 0;
       var hop = spin ? -Math.sin(spin * Math.PI) * dh * 0.25 : 0;
       art.style.transform = 'translateY(' + (bob + hop).toFixed(1) + 'px) scaleX(' + dog.sx.toFixed(3) + ') rotate(' + (dog.sx < 0 ? -1 : 1) * (spin * 360).toFixed(1) + 'deg)';
       // ball
-      var gx = ball.fx * W, gy = ball.fy * H, cx, cy, lift = 0, sh = 1;
+      var gx = ball.fx * W, gy = ball.fy * H, cx, cy, lift = 0, sh = 1, bs = 1;
       if (ball.mode === 'fly') {
         var u = clamp(ball.t / FLY_S, 0, 1);
         gx = ball.x0 + (ball.x1 - ball.x0) * u; gy = ball.y0 + (ball.y1 - ball.y0) * u; lift = ball.h * 4 * u * (1 - u);
       } else if (ball.mode === 'drag') { lift = 10; }
       if (ball.mode === 'carried') {
-        var m = mouthPx(), g = ease(ball.t / GRAB_S);
-        cx = gx + (m[0] - gx) * g; cy = (gy - BALL / 2) + (m[1] - (gy - BALL / 2)) * g; sh = 1 - g;
-        if (ball.t >= GRAB_S) { cx = m[0]; cy = m[1]; sh = 0; }
+        var m = mouthPx(), g = ease(ball.t / CATCH_S);
+        cx = gx + (m[0] - gx) * g; cy = (gy - BALL / 2) + (m[1] - (gy - BALL / 2)) * g; sh = 1 - g; bs = 1 - (1 - HELD) * g;
+        if (ball.t >= CATCH_S) { cx = m[0]; cy = m[1]; sh = 0; bs = HELD; }
       } else if (ball.mode === 'drop') {
         var e = ease(ball.t / DROP_S), rp = restPx();
         cx = ball.dropX + (rp[0] - ball.dropX) * e; cy = ball.dropY + ((rp[1] - BALL / 2) - ball.dropY) * e - Math.sin(e * Math.PI) * 14;
-        sh = e;
+        sh = e; bs = HELD + (1 - HELD) * e;
       } else { cx = gx; cy = gy - BALL / 2 - lift; }
-      ballBtn.style.transform = 'translate(' + (cx - BALL / 2).toFixed(1) + 'px,' + (cy - BALL / 2).toFixed(1) + 'px)';
+      // while held the ball sits behind the dog's muzzle, so the front of the muzzle covers part of it
+      dogBtn.style.zIndex = ball.mode === 'carried' || ball.mode === 'drop' ? '2' : '';
+      ballBtn.style.transform = 'translate(' + (cx - BALL / 2).toFixed(1) + 'px,' + (cy - BALL / 2).toFixed(1) + 'px)' + (bs < 1 ? ' scale(' + bs.toFixed(3) + ')' : '');
       var sx = ball.mode === 'drop' ? restPx()[0] : gx, sy = ball.mode === 'drop' ? restPx()[1] : gy;
       shadow.style.opacity = (0.28 * sh * (1 - Math.min(0.7, lift / 160))).toFixed(3);
       shadow.style.transform = 'translate(' + (sx - 18).toFixed(1) + 'px,' + (sy - 5).toFixed(1) + 'px)';
@@ -151,14 +167,17 @@
       dog.vmaxT = Math.min(SPEED_CAP * W * 0.98, 1.1 * L / (T - 1.4));
       dog.vmaxT = Math.max(dog.vmaxT, 0.02 * W);
     }
+    function reduced() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+    function dipFor() { return reduced() ? 0 : DIP_DEG; }
     function aimAtBall() {
       var d = dogPx(), bx = ball.x1, by = ball.y1, dir = bx >= d[0] ? 1 : -1;
-      dog.tx = clamp(bx - dir * dw * 0.4, dw * 0.4, W - dw * 0.4); dog.ty = dogClampY(by);
+      dog.tx = clamp(bx - dir * (mouthAt(dipFor(), 1, 0)[0] - dogPx()[0]), dw * 0.4, W - dw * 0.4); dog.ty = dogClampY(by);
       dog.d0 = Math.max(60, Math.hypot(dog.tx - d[0], dog.ty - d[1]));
       dog.bias = (Math.random() < 0.5 ? -1 : 1) * 0.55;
       planSpeed();
     }
     function throwBall(x0, y0, x1, y1, viaKey) {
+      if (ball.mode === 'carried') { var m = mouthPx(); x0 = m[0]; y0 = m[1] + BALL / 2; }
       var a = ballClamp(x1, y1);
       ball.rest = false; ball.mode = 'fly'; ball.t = 0; ball.x0 = x0; ball.y0 = y0; ball.x1 = a[0]; ball.y1 = a[1];
       ball.h = Math.min(130, H * 0.3);
@@ -166,6 +185,9 @@
       report(function (A) { A.track('interaction', { variant: dog.breed.id }); });
       var first = dog.phase === 'sit';
       aimAtBall();
+      if (dog.phase === 'grab' || dog.phase === 'back') {   // thrown away from the mouth: the dog lets go and runs to the new spot
+        dog.phase = 'run'; dog.dip = 0; dog.vmax = Math.max(dog.vmax, Math.hypot(dog.vx, dog.vy)); setMood(false);
+      }
       if (first) { dog.fetchT = 0; dog.phase = 'run'; dog.vmax = dog.vmaxT; dog.runT = 0; setMood(false); rotTail(0); }
       start();
     }
@@ -192,7 +214,7 @@
       if (ball.mode === 'fly') {
         ball.t += dt;
         if (ball.t >= FLY_S) { ball.mode = 'lying'; ball.t = 0; }
-      } else if (ball.mode === 'carried') { ball.t = Math.min(ball.t + dt, GRAB_S); }
+      } else if (ball.mode === 'carried') { ball.t = Math.min(ball.t + dt, CATCH_S); }
       else if (ball.mode === 'drop') { ball.t += dt; if (ball.t >= DROP_S) { ball.mode = 'lying'; ball.rest = true; var p = restPx(); ball.fx = p[0] / W; ball.fy = p[1] / H; } }
       // dog
       if (dog.phase === 'run') {
@@ -206,7 +228,9 @@
         }
       } else if (dog.phase === 'grab') {
         dog.grabT += dt; dog.fetchT += dt;
+        dog.dip = Math.sin(Math.PI * Math.min(1, dog.grabT / (2 * CATCH_S))) * dipFor();   // head lowers to the ball and comes up with it
         if (dog.grabT >= dog.grabDur) {
+          dog.dip = 0;
           dog.phase = 'back'; dog.tx = HOME.x * W; dog.ty = HOME.y * H;
           var d0 = dogPx(); dog.d0 = Math.max(60, Math.hypot(dog.tx - d0[0], dog.ty - d0[1])); dog.bias = -dog.bias;
         }
@@ -280,7 +304,7 @@
       dragId = null; ball.mode = 'lying'; render(); start();
     });
     ballBtn.addEventListener('click', function (e) {
-      if (e.detail !== 0 || !ballActive()) { return; }  // pointer taps are handled by pointerdown/up
+      if (e.detail !== 0 || !(ballActive() || ball.mode === 'carried')) { return; }  // pointer taps are handled by pointerdown/up
       var p = ballClamp(ball.fx * W, ball.fy * H), t = ballClamp(key.fx * W, key.fy * H);
       throwBall(p[0], p[1], t[0], t[1], true);
     });
@@ -294,6 +318,10 @@
     ballBtn.addEventListener('blur', function () { grass.classList.remove('ap-kb'); });
     dogBtn.addEventListener('click', function () {
       report(function (A) { A.track('interaction', { variant: dog.breed.id }); });
+      if (ball.mode === 'carried') {   // the new dog sits at the start with the ball released beside it
+        ball.mode = 'lying'; ball.rest = true; var rp = restPx(); ball.fx = rp[0] / W; ball.fy = rp[1] / H; ball.t = 0;
+        dog.phase = 'sit'; dog.fx = HOME.x; dog.fy = HOME.y; dog.vx = dog.vy = 0; dog.dip = 0; dog.wagT = WAG_S; dog.grabT = 0;
+      }
       setBreed(pickBreed(dog.breed.id));
       var d = dogPx(); sparkX = d[0]; sparkY = d[1] - dh * 0.5; sparkT = 0;
       sparks.forEach(function (p) { p.node.style.display = ''; });

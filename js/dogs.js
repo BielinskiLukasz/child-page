@@ -3,6 +3,7 @@
 //   Dogs.LIST             [{ id, name, size }]  name = Polish parent-facing label, size = 'small' | 'medium' | 'large'
 //   Dogs.SCALE            { small: .78, medium: .89, large: 1 }  relative size of each size class
 //   Dogs.byId(id)         the entry above; an unknown id falls back to the first breed (no error)
+//   Dogs.mouthPoint(id, deg)  {x, y, px, py}: held-ball spot (viewBox, scaled; head tilted deg about the neck pivot px, py)
 //   Dogs.draw(id, opts)   SVG markup (viewBox 0 0 120 100). opts: { scale } overrides the size-class scale (1 = full size).
 //                         Separable parts carry classes so activities can animate them: dg-body, dg-legs, dg-tail
 //                         (pivot data-px/data-py), dg-ears (pivot data-px/data-py), dg-head, dg-calm / dg-happy (mouths;
@@ -103,5 +104,16 @@
     return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" class="dg-svg" aria-hidden="true"><g transform="' + tf + '">' + inner + '</g></svg>';
   }
 
-  window.Dogs = { LIST: LIST, SCALE: SCALE, byId: byId, draw: draw };
+  // Where a held ball sits: the front of the muzzle at jaw height, in the 120 x 100 viewBox after the size-class scale. The head can be
+  // tilted about the neck pivot (px, py, in the unscaled drawing, for the dg-head transform); `deg` tilts the point the same way.
+  function mouthPoint(id, deg) {
+    var b = DEFS[byId(id).id], sc = SCALE[b.size];
+    var hx = 14 + b.len + 5, hy = 92 - b.leg - b.h + 3, ny = hy + b.hr * 0.3;
+    var px = hx - b.hr * 0.4, py = hy + b.hr * 0.6, x = hx + b.hr * 0.7 + b.snout * 0.85, y = ny + 2;
+    var a = (deg || 0) * Math.PI / 180, c = Math.cos(a), s = Math.sin(a);
+    var rx = px + (x - px) * c - (y - py) * s, ry = py + (x - px) * s + (y - py) * c;
+    return { x: 60 + (rx - 60) * sc, y: 92 + (ry - 92) * sc, px: r1(px), py: r1(py) };
+  }
+
+  window.Dogs = { LIST: LIST, SCALE: SCALE, byId: byId, draw: draw, mouthPoint: mouthPoint };
 })();

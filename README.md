@@ -67,7 +67,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 58. [**Latarka**](docs/activities/latarka.md) – Move a torch beam through a dark room to find hidden animals and toys.
 59. [**Lustro**](docs/activities/lustro.md) – Paint on one half of a picture and the other half mirrors every stroke.
 60. [**Od Jajka do…**](docs/activities/od-jajka-do.md) – Touch to watch a life cycle change stage by stage.
-61. [**Pizza**](docs/activities/pizza.md) – Make a pizza step by step: roll the dough, add sauce and toppings, bake it. (planned)
+61. [**Pizza**](docs/activities/pizza.md) – Make a pizza step by step: roll the dough, add sauce and toppings, bake it.
 62. [**Ślady na Piasku**](docs/activities/slady-na-piasku.md) – Leave paw prints, footprints or a wavy line on sand or snow to uncover a picture.
 63. [**Kulkowy Tor**](docs/activities/kulkowy-tor.md) – Turn the ramps and drop a ball to send it down to the basket.
 64. [**Nalej Wody**](docs/activities/nalej-wody.md) – Pour water from a jug into glasses of different sizes without spilling.
@@ -119,7 +119,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Mieszanie Kolorów (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Lustro | see [docs/activities/README.md](docs/activities/README.md#analytics-status) | each glow-and-next picture |
 | Od Jajka do… | interaction variants (cycle and stage) plus `complete()` per cycle | (a) yes, per cycle, but the activity stays open-ended |
-| Pizza (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
+| Pizza | interaction variant = topping or oven, per placement or oven touch | (a) yes, `complete()` per served pizza |
 | Ślady na Piasku | see [docs/activities/README.md](docs/activities/README.md#analytics-status) | each uncovered picture |
 | Kulkowy Tor | see [docs/activities/README.md](docs/activities/README.md#analytics-status) | each ball in the basket |
 | Nalej Wody | interaction variants (glass size at each pour start, `<size>-full` per filled glass) plus `complete()` per full set | (a) yes, per full set, but the activity stays open-ended |

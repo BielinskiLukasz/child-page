@@ -1058,3 +1058,25 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   .mt { flex-direction: row; }
   .mt-board { width: min(calc(100% - 96px), calc((100dvh - var(--safe-t) - var(--safe-b) - 64px) * 400 / 360)); }
 }
+/* Lustro (lu-) */
+.lu { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; flex-direction: column; overflow: hidden;
+  padding: calc(var(--safe-t) + 64px) 8px calc(var(--safe-b) + 8px); box-sizing: border-box; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#efe6fa, #fdf3f7); }
+.lu-board { position: relative; flex: none; aspect-ratio: 1; width: min(100%, calc(100dvh - var(--safe-t) - var(--safe-b) - 64px - 140px)); touch-action: none; border-radius: 24px; outline: none; }
+.lu-board:focus-visible { box-shadow: 0 0 0 4px #8f7fd1; }
+.stage .lu-svg, .lu-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; overflow: visible; }
+.lu-canvas { position: absolute; left: 0; top: 0; display: block; pointer-events: none; }
+.lu-ring { position: absolute; transform: translate(-50%, -50%); border: 3px solid #5b5675; border-radius: 50%; box-sizing: border-box; pointer-events: none; opacity: 0; }
+.lu-board:focus-visible .lu-ring { opacity: .8; }
+.lu-ctrls { display: grid; grid-template-columns: repeat(4, 56px); gap: 6px; flex: none; }
+.lu-dot, .lu-wipe { width: 56px; height: 56px; padding: 0; border: 3px solid transparent; border-radius: 50%; background: #fff; cursor: pointer; box-sizing: border-box;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent; box-shadow: 0 2px 6px rgba(91, 86, 117, .25); }
+.lu-dot.lu-on { border-color: #5b5675; box-shadow: 0 0 0 3px #fff, 0 0 0 6px #8f7fd1; }
+.stage .lu-dotsvg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.lu-dot:focus-visible, .lu-wipe:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; }
+.lu-glow .lu-board { filter: drop-shadow(0 0 8px #ffe27a) drop-shadow(0 0 16px #ffd98a); }
+@media (orientation: landscape) {
+  .lu { flex-direction: row; padding: calc(var(--safe-t) + 8px) 8px calc(var(--safe-b) + 8px) 72px; gap: 12px; }
+  .lu-board { width: min(calc(100% - 192px), calc(100dvh - var(--safe-t) - var(--safe-b) - 16px)); }
+  .lu-ctrls { grid-template-columns: repeat(3, 56px); }
+}

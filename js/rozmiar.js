@@ -31,7 +31,7 @@
         '<circle cx="33" cy="36" r="1.8" fill="' + INK + '"/><circle cx="43" cy="36" r="1.8" fill="' + INK + '"/>' +
         '<circle cx="38" cy="72" r="15" fill="' + set.c2 + '"/><circle cx="38" cy="72" r="5.5" fill="' + set.c1 + '"/>';
     }
-    return '<svg class="rz-svg" viewBox="0 0 76 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">' + s + '</svg>';
+    return '<svg class="rz-svg" viewBox="0 0 76 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">' + s + '</svg>';
   }
   function smooth(t) { t = t < 0 ? 0 : t > 1 ? 1 : t; return t * t * (3 - 2 * t); }
   function report(fn) { try { if (window.Analytics) { fn(window.Analytics); } } catch (e) { /* metrics must never break the activity */ } }
@@ -93,7 +93,7 @@
     }
     function sizeItems() {
       items.forEach(function (it) {
-        it.H = BASE_H * k * Math.pow(RATIO, it.i); it.W = it.H * ASPECT;
+        it.H = BASE_H * k * Math.pow(RATIO, it.i); it.W = Math.max(56, it.H * ASPECT);
         it.el.style.width = it.W + 'px'; it.el.style.height = it.H + 'px';
         if (it.head) {
           it.head.style.width = headSize + 'px'; it.head.style.height = headSize + 'px';

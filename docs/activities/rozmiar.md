@@ -38,7 +38,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 | Rule | Detail |
 |---|---|
-| Sizes | Heights 56, 72, 92, 117, 150 px (ratio 1.28, i.e. at least 25% from item to item), scaled up together on bigger screens (never below 56 px). Width is 0.76 of the height. |
+| Sizes | Heights 56, 72, 92, 117, 150 px (ratio 1.28, i.e. at least 25% from item to item), scaled up together on bigger screens (never below 56 px). Width is 0.76 of the height, but never below 56 px (the smallest item gets a 56 px wide touch box; its drawing keeps its proportions, centred). |
 | Sets | 12 sets (6 cups, 6 dolls, each with its own colours) via `Rand.pickOne`, so the same set never comes twice in a row. The animal is random from `Animals.pick`. |
 | Scatter | Random order and jitter in rows (three rows of 2, 2, 1 in portrait; one row in landscape); no overlaps at 320x568 or 568x320. |
 | Nesting | The dragged item (with its contents) may be dropped on any bigger item whose box contains the dragged item's centre; the nearest such item wins. Items already inside the target are merged in size order, so a stack is always sorted. |

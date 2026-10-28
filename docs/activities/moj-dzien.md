@@ -25,7 +25,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 1. The activity opens with a calm animal in daylight and four tiles in a row at the bottom.
 2. Touching a tile starts that scene (6 s); the sky blends to the time of day over 1 s.
 3. Touching any tile during a scene restarts or replaces it; only one scene runs at a time.
-4. A scene that has played to the end counts as seen; the final frame stays until the next touch.
+4. A scene counts as seen as soon as it is started (a scene cut short still counts); the finale follows when the scene playing after all four were seen reaches its end; the final frame stays until the next touch.
 5. When all four have been seen, the tiles glow for 3 s and the animal waves; then a different animal and a new set begin.
 
 ## 4. Rules and behavior
@@ -39,7 +39,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 - Scene length `DUR = 6` s, finale `FINALE = 3` s, pose blend between scenes 0.35 s, sky blend 1 s.
 - Sky colours (top, bottom): morning `#b9dff5/#ffe0bd`, meal `#9fd3f3/#e4f3fb`, play `#a9d9f0/#fff0c4`, night `#2f3b78/#6f66ae`.
-- "Seen" means the scene played to its end; a scene cut short by another touch does not count. The set resets at the finale.
+- "Seen" means the scene was started, so a scene cut short by another touch still counts; the finale starts when a scene plays to its end after all four have been seen. The set resets at the finale.
 
 ## 5. Educational and developmental benefits
 

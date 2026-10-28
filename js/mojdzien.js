@@ -1,6 +1,6 @@
 // Activity "Mój Dzień": four tiles (sun, bowl, ball, moon) each play a 6 s scene of one random animal's day.
-// Tiles can be touched in any order; a touch during a scene restarts it (one scene at a time). When all four scenes have
-// played to the end, the tiles glow for 3 s while the animal waves, then a new animal and a new set begin.
+// Tiles can be touched in any order; a touch during a scene restarts it (one scene at a time). A scene counts as seen once
+// it has been started; when all four have been seen and the current scene has played to the end, the tiles glow for 3 s while the animal waves, then a new animal and a new set begin.
 // All motion comes from one capped-dt rAF loop (poses are pure functions of scene time), so it works under reduced motion.
 (function () {
   var DUR = 6, FINALE = 3, BLEND = 0.35, SKY_S = 1;
@@ -192,13 +192,13 @@
     function startScene(k) {
       if (pendingNew) { pendingNew = false; setAnimal(newAnimal()); }
       from = cur; blendT = 0; kind = k; t = 0; held = false; glowT = 0;
+      seen[k] = true;
       setSky(KINDS[k]);
       report(function (A) { A.track('interaction', { variant: KINDS[k] }); });
       kick();
     }
     function sceneDone() {
       if (kind >= 0 && kind <= 3) {
-        seen[kind] = true;
         if (seen.every(Boolean)) {
           seen = [false, false, false, false];
           pendingNew = true;

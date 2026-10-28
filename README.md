@@ -134,7 +134,7 @@ All other activities use only the automatic tracking (c) and are open-ended. Whe
 To view it: gear icon, parent gate, Settings, **Statystyki** (app metrics, ranking by active time, other rankings; filter: this session, today, 7 days, 30 days, all time). The same screen exports all stored aggregates as JSON (download or copy) and has "Wyzeruj statystyki" (with confirmation) to delete everything.
 
 ## Playtime limit
-A gear icon on the main menu opens a parent gate (a simple sum) and then Settings: daily limit in minutes (default 20, or no limit) and a timer reset. The timer counts only visible activity time and resets each new day. An hourglass (no numbers) shows time left, content dims gently over the last 20%, and when time is up a sleeping-moon screen is shown.
+A gear icon on the main menu opens a parent gate (a simple sum) and then Settings: daily limit in minutes (default 20, or no limit) and a timer reset. The timer counts only visible activity time and resets each new day. An hourglass (no numbers) shows time left, content dims gently over the last 20%, and when time is up a sleeping-moon screen is shown. Settings and Statistics have the same round back arrow in the top-left corner as the activities (the text buttons at the bottom remain).
 
 ## Menu activities
 In Settings (behind the same gate) a parent can enable or disable each activity and reorder them with up/down buttons; "Przywróć domyślne" restores all of them in the original order. At least one activity always stays enabled, and disabled activities cannot be opened by any route (a stored or typed `#hash` shows the menu).

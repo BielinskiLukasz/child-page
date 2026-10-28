@@ -249,6 +249,7 @@
   gear.addEventListener('click', open);
   document.getElementById('gate-close').addEventListener('click', close);
   document.getElementById('settings-close').addEventListener('click', close);
+  document.getElementById('settings-back').addEventListener('click', close);
   overlay.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(); } });
   document.getElementById('gate-form').addEventListener('submit', function (e) {
     e.preventDefault();

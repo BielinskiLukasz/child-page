@@ -42,7 +42,10 @@
         <button id="gate-close" type="button">Zamknij</button>
       </form>
     </div>
-    <div id="settings-pane" class="panel" hidden>
+    <div id="settings-pane" class="panel has-back" hidden>
+      <button id="settings-back" class="back" type="button" aria-label="Powrót do menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
       <h2>Ustawienia</h2>
       <form id="settings-form">
         <label for="limit-minutes">Dzienny limit zabawy (minuty)</label>
@@ -67,7 +70,10 @@
       </section>
       <button id="stats-open" type="button" class="stats-open">Statystyki</button>
     </div>
-    <div id="stats-pane" class="panel stats" hidden>
+    <div id="stats-pane" class="panel stats has-back" hidden>
+      <button id="stats-back-top" class="back" type="button" aria-label="Powrót do ustawień">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
       <h2>Statystyki</h2>
       <p class="stats-note">Zapisane tylko na tym urządzeniu, anonimowo. Nic nie jest nigdzie wysyłane.</p>
       <div id="stats-periods" class="stats-periods" role="group" aria-label="Okres"></div>

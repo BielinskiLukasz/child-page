@@ -1044,6 +1044,19 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .stage .wd-svg, .wd-svg { position: absolute; left: 0; top: 0; display: block; width: 100%; height: 100%; }
 .wd-rod { position: absolute; left: 0; top: 0; padding: 0; border: 0; border-radius: 50%; background: transparent; pointer-events: none; }
 .wd-rod:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+/* Kulkowy Tor (mt-) */
+.mt { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; gap: 12px; flex-direction: column; overflow: hidden;
+  user-select: none; -webkit-user-select: none; background: linear-gradient(#dff1fb, #f8f3e1); }
+.mt-board { position: relative; aspect-ratio: 400 / 360; width: min(100%, calc((100dvh - var(--safe-t) - var(--safe-b) - 64px - 84px) * 400 / 360)); }
+.stage .mt-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border-radius: 24px; pointer-events: none; }
+.mt-rb { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 12px; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.mt-drop { width: 72px; height: 72px; padding: 0; border: 0; border-radius: 50%; background: #fff; cursor: pointer; touch-action: manipulation; box-shadow: 0 2px 8px rgba(91, 86, 117, .25); flex: none; }
+.stage .mt-dropsvg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.mt-rb:focus-visible, .mt-drop:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+.mt-glow .mt-track { filter: drop-shadow(0 0 6px #ffe27a) drop-shadow(0 0 10px #ffd98a); }
+@media (orientation: landscape) {
+  .mt { flex-direction: row; }
+  .mt-board { width: min(calc(100% - 96px), calc((100dvh - var(--safe-t) - var(--safe-b) - 64px) * 400 / 360)); }
 /* Lustro (lu-) */
 .lu { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; flex-direction: column; overflow: hidden;
   padding: calc(var(--safe-t) + 64px) 8px calc(var(--safe-b) + 8px); box-sizing: border-box; user-select: none; -webkit-user-select: none;

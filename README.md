@@ -68,7 +68,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 59. [**Lustro**](docs/activities/lustro.md) – Paint on one half of a picture and the other half mirrors every stroke.
 60. [**Od Jajka do…**](docs/activities/od-jajka-do.md) – Touch to watch a life cycle change stage by stage.
 61. [**Pizza**](docs/activities/pizza.md) – Make a pizza step by step: roll the dough, add sauce and toppings, bake it. (planned)
-62. [**Ślady na Piasku**](docs/activities/slady-na-piasku.md) – Leave paw prints, footprints or a wavy line on sand or snow to uncover a picture. (planned)
+62. [**Ślady na Piasku**](docs/activities/slady-na-piasku.md) – Leave paw prints, footprints or a wavy line on sand or snow to uncover a picture.
 63. [**Kulkowy Tor**](docs/activities/kulkowy-tor.md) – Turn the ramps and drop a ball to send it down to the basket.
 64. [**Nalej Wody**](docs/activities/nalej-wody.md) – Pour water from a jug into glasses of different sizes without spilling. (planned)
 65. [**Wędkowanie**](docs/activities/wedkowanie.md) – Hold a finger to lower the hook, release to pull up a fish, boot, star or bottle into the bucket.
@@ -120,7 +120,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Lustro | see [docs/activities/README.md](docs/activities/README.md#analytics-status) | each glow-and-next picture |
 | Od Jajka do… | interaction variants (cycle and stage) plus `complete()` per cycle | (a) yes, per cycle, but the activity stays open-ended |
 | Pizza (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
-| Ślady na Piasku (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
+| Ślady na Piasku | see [docs/activities/README.md](docs/activities/README.md#analytics-status) | each uncovered picture |
 | Kulkowy Tor | see [docs/activities/README.md](docs/activities/README.md#analytics-status) | each ball in the basket |
 | Nalej Wody (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Wędkowanie | catch kind per lowering (`track('interaction')`) plus `complete()` per five catches | (a) yes, per set of five, but the activity stays open-ended |

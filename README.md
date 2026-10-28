@@ -66,7 +66,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 57. [**Mieszanie Kolorów**](docs/activities/mieszanie-kolorow.md) – Mix the three primary colours in a pot and see what new colour appears. (planned)
 58. [**Latarka**](docs/activities/latarka.md) – Move a torch beam through a dark room to find hidden animals and toys. (planned)
 59. [**Lustro**](docs/activities/lustro.md) – Paint on one half of a picture and the other half mirrors every stroke. (planned)
-60. [**Od Jajka do…**](docs/activities/od-jajka-do.md) – Touch to watch a life cycle change stage by stage. (planned)
+60. [**Od Jajka do…**](docs/activities/od-jajka-do.md) – Touch to watch a life cycle change stage by stage.
 61. [**Pizza**](docs/activities/pizza.md) – Make a pizza step by step: roll the dough, add sauce and toppings, bake it. (planned)
 62. [**Ślady na Piasku**](docs/activities/slady-na-piasku.md) – Leave paw prints, footprints or a wavy line on sand or snow to uncover a picture. (planned)
 63. [**Kulkowy Tor**](docs/activities/kulkowy-tor.md) – Turn the ramps and drop a ball to send it down to the basket. (planned)
@@ -119,7 +119,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Mieszanie Kolorów (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Latarka (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Lustro (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
-| Od Jajka do… (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
+| Od Jajka do… | interaction variants (cycle and stage) plus `complete()` per cycle | (a) yes, per cycle, but the activity stays open-ended |
 | Pizza (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Ślady na Piasku (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Kulkowy Tor (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |

@@ -97,7 +97,7 @@ A set of five catches: fisher hop and bucket glow (3 s, a smooth fade, no flashi
 
 ## 14. Technical implementation
 
-One SVG scene updated every frame by a single capped-dt `requestAnimationFrame` loop (paused while the tab is hidden); everything is set from JS, so reduced motion does not hide any state. The root is attached with `container.appendChild(root)` before `layout()`; the returned cleanup removes the listeners, the loop and the root.
+One SVG scene updated every frame by a single capped-dt `requestAnimationFrame` loop (paused while the tab is hidden). It deliberately keeps running while the tab is visible: the swimmers always drift, so there is never a resting state to idle in; everything is set from JS, so reduced motion does not hide any state. The root is attached with `container.appendChild(root)` before `layout()`; the returned cleanup removes the listeners, the loop and the root.
 
 ## 15. Responsive layout and coordinate system
 

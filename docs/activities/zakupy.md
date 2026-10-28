@@ -22,7 +22,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 ## 3. Activity flow
 
 1. A shop with six shelf slots (each shows 2-4 units of one product), a big basket, a register button and a shop owner (random animal) is shown; a shopping list of pictures (1-5, kinds that are on the shelves) and the numeral `0` are at the top.
-2. The child drags a product onto the basket: one unit leaves the shelf and goes into the basket (its picture, at least 40 px wide, shows in the pile). A product can be taken any number of times; a slot whose last unit was taken stays empty for 2 s and is then restocked with 2-4 fresh units.
+2. The child drags a product onto the basket: one unit leaves the shelf and goes into the basket (its picture, at least 44 px wide, shows in the pile). A product can be taken any number of times; a slot whose last unit was taken stays empty for 2 s and is then restocked with 2-4 fresh units.
 3. Dragging the basket into the shop area, tapping it or pressing the register button brings the basket to the counter. Basket items come first; list products that were not picked are added until the counter has as many items as the list.
 4. Each counter item is dragged across the scanner (or activated with Enter/Space). The scanner flashes a green line and the numeral rises by 1; the item lands in the bag row.
 5. When everything is scanned a receipt (a picture and a count numeral such as `x3` per distinct product) slides out of the scanner and the owner smiles. About 4 s after that the counter fades out and a new list starts with a different random set of products on the shelves.
@@ -62,7 +62,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 - **Keyboard:** arrows move focus between the visible products (and basket, register) or counter items; Enter or Space puts a product in the basket, presses the register or scans an item; visible 4 px focus ring.
 - **Labels (Polish):** Polish product names (for example "Jabłko", "Chleb", "Mleko", "Jajka", "Ryba"), "Koszyk", "Kasa" with instructions; the pictures are decorative.
 - **Non-colour cues:** the basket gets a glowing outline when a product is over it; scanned items are dimmed and move to the bag row.
-- **Layout:** shelves 3 x 2 or 6 x 1, whichever gives larger products; the basket is 1.4 x its former width and its pile reserves room above the bottom band; works from 320 x 568 to 1920 x 1080 in both orientations (nothing clipped, Back button not covered).
+- **Layout:** shelves 3 x 2 or 6 x 1, whichever gives larger products; the basket is 1.6 x its former width and its pile reserves room above the bottom band; works from 320 x 568 to 1920 x 1080 in both orientations (nothing clipped, Back button not covered).
 - **Reduced motion:** all movement is driven from JavaScript (one rAF loop), so every state is reached.
 - **Text:** numerals only (counter, basket count above 8 items, `xN` on the receipt).
 

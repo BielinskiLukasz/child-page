@@ -142,9 +142,9 @@
       topH = clamp(H * 0.12, TOP_MIN, TOP_MAX);
       ls = Math.min(clamp(topH * 0.62, 30, 40), Math.max(24, Math.floor((W - 168) / 5))); // 5 list pictures + counter fit right of the Back button
       bsz = clamp(Math.min(W * 0.26, H * 0.17), 72, 104); regSz = clamp(bsz * 0.78, 56, 80); osz = clamp(bsz * 0.9, 64, 96);
-      // basket: 1.4 x the old width (about twice the area); its pile shows items 40+ px wide, up to 4 rows high
-      bkW = Math.round(bsz * 1.4); bkH = Math.round(bkW * 0.7);
-      pUw = Math.max(40, Math.round(bkW * 0.34)); pTh = Math.round(pUw * 50 / 64); pStep = Math.round(pUw * 0.85); pStepY = Math.round(pTh * 0.85);
+      // basket: 1.6 x the old width (about 2.5 x the area); its pile shows items 40+ px wide, up to 4 rows high
+      bkW = Math.round(bsz * 1.6); bkH = Math.round(bkW * 0.7);
+      pUw = Math.max(44, Math.round(bkW * 0.4)); pTh = Math.round(pUw * 50 / 64); pStep = Math.round(pUw * 0.85); pStepY = Math.round(pTh * 0.85);
       pCols = Math.max(2, Math.floor((bkW * 0.96 - pUw) / pStep) + 1); pV = Math.min(12, pCols * 4);
       pileUp = Math.max(0, pTh + (Math.ceil(pV / pCols) - 1) * pStepY - bkH * 0.93 - 8) + 4;
       botH = Math.max(bkH, osz) + 16;
@@ -230,10 +230,10 @@
       var n = Math.max(0, p.stock - (p.mode === 'drag' || p.mode === 'back' ? 1 : 0)), key = p.kind.id + ':' + n + ':' + psz;
       if (p.shown === key) { return; }
       p.shown = key;
-      var us = Math.round(psz * 0.5), order = [2, 3, 0, 1], html = '', k, cell;
+      var us = Math.round(psz * 0.62), gap = psz - us, order = [2, 3, 0, 1], html = '', k, cell;
       for (k = 0; k < n && k < 4; k++) {
         cell = order[k];
-        html += '<span class="zk-un" style="left:' + ((cell % 2) * us) + 'px;top:' + (Math.floor(cell / 2) * us) + 'px;width:' + us + 'px;height:' + us + 'px">' + iconSvg(p.kind) + '</span>';
+        html += '<span class="zk-un" style="left:' + ((cell % 2) * gap) + 'px;top:' + (Math.floor(cell / 2) * gap) + 'px;width:' + us + 'px;height:' + us + 'px">' + iconSvg(p.kind) + '</span>';
       }
       p.node.innerHTML = html;
     }

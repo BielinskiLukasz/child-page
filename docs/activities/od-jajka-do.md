@@ -31,7 +31,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 2. Initially displayed: a pastel picture that only sways slowly, and a row of four dots under it (right of it in landscape); the first dot is marked as current.
 3. Touching the picture moves to the next stage with a 1.5 s cross-fade and grow-in and a small happy wiggle. Touching a dot of an already reached stage jumps to that stage; dots of stages not reached yet are inactive.
 4. At the fourth (last) stage the picture glows for 3 s and a little bunny waves; the picture no longer advances.
-5. After 4 s the picture fades out (0.6 s) and the next cycle fades in at its first stage.
+5. After 7 s (3 s glow + 4 s) the picture fades out (0.6 s) and the next cycle fades in at its first stage.
 6. Cycles come in a shuffled order, each once before any repeats; the first cycle of a launch differs from the first one of the previous launch. There is no end; exit with the Back button or browser Back.
 
 ## 4. Rules and behavior
@@ -44,7 +44,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Wiggle | 0.7 s rotate/scale of the picture button, restarted on each advance or jump. |
 | Sway | The picture rotates between -1.5 and +1.5 degrees (with a 1.5% scale) every 3 s, alternating, all the time. |
 | Dots | Four 56 px buttons with a 28 px visible dot. Current = larger with a ring; reached = solid; not reached = dashed outline and disabled. |
-| Finale | On entering stage 4 (by touch or by dot): glow 3 s, bunny waving 4 s, fade-out starts at 3.4 s, next cycle at 4 s. Jumping back to an earlier stage cancels the finale. |
+| Finale | On entering stage 4 (by touch or by dot): glow 3 s, bunny waving until the next cycle, fade-out starts at 6.4 s, next cycle at 7 s. Jumping back to an earlier stage cancels the finale. |
 | Order | `window.Rand.shuffle` of the 3 cycles; a new shuffle after the third, never starting with the cycle just shown; a fallback to an unshuffled list when `Rand` is missing. |
 
 ## 5. Educational and developmental benefits
@@ -71,7 +71,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 ## 8. Configuration
 
-No external configuration. Tunable constants at the top of `js/odjajka.js`: `FIN_GLOW` (3000 ms), `FIN_NEXT` (4000 ms), `FADE_OUT` (600 ms), `WIGGLE` (700 ms). Stage fade (1.5 s), sway (3 s) and glow timing are in the `oj-` rules in `css/style.css`.
+No external configuration. Tunable constants at the top of `js/odjajka.js`: `FIN_GLOW` (3000 ms), `FIN_NEXT` (7000 ms), `FADE_OUT` (600 ms), `WIGGLE` (700 ms). Stage fade (1.5 s), sway (3 s) and glow timing are in the `oj-` rules in `css/style.css`.
 
 ## 9. Assets
 
@@ -131,7 +131,7 @@ No automated tests exist. Manual scenarios (none are claimed as done):
 - [ ] Touch the picture: it changes in 1.5 s with a small wiggle; four touches are never needed (3 touches reach the last stage).
 - [ ] Do nothing: nothing advances; the picture sways slowly.
 - [ ] Touch dots: reached dots jump, unreached dots do nothing; the current dot is clearly larger.
-- [ ] At the last stage: 3 s glow, bunny waves, after 4 s the next cycle fades in.
+- [ ] At the last stage: 3 s glow, bunny waves, after 7 s the next cycle fades in.
 - [ ] Jump back during the finale: the glow stops and the cycle stays.
 - [ ] Keyboard: Tab, Enter/Space on the picture and on the dots.
 - [ ] Rotate in the middle of a morph and during the finale; the Back button is never covered at 320x568 and 568x320.

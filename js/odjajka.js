@@ -6,7 +6,7 @@
 // All stage states live in base CSS classes (opacity), the CSS animations only add motion, so reduced motion still reaches
 // every state. State lives in the closure and layout is pure CSS, so rotation/resize never loses it. Nothing is scored or stored.
 (function () {
-  var FIN_GLOW = 3000, FIN_NEXT = 4000, FADE_OUT = 600, WIGGLE = 700;
+  var FIN_GLOW = 3000, FIN_NEXT = 7000, FADE_OUT = 600, WIGGLE = 700;
   var lastFirst = null;                          // first cycle of the previous launch (page session only)
 
   function leafBg(sky, ground) {

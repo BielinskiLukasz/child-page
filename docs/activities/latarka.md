@@ -65,7 +65,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 ## 7. Risks and limitations
 
 - Look and feel (beam softness, darkness level, toy drawings) has not been checked on a device.
-- The loop runs until the child leaves or the tab is hidden.
+- The loop runs while something moves or fades and rests when the beam has settled and nothing is changing; input, resize and returning to the tab restart it.
 
 ## 8. Configuration
 
@@ -96,7 +96,7 @@ Reports to `js/analytics.js` (`window.Analytics`). Beam moves are not reported. 
 - **Entry point:** `mount(container)` in [`js/latarka.js`](../../js/latarka.js) overrides `mount` of the `latarka` entry; returns a cleanup function that cancels the frame and removes listeners and DOM.
 - **Rendering:** `div.fl > div.fl-dark (two radial gradients driven by CSS variables --fl-x, --fl-y, --fl-r, --fl-a) + div.fl-items > div.fl-item`.
 - **State:** beam and aim points, item list (fraction position, lit level, hold timer, revealed flag, action timer), phase (`play`, `glow`, `darken`).
-- **Loop:** one `requestAnimationFrame` loop with `dt` capped at 0.05 s, cancelled while the tab is hidden and restarted on `visibilitychange`.
+- **Loop:** one `requestAnimationFrame` loop with `dt` capped at 0.05 s; it rests when the beam has settled in the play phase and no item is fading or acting, and restarts on pointer/key input, resize and `visibilitychange` (cancelled while the tab is hidden). Nothing is lit or reported before the first input of a room.
 - **Persistence:** none. **Analytics:** section 13.
 
 ## 15. Responsive layout and coordinate system

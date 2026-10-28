@@ -5,7 +5,7 @@
 // light leaves. A revealed animal waves (a small tilt) and a toy bounces, once per reveal. When all six were revealed at least once the room
 // lights up slowly (3 s), then darkens again with a new random arrangement. Keyboard: Tab focuses the room, arrows move the beam by 8% of the
 // width, Enter/Space reveals what is under the beam. One capped-dt rAF loop sets every state from JS (nothing lives only in a CSS keyframe);
-// it is paused while the tab is hidden. Nothing is scored or stored.
+// it rests while nothing moves or fades and while the tab is hidden, and restarts on input, resize and visibility. Nothing is lit or reported before the first input of a room. Nothing is scored or stored.
 // Usage metrics: track('interaction', {variant: item id}) on the first reveal of each item in a room; complete() for each fully lit room.
 (function () {
   var DIM = 0.85;                  // darkness alpha outside the beam
@@ -60,6 +60,8 @@
     var beam = { x: 0, y: 0 }, aim = { x: 0, y: 0 };
     var phase = 'play', phaseT = 0, darkA = DIM;
     var pid = null, alive = true, raf = 0, last = 0;
+    var touched = false;           // nothing is lit or reported before the first pointer / key input of a room
+    var busy = true;               // false when the loop can rest (see step)
     var offs = [];                 // sample offsets inside a unit disc
     (function () {
       var i, a = Math.PI * (3 - Math.sqrt(5));
@@ -113,6 +115,7 @@
         itemLayer.appendChild(el);
         return { id: s.id, kind: s.kind, el: el, fx: s.fx, fy: s.fy, lit: 0, hold: 0, revealed: false, inside: false, actT: -1, px: 0, py: 0 };
       });
+      touched = pid !== null;
       layout();
     }
     // Random fractions with a minimum spacing (in item sizes) measured in the current layout; relaxes when the room is small.
@@ -145,7 +148,7 @@
       }
       return n / offs.length;
     }
-    function setAim(x, y) { aim.x = clamp(x, 0, W); aim.y = clamp(y, 0, H); }
+    function setAim(x, y) { touched = true; aim.x = clamp(x, 0, W); aim.y = clamp(y, 0, H); }
     function reveal(it) {
       if (!it.revealed) {
         it.revealed = true;
@@ -165,7 +168,7 @@
       phaseT += dt;
       if (phase === 'play') {
         darkA = DIM;
-        if (allRevealed()) { phase = 'glow'; phaseT = 0; report(function (A) { A.complete(); }); }
+        if (allRevealed()) { phase = 'glow'; phaseT = 0; report(function (A) { A.complete(); }); busy = true; }
       } else if (phase === 'glow') {
         darkA = DIM * (1 - ease(phaseT / GLOW_S));
         if (phaseT >= GLOW_S) { darkA = 0; phase = 'darken'; phaseT = 0; newRoom(); }
@@ -174,9 +177,11 @@
         if (phaseT >= DARKEN_S) { darkA = DIM; phase = 'play'; phaseT = 0; }
       }
 
+      var moving = Math.abs(aim.x - beam.x) > 0.3 || Math.abs(aim.y - beam.y) > 0.3;
+      busy = phase !== 'play' || moving;
       items.forEach(function (it) {
         var frac = insideFrac(it, beam.x, beam.y);
-        var inBeam = phase === 'play' ? frac > 0.5 : false;
+        var inBeam = phase === 'play' && touched ? frac > 0.5 : false;
         if (phase === 'glow') { it.lit = 1; it.hold = 0; }
         else if (inBeam) {
           if (it.lit <= 0.02) { it.actT = 0; }          // one friendly action per reveal
@@ -187,6 +192,7 @@
           if (it.hold > HOLD_S) { it.lit = Math.max(0, it.lit - dt / FADE_S); }
         }
         it.inside = inBeam;
+        if (it.actT >= 0 || (inBeam ? it.lit < 1 : it.lit > 0)) { busy = true; }
         if (it.actT >= 0) { it.actT += dt; if (it.actT > ACT_S) { it.actT = -1; } }
         var t = it.actT < 0 ? 0 : it.actT / ACT_S, tr = '';
         if (it.actT >= 0) {
@@ -208,7 +214,7 @@
       var dt = last ? Math.min(0.05, (ts - last) / 1000) : 0.016;
       last = ts;
       step(dt);
-      raf = requestAnimationFrame(frame);
+      if (busy && !raf) { raf = requestAnimationFrame(frame); }
     }
     function start() { if (!raf && alive && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); } }
 
@@ -228,6 +234,7 @@
     function onUp(e) { if (e.pointerId === pid) { pid = null; } }
     function onKey(e) {
       var k = e.key, st = KEY_STEP * W;
+      if (k === 'Enter' || k === ' ' || k === 'Spacebar') { touched = true; }
       if (k === 'ArrowLeft') { setAim(aim.x - st, aim.y); }
       else if (k === 'ArrowRight') { setAim(aim.x + st, aim.y); }
       else if (k === 'ArrowUp') { setAim(aim.x, aim.y - st); }
@@ -237,14 +244,14 @@
           items.forEach(function (it) {
             if (insideFrac(it, aim.x, aim.y) > 0.5) {
               if (it.lit <= 0.02) { it.actT = 0; }
-              it.lit = 1; it.hold = 0; reveal(it);
+              it.lit = 1; it.hold = 0; reveal(it); busy = true;
             }
           });
         }
       } else { return; }
       e.preventDefault(); start();
     }
-    function onResize() { layout(); }
+    function onResize() { layout(); start(); }
     function onVis() {
       if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = 0; } } else { start(); }
     }

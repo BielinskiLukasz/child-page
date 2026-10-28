@@ -159,6 +159,7 @@
     function hookPos() { return { x: hx, y: waterTop + hook.d * pondH }; }
 
     function startCatch(s, via) {
+      history.push(s.kind); if (history.length > 3) { history.shift(); } // recorded at latch/pull so in-flight catches count for the no-triple rule
       latched = s; s.att = via === 'pull' ? 0.0001 : 0; s.fade = 1; s.alpha = 1;
       st.sway = 0.35; st.swayT = 0;
     }
@@ -243,7 +244,6 @@
       ensureVariety();
     }
     function arrive(kind) {
-      history.push(kind); if (history.length > 3) { history.shift(); }
       st.bucketItems.push(kind); st.count++;
       drawBucket();
       if (st.count >= SET_SIZE) {

@@ -25,7 +25,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 2. Interactions: the child drags a part onto its slot (a glowing outline appears when the part is over its slot); it snaps in with a soft pop and stays in the tray so it can be swapped for another variant.
 3. When all four slots are full a large glowing launch button appears beside the rocket.
 4. Tapping launch hides the tray and moves the rocket to the launch pad; the numerals 3, 2, 1 appear one second each.
-5. The rocket flies up for 9 s through the sky, which darkens into a starry night, the stars drift down and the Moon surface slides into view.
+5. The rocket flies up for 9 s through the sky, which first stays blue, then darkens into a starry night; only once the sky is dark does the Moon surface slide in from the top.
 6. The rocket lands on the Moon in 2 s; an astronaut appears next to it and waves for 4 s.
 7. The scene fades out and a new empty assembly with a tray with the variants reshuffled within each group fades in. Exit: Back button or browser Back.
 
@@ -163,3 +163,4 @@ None currently planned.
 - Issue [#183](https://github.com/BielinskiLukasz/child-page/issues/183): initial activity.
 - Issue [#208](https://github.com/BielinskiLukasz/child-page/issues/208): placed parts and the rocket were invisible because the part groups in the rocket SVG were never filled; they are now filled on placement.
 - PR [#229](https://github.com/BielinskiLukasz/child-page/pull/229) feedback: tray parts are grouped by kind (column per kind in portrait, row per kind in landscape); variants shuffled within a group.
+- PR [#229](https://github.com/BielinskiLukasz/child-page/pull/229) feedback: the Moon surface appeared right after take-off (it started over the screen and covered the sky); the sky now stays blue, darkens into stars (progress 0.2-0.65), and the Moon slides in from above the screen only after progress 0.7.

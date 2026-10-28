@@ -211,14 +211,14 @@
         gEls[k].setAttribute('fill', h ? 'rgba(255,226,122,.7)' : 'rgba(255,255,255,.35)');
       });
       // sky, stars, ground and Moon follow the flight progress
-      var night = ease(p / 0.6);
+      var night = ease((p - 0.2) / 0.45);   // blue sky first, then dark sky with stars, the Moon only after that
       skyN.style.opacity = night.toFixed(3);
       starsEl.style.opacity = night.toFixed(3);
       starsEl.style.transform = 'translateY(' + (p * H * 0.55).toFixed(1) + 'px)';
       var gy = padBot + H * 0.6 * ease(p / 0.45), gOp = building ? 0 : 1;
       if (phase === 'count') { gOp = ease(t / ((rm ? RM_COUNT_S : COUNT_S) * 0.8)); }
       ground.style.opacity = gOp.toFixed(3); ground.style.transform = 'translateY(' + gy.toFixed(1) + 'px)';
-      var sy = lerp(-H * 0.45, surfY, ease((p - 0.4) / 0.6));
+      var sy = lerp(-H * 1.35, surfY, ease((p - 0.7) / 0.3));   // starts fully above the screen
       moon.style.transform = 'translateY(' + sy.toFixed(1) + 'px)';
       // tray and launch button
       tray.style.opacity = trayA.toFixed(3); tray.style.visibility = trayA <= 0.001 ? 'hidden' : 'visible';

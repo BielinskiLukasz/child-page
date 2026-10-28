@@ -1,13 +1,13 @@
 // Activity "Lustro": a big outline (butterfly, house or tree) is split by a soft dashed centre line. A finger (or arrow keys + Enter/Space)
 // paints on either half and the same stroke appears at once at the mirrored position (x -> 1 - x) in the same colour and width (at least 14 px).
 // Paint is clipped to the outline and kept as strokes in coordinates relative to the board, so rotation / resize only redraws the canvas.
-// Painted area is measured on a 40x40 grid of the outline's cells; at 40% the picture glows for 3 s, then the next outline (shuffled bag,
+// Painted area is measured on a 40x40 grid of the outline's cells; at 70% the picture glows for 3 s, then the next outline (shuffled bag,
 // each once before repeats) fades in on a clean canvas. A round "wipe" button clears the picture with a 0.5 s fade. Only the first pointer paints.
 // One capped-dt rAF loop (running only while something fades) drives all fades, so it works under prefers-reduced-motion. Nothing is stored.
 // Usage metrics: track('interaction', {variant: outline id}) per stroke; complete() when the glow starts; open-ended.
 (function () {
   var NS = 'http://www.w3.org/2000/svg';
-  var GRID = 40, GOAL = 0.4, MIN_PX = 14, REL_W = 0.05, STEP = 0.03, MIN_STEP = 0.004;
+  var GRID = 40, GOAL = 0.7, MIN_PX = 14, REL_W = 0.05, STEP = 0.03, MIN_STEP = 0.004;
   var GLOW_S = 3, OUT_S = 0.3, IN_S = 0.5, WIPE_S = 0.5, MAX_DT = 0.05, MAX_PTS = 6000;
   var COLORS = ['#e8605a', '#f4a63c', '#f2d13c', '#5cb85c', '#4a9fe0', '#9b6ad0'];
   var COLOR_NAMES = ['czerwony', 'pomarańczowy', 'żółty', 'zielony', 'niebieski', 'fioletowy'];

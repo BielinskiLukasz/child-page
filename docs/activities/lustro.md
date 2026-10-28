@@ -16,7 +16,7 @@ Gentle introduction to symmetry through free drawing: every picture comes out sy
 
 ## 3. Activity flow
 
-1. One outline (random from a shuffled bag of three) is shown with a row of six colour dots (one chosen at random) and a sponge button. 2. The child paints on either half; each stroke is mirrored over the centre line and clipped to the outline. 3. When about 40% of the outline is painted the picture glows for 3 s, then fades out (0.3 s) and the next outline fades in (0.5 s) on a clean canvas. 4. The sponge button wipes the picture with a 0.5 s fade. The activity never ends by itself.
+1. One outline (random from a shuffled bag of three) is shown with a row of six colour dots (one chosen at random) and a sponge button. 2. The child paints on either half; each stroke is mirrored over the centre line and clipped to the outline. 3. When about 70% of the outline is painted the picture glows for 3 s, then fades out (0.3 s) and the next outline fades in (0.5 s) on a clean canvas. 4. The sponge button wipes the picture with a 0.5 s fade. The activity never ends by itself.
 
 ## 4. Rules and behavior
 
@@ -28,7 +28,7 @@ Gentle introduction to symmetry through free drawing: every picture comes out sy
 | Colours | six dots (red, orange, yellow, green, blue, purple), 56 px, each with its own white pattern (stripes, dots, zigzag, checks, waves, cross); the chosen dot has a thick ring; the first colour is random |
 | Wipe | round 56 px sponge button; 0.5 s fade of the paint, then empty canvas; ignored while the picture glows |
 | Clip | paint is clipped to the outline path and never leaves it |
-| Goal | painted area measured on a 40x40 grid of the cells inside the outline (a cell counts when the brush centre passes within half the brush width; the mirror counts too); at 40% the glow starts |
+| Goal | painted area measured on a 40x40 grid of the cells inside the outline (a cell counts when the brush centre passes within half the brush width; the mirror counts too); at 70% the glow starts |
 | Glow | 3 s static warm drop-shadow, painting ignored; then 0.3 s fade-out, new outline, 0.5 s fade-in |
 | Pointers | only the first pointer paints; other fingers are ignored until it lifts |
 
@@ -44,7 +44,7 @@ The board is focusable: arrows move a brush ring (3% of the board per press), En
 
 ## 7. Risks and limitations
 
-Checked only with a node stub DOM (stroke flow, coverage, glow, bag, wipe, two pointers) and syntax checks; no browser or device run was possible, so the real proportions of the outlines, the clip and the glow still need a manual look. Painting 40% of a small outline can be quick for a child who scribbles.
+Checked only with a node stub DOM (stroke flow, coverage, glow, bag, wipe, two pointers) and syntax checks; no browser or device run was possible, so the real proportions of the outlines, the clip and the glow still need a manual look. The 70% goal (raised from 40%, which came too early) needs real covering of the picture; a very small outline may still fill quickly for a child who scribbles.
 
 ## 8. Configuration
 
@@ -64,7 +64,7 @@ None: the same rules throughout.
 
 ## 12. Completion and feedback
 
-At 40% painted: glow for 3 s, then the next outline on a clean canvas. Sponge: fade and clean canvas.
+At 70% painted: glow for 3 s, then the next outline on a clean canvas. Sponge: fade and clean canvas.
 
 ## 13. Analytics and metrics
 
@@ -84,7 +84,7 @@ Rotation and resize: the canvas is replayed from relative strokes. Tab hidden: t
 
 ## 17. Testing
 
-Manual scenarios: (1) Open: one outline with a dashed centre line, six dots, a sponge; one dot is chosen. (2) Draw on the left half: the mirrored line appears at the same moment on the right, in the same colour; draw across the outline edge: paint stays inside. (3) Pick another colour and draw: the new colour is used, the old paint stays. (4) Rotate the device: the picture stays, redrawn. (5) Touch with two fingers: only the first paints. (6) Tab to the board, move with arrows, hold Enter and press arrows: a mirrored line is drawn. (7) Fill about 40%: the picture glows for 3 s, then a different outline fades in clean; repeat three times: all three outlines appear before one repeats. (8) Press the sponge: the paint fades in 0.5 s. (9) Settings, Statystyki: strokes counted as touches, glow-and-next pictures as completions.
+Manual scenarios: (1) Open: one outline with a dashed centre line, six dots, a sponge; one dot is chosen. (2) Draw on the left half: the mirrored line appears at the same moment on the right, in the same colour; draw across the outline edge: paint stays inside. (3) Pick another colour and draw: the new colour is used, the old paint stays. (4) Rotate the device: the picture stays, redrawn. (5) Touch with two fingers: only the first paints. (6) Tab to the board, move with arrows, hold Enter and press arrows: a mirrored line is drawn. (7) Fill about 70%: the picture glows for 3 s, then a different outline fades in clean; repeat three times: all three outlines appear before one repeats. (8) Press the sponge: the paint fades in 0.5 s. (9) Settings, Statystyki: strokes counted as touches, glow-and-next pictures as completions.
 
 ## 18. Known limitations and open issues
 

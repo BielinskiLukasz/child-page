@@ -65,7 +65,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 56. [**Lot na Smoku**](docs/activities/smok.md) – Steer a friendly dragon with a rider over a scrolling land and make it breathe a little fire.
 57. [**Mieszanie Kolorów**](docs/activities/mieszanie-kolorow.md) – Mix the three primary colours in a pot and see what new colour appears. (planned)
 58. [**Latarka**](docs/activities/latarka.md) – Move a torch beam through a dark room to find hidden animals and toys. (planned)
-59. [**Lustro**](docs/activities/lustro.md) – Paint on one half of a picture and the other half mirrors every stroke. (planned)
+59. [**Lustro**](docs/activities/lustro.md) – Paint on one half of a picture and the other half mirrors every stroke.
 60. [**Od Jajka do…**](docs/activities/od-jajka-do.md) – Touch to watch a life cycle change stage by stage. (planned)
 61. [**Pizza**](docs/activities/pizza.md) – Make a pizza step by step: roll the dough, add sauce and toppings, bake it. (planned)
 62. [**Ślady na Piasku**](docs/activities/slady-na-piasku.md) – Leave paw prints, footprints or a wavy line on sand or snow to uncover a picture. (planned)
@@ -118,7 +118,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Psia Myjnia, Wyścig Piesków, Aport, Nakarm Pieska, Koparka, Zbuduj Rakietę, Zakupy | interaction variants (breed, scoop/tip, part/launch, product) plus `complete()` per round | (a) yes, per round, but the activity stays open-ended |
 | Mieszanie Kolorów (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Latarka (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
-| Lustro (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
+| Lustro | see [docs/activities/README.md](docs/activities/README.md#analytics-status) | each glow-and-next picture |
 | Od Jajka do… (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Pizza (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Ślady na Piasku (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |

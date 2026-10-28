@@ -39,7 +39,7 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Rasy Piesków** | each dog touch and navigation with the breed (`track('interaction', { variant })`) | None |
 | **Mieszanie Kolorów** (planned) | each blob drop (`track('interaction')`, variant = colour) | each mix (`complete()`), open-ended |
 | **Latarka** (planned) | each first reveal of an item (`track('interaction')`, variant = item); beam moves are not reported | each fully lit room (`complete()`) |
-| **Lustro** (planned) | each stroke (`track('interaction')`, variant = outline) | each glow-and-next picture (`complete()`), open-ended |
+| **Lustro** | each stroke (`track('interaction')`, variant = outline) | each glow-and-next picture (`complete()`), open-ended |
 | **Od Jajka do…** (planned) | each advance (`track('interaction')`, variant = cycle and stage) | each cycle that reaches its last stage (`complete()`) |
 | **Pizza** (planned) | each topping placement and the oven touch (`track('interaction')`, variant = topping) | each served pizza (`complete()`) |
 | **Ślady na Piasku** (planned) | each stroke start (`track('interaction')`, variant = track type) | each revealed picture (`complete()`) |
@@ -116,7 +116,7 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 56 | [Lot na Smoku](smok.md) | `smok` | A friendly dragon with a rider flies over a scrolling land that changes between meadow, snow and sea; the child steers it with a finger and a tap makes it breathe a little fire to light drifting lanterns. | Complete |
 | 57 | [Mieszanie Kolorów](mieszanie-kolorow.md) | `mieszanie` | Three primary-colour blobs are dragged into a pot, where the colours mix into a new one. (planned) | planned |
 | 58 | [Latarka](latarka.md) | `latarka` | A torch beam that follows the finger reveals hidden animals and toys in a dark room. (planned) | planned |
-| 59 | [Lustro](lustro.md) | `lustro` | Painting on one half of a butterfly, house or tree is mirrored on the other half. (planned) | planned |
+| 59 | [Lustro](lustro.md) | `lustro` | Painting on one half of a butterfly, house or tree is mirrored on the other half. | Complete |
 | 60 | [Od Jajka do…](od-jajka-do.md) | `odjajka` | Touching a picture advances a four-stage life cycle (a random one of three), with dots to jump back to reached stages. (planned) | planned |
 | 61 | [Pizza](pizza.md) | `pizza` | A multi-step meal: flatten dough, spread sauce, place toppings, bake and serve a pizza. (planned) | planned |
 | 62 | [Ślady na Piasku](slady-na-piasku.md) | `slady` | Dragging over sand or snow leaves one of three kinds of tracks and uncovers a hidden picture. (planned) | planned |

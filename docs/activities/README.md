@@ -37,7 +37,7 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Zakupy** | each product put in the basket and each scan (`track('interaction', { variant })`, product id) | Each fully scanned list (`complete()`), open-ended |
 | **Lot na Smoku** | each steering touch, fire puff and lit lantern (`track('interaction', { variant })`) | None |
 | **Rasy Piesków** | each dog touch and navigation with the breed (`track('interaction', { variant })`) | None |
-| **Mieszanie Kolorów** (planned) | each blob drop (`track('interaction')`, variant = colour) | each mix (`complete()`), open-ended |
+| **Mieszanie Kolorów** | each blob drop (`track('interaction')`, variant = colour) | each mix (`complete()`), open-ended |
 | **Latarka** (planned) | each first reveal of an item (`track('interaction')`, variant = item); beam moves are not reported | each fully lit room (`complete()`) |
 | **Lustro** (planned) | each stroke (`track('interaction')`, variant = outline) | each glow-and-next picture (`complete()`), open-ended |
 | **Od Jajka do…** (planned) | each advance (`track('interaction')`, variant = cycle and stage) | each cycle that reaches its last stage (`complete()`) |
@@ -114,7 +114,7 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 54 | [Plac Budowy](plac-budowy.md) | `plac` | A building site with four machines (crane, mixer, roller, dump truck); each different machine used builds one more stage of a small house, which glows and resets when finished. | Complete |
 | 55 | [Zakupy](zakupy.md) | `zakupy` | A shop where the child puts products in a basket, brings it to the counter and drags each item across a barcode scanner that flashes green while a numeral counts the scanned items; a receipt slides out and a new list of 1-5 items follows. | Complete |
 | 56 | [Lot na Smoku](smok.md) | `smok` | A friendly dragon with a rider flies over a scrolling land that changes between meadow, snow and sea; the child steers it with a finger and a tap makes it breathe a little fire to light drifting lanterns. | Complete |
-| 57 | [Mieszanie Kolorów](mieszanie-kolorow.md) | `mieszanie` | Three primary-colour blobs are dragged into a pot, where the colours mix into a new one. (planned) | planned |
+| 57 | [Mieszanie Kolorów](mieszanie-kolorow.md) | `mieszanie` | Three paint blobs are dragged into a pot; two different ones blend into a new colour, a matching result blob glows, and after all three mixes a friendly animal appears. | Complete |
 | 58 | [Latarka](latarka.md) | `latarka` | A torch beam that follows the finger reveals hidden animals and toys in a dark room. (planned) | planned |
 | 59 | [Lustro](lustro.md) | `lustro` | Painting on one half of a butterfly, house or tree is mirrored on the other half. (planned) | planned |
 | 60 | [Od Jajka do…](od-jajka-do.md) | `odjajka` | Touching a picture advances a four-stage life cycle (a random one of three), with dots to jump back to reached stages. (planned) | planned |

@@ -63,7 +63,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 54. [**Plac Budowy**](docs/activities/plac-budowy.md) – Operate the building-site machines to build a small house stage by stage.
 55. [**Zakupy**](docs/activities/zakupy.md) – Put products in a basket and scan them at the shop counter.
 56. [**Lot na Smoku**](docs/activities/smok.md) – Steer a friendly dragon with a rider over a scrolling land and make it breathe a little fire.
-57. [**Mieszanie Kolorów**](docs/activities/mieszanie-kolorow.md) – Mix the three primary colours in a pot and see what new colour appears. (planned)
+57. [**Mieszanie Kolorów**](docs/activities/mieszanie-kolorow.md) – Drag red, yellow and blue paint blobs into a pot and watch a new colour appear.
 58. [**Latarka**](docs/activities/latarka.md) – Move a torch beam through a dark room to find hidden animals and toys. (planned)
 59. [**Lustro**](docs/activities/lustro.md) – Paint on one half of a picture and the other half mirrors every stroke. (planned)
 60. [**Od Jajka do…**](docs/activities/od-jajka-do.md) – Touch to watch a life cycle change stage by stage. (planned)
@@ -116,7 +116,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Literki | letter shown (`levelStart`) and letter touched (`track('interaction')`) | (b) no, interaction variants only |
 | Plac Budowy, Lot na Smoku, Rasy Piesków | machine operated / steering touch, fire puff and lit lantern / dog touch and navigation with the breed (`track('interaction')`) | (b) no, interaction variants only |
 | Psia Myjnia, Wyścig Piesków, Aport, Nakarm Pieska, Koparka, Zbuduj Rakietę, Zakupy | interaction variants (breed, scoop/tip, part/launch, product) plus `complete()` per round | (a) yes, per round, but the activity stays open-ended |
-| Mieszanie Kolorów (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
+| Mieszanie Kolorów | each blob drop (`track('interaction')`, variant = colour) plus `complete()` per mix | (a) yes, per mix, but the activity stays open-ended |
 | Latarka (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Lustro (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |
 | Od Jajka do… (planned) | see the planned row in [docs/activities/README.md](docs/activities/README.md#analytics-status) | (planned) |

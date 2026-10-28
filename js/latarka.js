@@ -230,6 +230,7 @@
     function onMove(e) {
       if (pid !== null ? e.pointerId !== pid : e.pointerType !== 'mouse') { return; }
       var p = pt(e); setAim(p.x, p.y);
+      start();                                            // hover must wake the resting loop
     }
     function onUp(e) { if (e.pointerId === pid) { pid = null; } }
     function onKey(e) {

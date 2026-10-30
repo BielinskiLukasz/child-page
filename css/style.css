@@ -1254,3 +1254,5 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .stage .md-tile svg { width: 100%; height: 100%; display: block; pointer-events: none; }
 .md-tile:focus-visible { outline: 4px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 7px #8f7fd1; }
 @media (max-height: 420px) { .md-tiles { max-width: 320px; } }
+
+.app-version { margin: 1.5rem 0 0; font-size: .75rem; opacity: .7; text-align: center; }

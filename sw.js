@@ -14,10 +14,16 @@ self.addEventListener('install', function (e) {
     var re = /(?:src|href)="([^":]+\.(?:js|css|png|svg|webmanifest))"/g;
     var m;
     while ((m = re.exec(html))) { urls.push(m[1]); }
+    // Activity scripts are loaded lazily, so precache every src/deps URL listed in the registry too.
+    var reg = await (await fetch('js/activities.js', { cache: 'reload' })).text();
+    var re2 = /'(js\/[\w.-]+\.js)'/g;
+    while ((m = re2.exec(reg))) { if (urls.indexOf(m[1]) < 0) { urls.push(m[1]); } }
+    // A file that cannot be fetched fails the install (the browser retries) instead of caching a partial app.
     await Promise.all(urls.map(function (u) {
-      return fetch(u, { cache: 'reload' })
-        .then(function (r) { if (r.ok) { return cache.put(u, r); } })
-        .catch(function () {});
+      return fetch(u, { cache: 'reload' }).then(function (r) {
+        if (!r.ok) { throw new Error(u + ' ' + r.status); }
+        return cache.put(u, r);
+      });
     }));
     await self.skipWaiting();
   })());

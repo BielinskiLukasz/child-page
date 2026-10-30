@@ -63,6 +63,26 @@ def check_scripts():
         seen.add(s)
 
 
+# 3b. registry src/deps (lazy-loaded activity scripts)
+def check_registry():
+    reg = read('js/activities.js')
+    used = set()
+    for m in re.finditer(r"\bsrc:\s*'([^']+)'", reg):
+        used.add(m.group(1))
+        if not exists(m.group(1)):
+            fail('js/activities.js', 'registry-src', 'src %s does not exist' % m.group(1))
+    for m in re.finditer(r"\bdeps:\s*\[([^\]]*)\]", reg):
+        for d in re.findall(r"'([^']+)'", m.group(1)):
+            used.add(d)
+            if not exists(d):
+                fail('js/activities.js', 'registry-deps', 'dep %s does not exist' % d)
+    tags = set(re.findall(r'<script[^>]*\ssrc="([^"]+)"', read('index.html')))
+    for p in sorted(glob.glob(os.path.join(ROOT, 'js', '*.js'))):
+        rel = 'js/' + os.path.basename(p)
+        if rel not in used and rel not in tags:
+            fail(rel, 'script-orphan', 'not loaded by index.html and not listed as src/deps in js/activities.js')
+
+
 # 4 + 5. activities, docs index, README list
 def check_activities():
     ids = re.findall(r"\{\s*id:\s*'([^']+)'", read('js/activities.js'))
@@ -166,6 +186,7 @@ def check_prefixes():
 def main():
     check_syntax()
     check_scripts()
+    check_registry()
     check_activities()
     check_links()
     check_prefixes()

@@ -11,6 +11,47 @@
   var pushedByApp = false;
   var lastTile = null;
   var menuScroll = 0;
+  var mountToken = 0;
+  var scripts = {};
+  var loaded = {};
+
+  // Loads a script once (shared promise); a script already present in index.html counts as loaded.
+  function loadScript(url) {
+    if (!scripts[url]) {
+      scripts[url] = new Promise(function (resolve, reject) {
+        if (document.querySelector('script[src="' + url + '"]')) { resolve(); return; }
+        var el = document.createElement('script');
+        el.src = url;
+        el.onload = function () { loaded[url] = true; resolve(); };
+        el.onerror = function () { delete scripts[url]; el.remove(); reject(new Error(url)); };
+        document.head.appendChild(el);
+      });
+    }
+    return scripts[url];
+  }
+
+  // Resolves once the activity's deps and then its own script are loaded (no-op without `src`).
+  function loadActivity(a) {
+    return (a.deps || []).reduce(function (p, d) {
+      return p.then(function () { return loadScript(d); });
+    }, Promise.resolve()).then(function () { return a.src ? loadScript(a.src) : null; });
+  }
+
+  function isLoaded(a) {
+    return [].concat(a.deps || [], a.src || []).every(function (u) {
+      // Eager tags (index.html) run before app.js; injected ones count once their load event fired.
+      return u in loaded || (!scripts[u] && !!document.querySelector('script[src="' + u + '"]'));
+    });
+  }
+
+  function say(text) {
+    var p = document.createElement('p');
+    p.className = 'load-msg';
+    p.setAttribute('role', 'status');
+    p.textContent = text;
+    stage.textContent = '';
+    stage.appendChild(p);
+  }
 
   function byId(id) {
     return window.ACTIVITIES.filter(function (a) { return a.id === id; })[0];
@@ -52,6 +93,7 @@
   window.addEventListener('storage', function (e) { if (e.key === 'swa.menu') { buildTiles(); } });
 
   function unmount() {
+    mountToken++;
     window.Analytics.activityEnd();
     window.Playtime.stop();
     if (typeof cleanup === 'function') { cleanup(); }
@@ -97,7 +139,19 @@
       window.Playtime.renderLater(stage);
     } else {
       window.Analytics.activityStart(a.id);
-      cleanup = a.mount(stage) || null;
+      if (isLoaded(a)) {
+        cleanup = a.mount(stage) || null;
+      } else {
+        // Script is fetched on first open; a stale result (Back, time up, other activity) is ignored.
+        var token = mountToken;
+        var current = function () { return token === mountToken && !shownLater; };
+        say('Chwileczkę…');
+        loadActivity(a).then(function () {
+          if (current()) { stage.textContent = ''; cleanup = a.mount(stage) || null; }
+        }, function () {
+          if (current()) { say('Ta zabawa się nie wczytała. Wróć i spróbuj jeszcze raz.'); }
+        });
+      }
     }
     backBtn.focus();
   }

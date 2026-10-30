@@ -12,7 +12,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Category | Daily routine; cause and effect |
 | Interaction type | Tap (touch, mouse, keyboard) |
 | Status | Implemented; enabled in the menu by default |
-| Source | [`js/mojdzien.js`](../../js/mojdzien.js), styles with prefix `md-` in [`css/style.css`](../../css/style.css), script tag in [`index.html`](../../index.html) |
+| Source | [`js/mojdzien.js`](../../js/mojdzien.js), styles with prefix `md-` in [`css/style.css`](../../css/style.css), lazy-loaded via `src`/`deps` on its registry entry in [`js/activities.js`](../../js/activities.js) |
 | Issue | [#220](https://github.com/BielinskiLukasz/child-page/issues/220) |
 
 ## 2. Business purpose

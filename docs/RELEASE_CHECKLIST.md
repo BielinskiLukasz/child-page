@@ -24,6 +24,9 @@ Run the same list on each of: **Chrome desktop**, **Chrome Android**, **Safari i
 | 12 | Settings: "Wersja" line shows the released version; menu and activities show no version | Pass / Fail | Pass / Fail | Pass / Fail | |
 | 13 | Time-up screen appears when the limit is reached and the menu stays reachable after reset | Pass / Fail | Pass / Fail | Pass / Fail | |
 | 14 | Reduced motion (OS setting on): activities still reach their end states, nothing flickers | Pass / Fail | Pass / Fail | Pass / Fail | |
+| 15 | Lazy loading: first open of an activity online (fresh load via `#/<id>`) works, no console errors | Pass / Fail | Pass / Fail | Pass / Fail | |
+| 16 | Lazy loading: after first online load, with network off, every activity still opens | Pass / Fail | Pass / Fail | Pass / Fail | |
+| 17 | Lazy loading: Back during loading returns to the menu; a failed load shows the friendly message and Back works | Pass / Fail | Pass / Fail | Pass / Fail | |
 
 ## Release steps
 

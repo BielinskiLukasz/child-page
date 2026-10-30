@@ -119,9 +119,11 @@
     pane.querySelector('h2').scrollIntoView();
     document.getElementById('stats-back').focus();
   });
-  document.getElementById('stats-back').addEventListener('click', function () {
+  function backToSettings() {
     pane.hidden = true; setPane.hidden = false; openBtn.focus();
-  });
+  }
+  document.getElementById('stats-back').addEventListener('click', backToSettings);
+  document.getElementById('stats-back-top').addEventListener('click', backToSettings);
   document.getElementById('stats-export').addEventListener('click', function () {
     try {
       var blob = new Blob([json()], { type: 'application/json' });

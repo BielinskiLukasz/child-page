@@ -91,7 +91,7 @@ No runtime configuration; the letters and pictures are data in [`js/literki-data
 
 ## 9. Assets
 
-No external image files. The 74 pictures are inline SVG strings in `js/literki-data.js` (100x100 viewBox, the app's own style), one `w` (Polish word) per picture and an optional `c` flag. The file is about 26 KB and is loaded by a script tag before `js/literki.js`. The arrow icons are inline SVG in `js/literki.js`.
+No external image files. The 74 pictures are inline SVG strings in `js/literki-data.js` (100x100 viewBox, the app's own style), one `w` (Polish word) per picture and an optional `c` flag. The file is about 26 KB and is declared in `deps` of the `literki` registry entry and loaded before `js/literki.js` on first open. The arrow icons are inline SVG in `js/literki.js`.
 
 ## 10. Randomization and variants
 

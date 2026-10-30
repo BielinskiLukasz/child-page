@@ -12,7 +12,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Category | Cause and effect; open-ended play |
 | Interaction type | Tap and drag (touch, mouse, stylus) |
 | Status | Implemented; enabled in the menu by default |
-| Source | [`js/banki.js`](../../js/banki.js), styles with prefix `bm-` in [`css/style.css`](../../css/style.css), script tag in [`index.html`](../../index.html) |
+| Source | [`js/banki.js`](../../js/banki.js), styles with prefix `bm-` in [`css/style.css`](../../css/style.css), lazy-loaded via `src`/`deps` on its registry entry in [`js/activities.js`](../../js/activities.js) |
 
 ## 2. Business purpose
 

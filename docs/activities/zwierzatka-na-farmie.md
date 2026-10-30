@@ -12,7 +12,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Category | Cause and effect; exploratory; open-ended play |
 | Interaction type | Tap (touch, mouse, keyboard) |
 | Status | Implemented; enabled in the menu by default |
-| Source | [`js/farma.js`](../../js/farma.js), styles with prefix `fm-` in [`css/style.css`](../../css/style.css), script tag in [`index.html`](../../index.html) |
+| Source | [`js/farma.js`](../../js/farma.js), styles with prefix `fm-` in [`css/style.css`](../../css/style.css), lazy-loaded via `src`/`deps` on its registry entry in [`js/activities.js`](../../js/activities.js) |
 
 ## 2. Business purpose
 

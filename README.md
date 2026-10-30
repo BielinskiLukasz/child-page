@@ -86,6 +86,14 @@ python3 -m http.server 8000
 ```
 then open http://localhost:8000/. Navigation uses URL hashes and relative paths, so it works from any subpath.
 
+## Automatic checks
+Every pull request and push to `main` runs [`.github/workflows/checks.yml`](.github/workflows/checks.yml), which executes one script (Python 3 and Node.js, no packages, no network, about 2 seconds). Run the same checks locally from the repository root:
+
+```
+python3 tools/check.py
+```
+Each failure is printed as `<file>: [<rule>] <message>`. Rules: `js-syntax` (`node --check` on every `js/*.js`), `script-exists` / `script-order` / `script-duplicate` (scripts in `index.html` exist and `js/app.js` is loaded last), `activity-id-unique` (ids in `js/activities.js`), `activity-doc` / `index-row` / `index-status` (every activity has a document and a row in the docs index; rows with status `planned` are skipped and not counted), `readme-count` / `index-count` / `stated-count` (README Activities items without "(planned)", index rows and any "all N activities" phrase equal the number of activities), `md-link` (relative links in `README.md` and `docs/**/*.md` resolve), `css-prefix` / `css-prefix-unique` (the CSS prefix an activity document declares, e.g. "styles with prefix `rz-`" in its Source row or "CSS prefix: `rz-`", is used in `css/` and not claimed by another activity). Keep that declaration in every new activity document so the prefix check can see it. These checks are mechanical only: they do not replace the manual browser and device tests.
+
 ## Install and offline use
 The app is an installable PWA (manifest, icons, service worker); it needs HTTPS (GitHub Pages) or localhost.
 - **Android Chrome:** open the site, menu ⋮ → **Zainstaluj aplikację** / *Install app*. It opens full-screen from the home-screen icon.

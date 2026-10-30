@@ -136,7 +136,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/kapiel.js`](../../js/kapiel.js), registered on the `kapiel` entry; returns a cleanup function. Loaded just before `app.js` in `index.html`.
+- **Entry point:** `mount(container)` in [`js/kapiel.js`](../../js/kapiel.js), registered on the `kapiel` entry; returns a cleanup function. Lazy-loaded via `src`/`deps` on its registry entry in js/activities.js.
 - **State:** `animal`, `stage`, `phase` (`wait`, `play`, `rest`, `in`, `done`, `swap`), `baseline` (opaque pixel sum of the fresh layer), `pointers` (active drags), `dirty`, `token` (guards against stale async image loads), bubble pool `bubbles[28]`.
 - **Rendering:** a `.kp-box` with an animal SVG, a blurred halo (`kp-halo`), the mask `<canvas class="kp-layer">`, an accessory layer, the shower, a keyboard brush ring and the bubble layer. The progress check draws the layer into a 32 x 42 canvas (`willReadFrequently`) and sums alpha.
 - **Animation:** one rAF loop (`frame`, `dt` capped at 50 ms); `if (busy && !raf)` keeps a single loop when an image callback restarts it synchronously (fix in commit `c8b1d37`). The loop stops when idle and is cancelled when the tab is hidden.

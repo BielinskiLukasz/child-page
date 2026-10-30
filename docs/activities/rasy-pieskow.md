@@ -12,7 +12,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Category | Cause and effect; observation; open-ended play |
 | Interaction type | Tap, horizontal swipe, arrow buttons, keyboard |
 | Status | Implemented; enabled in the menu by default (appended last, no `defaultOff`) |
-| Source | [`js/rasy.js`](../../js/rasy.js) (activity), [`js/dogs.js`](../../js/dogs.js) (shared drawings, `window.Dogs`), styles with prefixes `rp-` and `dg-` in [`css/style.css`](../../css/style.css), script tags in [`index.html`](../../index.html) |
+| Source | [`js/rasy.js`](../../js/rasy.js) (activity), [`js/dogs.js`](../../js/dogs.js) (shared drawings, `window.Dogs`), styles with prefixes `rp-` and `dg-` in [`css/style.css`](../../css/style.css), lazy-loaded via `src`/`deps` on its registry entry in js/activities.js |
 
 ## 2. Business purpose
 

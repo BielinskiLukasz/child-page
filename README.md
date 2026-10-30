@@ -2,6 +2,8 @@
 
 A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
+**Version 1.0.0** (see the [changelog](CHANGELOG.md)).
+
 **Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
 
 ## Activities
@@ -157,3 +159,9 @@ In Settings (behind the same gate) a parent can enable or disable each activity 
 
 ## Activity documentation
 One document per activity (purpose, flow, rules, configuration, risks, technical details, manual test scenarios) is in [docs/activities/](docs/activities/README.md); new ones start from the [template](docs/activities/ACTIVITY_TEMPLATE.md). A new activity adds one linked one-line item to the Activities list above (details live only in its document) and its row to the docs index; the intro carries no count. Items marked "(planned)" are placeholders with a stub page; filling one follows the rules in [Planned activities](docs/activities/README.md#planned-activities).
+
+## Licence
+This project is proprietary: **all rights reserved** (see [LICENSE](LICENSE)). Nobody may use, copy, modify or distribute the code or its assets (icons, drawings, texts) without the owner's written permission. The repository being public does not grant any licence.
+
+## Releases
+The version is defined once, in `js/version.js`, and shown only in the parent-gated Settings ("Wersja"). Every release updates `CHANGELOG.md` and that version and follows [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md).

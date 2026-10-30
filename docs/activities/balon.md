@@ -128,7 +128,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/balon.js`](../../js/balon.js), assigned to the `balon` registry entry; loaded before `js/app.js`. No shared helper is used.
+- **Entry point:** `mount(container)` in [`js/balon.js`](../../js/balon.js), assigned to the `balon` registry entry; lazy-loaded via `src`/`deps` on its registry entry in js/activities.js. No shared helper is used.
 - **Rendering:** DOM + inline SVG. The meadow is an SVG overlay with a `viewBox` of `0 0 W H`; the balloon and clouds are positioned with inline `transform`; the glow is an SVG group whose opacity is set per frame.
 - **State:** closures: `a` (altitude), `v`, `mode` (`ground`/`up`/`down`), `ph` (drift phase), `glowAmt`/`gp`, `waves[]`, `cloudU[]`, `cloudT[]`, `cloudDir[]`.
 - **Animation:** one rAF loop `frame` with a capped dt; paused while hidden and restarted on `visibilitychange`.

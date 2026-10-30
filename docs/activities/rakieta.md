@@ -135,7 +135,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/rakieta.js`](../../js/rakieta.js), assigned to the `rakieta` registry entry; loaded before `js/app.js`. Uses `js/random.js` (`Rand.pickOne`) and the `.rq-*` CSS.
+- **Entry point:** `mount(container)` in [`js/rakieta.js`](../../js/rakieta.js), assigned to the `rakieta` registry entry; lazy-loaded via `src`/`deps` on its registry entry in js/activities.js. Uses `js/random.js` (`Rand.pickOne`) and the `.rq-*` CSS.
 - **Rendering:** DOM + inline SVG. Stars, planets and rocket are absolutely positioned elements; the rocket is moved by an inline `transform` (translate, rotate, scale).
 - **State:** closure variables: `st` (`hover`/`fly`/`visit`), `prev`, `x`, `y`, `hd` (heading), `spd`, `om` (turn rate), `ang`, `sy`, `face`, `vs` (visit state), `puffs`, `twT[]`, `glow[]`, `waveT`.
 - **Animation:** one rAF loop `frame` with a capped dt; paused while the tab is hidden and resumed on `visibilitychange`.

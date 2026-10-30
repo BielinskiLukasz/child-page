@@ -38,7 +38,7 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   box-shadow: 0 2px 8px rgba(120, 110, 160, .25); touch-action: manipulation; }
 .back svg { width: 28px; height: 28px; }
 .panel .back { min-height: 56px; border-radius: 50%; padding: 0; font-size: inherit; }
-.panel.has-back { padding-top: 64px; }
+.panel.has-back { padding-top: calc(var(--safe-t) + 64px); }
 .stage { min-height: 100vh; min-height: 100dvh; display: grid; place-items: center; text-align: center;
   padding: 80px 1rem 1rem; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
 .stage h2 { font-size: clamp(1.4rem, 5vw, 2.2rem); margin: .5rem 0; }

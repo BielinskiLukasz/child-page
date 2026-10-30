@@ -11,7 +11,7 @@
 | Interaction type | Tap (animals, mat) |
 | Status | Implemented; enabled in the menu by default (no `defaultOff`) |
 
-Source: [`js/zjezdzalnia.js`](../../js/zjezdzalnia.js), CSS prefix `zj-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js), script tag in [`index.html`](../../index.html). Introduced by issue #97 / PR [#160](https://github.com/BielinskiLukasz/child-page/pull/160).
+Source: [`js/zjezdzalnia.js`](../../js/zjezdzalnia.js), CSS prefix `zj-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js) (lazy-loaded via `src`/`deps` on its registry entry in js/activities.js). Introduced by issue #97 / PR [#160](https://github.com/BielinskiLukasz/child-page/pull/160).
 
 ## 2. Business purpose
 

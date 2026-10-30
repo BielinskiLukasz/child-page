@@ -143,7 +143,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/cienie.js`](../../js/cienie.js) replaces the `mount` of the registry entry whose `id === 'cienie'`; it returns a `cleanup` function. Script tag order in `index.html`: `cienie.js` is loaded before `app.js`.
+- **Entry point:** `mount(container)` in [`js/cienie.js`](../../js/cienie.js) replaces the `mount` of the registry entry whose `id === 'cienie'`; it returns a `cleanup` function. It is lazy-loaded via `src`/`deps` on its registry entry in js/activities.js.
 - **State:** closure variables in `mount` (`set`, `slots`, `items`, `shadows`, `selected`, timers `doneT`, `fade`, `fadeDir`); per-animal state objects hold position, glide data and mode (`idle`, `drag`, `glide`).
 - **Rendering:** a fixed DOM of three shadow `<button>` elements and three animal `<button>` elements inside `.ci-field`, each holding one inline SVG; positions are set through `transform: translate(...)`. A `.ci-glow` div carries the completion glow.
 - **Animation:** a single capped-step (`dt <= 50 ms`) `requestAnimationFrame` loop `frame`; it runs only while something is moving (glide, glow, fade, completion timer) and is restarted by `start()`; it is cancelled when `document.hidden` and restarted on `visibilitychange`.
@@ -151,7 +151,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 - **Randomization:** `Rand.shuffle` from [`js/random.js`](../../js/random.js) and `Animals.LIST`/`Animals.head`.
 - **Persistence:** none.
 - **Cleanup:** cancels the animation frame, removes the `resize`, `orientationchange` and `visibilitychange` listeners and removes the board from the DOM.
-- **Dependencies:** `window.Animals`, `window.Rand` (both loaded before the activity scripts).
+- **Dependencies:** `window.Animals`, `window.Rand` (listed in `deps` of its registry entry in js/activities.js).
 
 ## 15. Responsive layout and coordinate system
 

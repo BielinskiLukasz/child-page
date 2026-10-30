@@ -11,7 +11,7 @@
 | Interaction type | Tap (doors, hands, pendulum) |
 | Status | Implemented; enabled in the menu by default (no `defaultOff`) |
 
-Source: [`js/kukulka.js`](../../js/kukulka.js), CSS prefix `kk-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js), script tag in [`index.html`](../../index.html). Introduced by issue #101 / PR [#166](https://github.com/BielinskiLukasz/child-page/pull/166). Note that the file name is `zegar-z-kukulka.md` but the activity ID and script are `kukulka`.
+Source: [`js/kukulka.js`](../../js/kukulka.js), CSS prefix `kk-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js) (lazy-loaded via `src`/`deps` on its registry entry in js/activities.js). Introduced by issue #101 / PR [#166](https://github.com/BielinskiLukasz/child-page/pull/166). Note that the file name is `zegar-z-kukulka.md` but the activity ID and script are `kukulka`.
 
 ## 2. Business purpose
 

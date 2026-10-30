@@ -11,7 +11,7 @@
 | Interaction type | Tap (start/stop), drag around the carousel (turn by hand), tap an animal |
 | Status | Implemented; enabled in the menu by default (no `defaultOff`) |
 
-Source: [`js/karuzela.js`](../../js/karuzela.js), CSS prefix `kz-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js), script tag in [`index.html`](../../index.html). Introduced by issue #96 / PR [#159](https://github.com/BielinskiLukasz/child-page/pull/159).
+Source: [`js/karuzela.js`](../../js/karuzela.js), CSS prefix `kz-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js) (lazy-loaded via `src`/`deps` on its registry entry in js/activities.js). Introduced by issue #96 / PR [#159](https://github.com/BielinskiLukasz/child-page/pull/159).
 
 ## 2. Business purpose
 

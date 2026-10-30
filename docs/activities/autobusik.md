@@ -133,7 +133,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/autobusik.js`](../../js/autobusik.js), assigned to the `autobusik` registry entry; loaded from `index.html` before `js/app.js`. Other sources: `js/animals.js` (`Animals.head`, `Animals.pick`), `.ab-*` in `css/style.css`.
+- **Entry point:** `mount(container)` in [`js/autobusik.js`](../../js/autobusik.js), assigned to the `autobusik` registry entry; lazy-loaded via `src`/`deps` on its registry entry in js/activities.js. Other sources: `js/animals.js` (`Animals.head`, `Animals.pick`), `.ab-*` in `css/style.css`.
 - **Rendering:** DOM + inline SVG; bus and animals are moved with inline `transform` per frame; the door panel width is an SVG attribute.
 - **State:** closures. Bus: `f`, `v`, `ramp`, `brake`, `target`, `skip`, `go`, `parkedAt`, `door1`. Per animal: `st` (`wait`, `hopin`, `in`, `hopout`), `t`, `p0`, `stop`, `noBoard`, `wave`.
 - **Animation:** a single rAF loop `frame` with dt capped at 0.05 s, stopped when `document.hidden` and restarted on `visibilitychange`.

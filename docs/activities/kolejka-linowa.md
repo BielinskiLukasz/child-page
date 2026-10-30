@@ -126,7 +126,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/kolejka.js`](../../js/kolejka.js), assigned to the `kolejka` registry entry; loaded before `js/app.js`. No shared helper is used.
+- **Entry point:** `mount(container)` in [`js/kolejka.js`](../../js/kolejka.js), assigned to the `kolejka` registry entry; lazy-loaded via `src`/`deps` on its registry entry in js/activities.js. No shared helper is used.
 - **Rendering:** DOM + inline SVG. The land and cable are full-scene SVG overlays; stations, trees and the gondola are positioned with inline `transform`; the door is an SVG rectangle scaled horizontally.
 - **State:** closures: `p` (cable fraction), `dir`, `v`, `ramp`, `plan` (braking), `loop`, `dest`, `dwellActive`/`dwellT`, `door`/`doorTarget`, `pulse`, `goAfterDoor`, `swayAmp`, `waves[]`, `tsT[]`.
 - **Control functions:** `startMove`, `depart`, `brakeStop`, `finishPlan`, `arrive`, `onCar`, `onStation`.

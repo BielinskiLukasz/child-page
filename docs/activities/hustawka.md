@@ -11,7 +11,7 @@
 | Interaction type | Tap (swing seat, animal, tree) |
 | Status | Implemented; enabled in the menu by default (no `defaultOff`) |
 
-Source: [`js/hustawka.js`](../../js/hustawka.js), CSS prefix `hs-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js), script tag in [`index.html`](../../index.html). Introduced by issue #98 / PR [#161](https://github.com/BielinskiLukasz/child-page/pull/161).
+Source: [`js/hustawka.js`](../../js/hustawka.js), CSS prefix `hs-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js) (lazy-loaded via `src`/`deps` on its registry entry in js/activities.js). Introduced by issue #98 / PR [#161](https://github.com/BielinskiLukasz/child-page/pull/161).
 
 ## 2. Business purpose
 

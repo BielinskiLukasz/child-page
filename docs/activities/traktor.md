@@ -139,7 +139,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/traktor.js`](../../js/traktor.js), assigned to the `traktor` registry entry; loaded from `index.html` before `js/app.js`. Other sources: `js/random.js` (`Rand.pickOne`), `.tk-*` CSS rules in `css/style.css`, README entry 33.
+- **Entry point:** `mount(container)` in [`js/traktor.js`](../../js/traktor.js), assigned to the `traktor` registry entry; lazy-loaded via `src`/`deps` on its registry entry in js/activities.js. Other sources: `js/random.js` (`Rand.pickOne`), `.tk-*` CSS rules in `css/style.css`, README entry 33.
 - **Rendering:** DOM + inline SVG. 36 plant nodes are created once and shown/hidden with `visibility`; tractor and plants are positioned with inline `left/top` and `transform`.
 - **State:** closure variables: `s` (arc-length position on the loop), `v` (speed), `ramp` (start/stop easing), `plan` (Hermite drive to the barn), `parked`, per-plant `age`/`wig`, `waveT`, `fullT`/`fadeT`.
 - **Animation:** one `requestAnimationFrame` loop `frame(now)` with dt capped at 0.05 s; it is cancelled when `document.hidden` and restarted on `visibilitychange` (resetting `last`, so there is no time jump).

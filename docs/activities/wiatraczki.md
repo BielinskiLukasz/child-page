@@ -11,7 +11,7 @@
 | Interaction type | Tap (pinwheels), slide/swipe (gust) |
 | Status | Implemented; **disabled in the menu by default** (`defaultOff: true`). A parent enables it in the gated Settings; see [shared platform behaviour](README.md#shared-platform-behaviour). |
 
-Source: [`js/wiatraczki.js`](../../js/wiatraczki.js), CSS prefix `wi-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js), script tag in [`index.html`](../../index.html). Introduced by issue #100 / PR [#170](https://github.com/BielinskiLukasz/child-page/pull/170).
+Source: [`js/wiatraczki.js`](../../js/wiatraczki.js), CSS prefix `wi-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js) (lazy-loaded via `src`/`deps` on its registry entry in js/activities.js). Introduced by issue #100 / PR [#170](https://github.com/BielinskiLukasz/child-page/pull/170).
 
 ## 2. Business purpose
 

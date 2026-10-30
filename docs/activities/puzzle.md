@@ -96,7 +96,7 @@ If `window.PuzzlePictures` is missing, `PICTURES` falls back to an empty array; 
 
 ## 9. Assets
 
-- [`js/puzzle-pictures.js`](../../js/puzzle-pictures.js): 25 simple hand-drawn SVG scenes on a 200x200 canvas (house, fish, flower, apple, balloons, smiling sun, cat, rabbit, bear, duck, ladybug, butterfly, snail, car, sailboat, tree, ice cream, cupcake, rocket, umbrella, kite, snowman, turtle, mushroom, owl). Subjects sit around the centre (about 36 to 164) because non-square grids show a centred crop. It must be loaded before `js/puzzle.js` (it is, in [`index.html`](../../index.html)). Licence/source: Not currently documented (drawn in the repository).
+- [`js/puzzle-pictures.js`](../../js/puzzle-pictures.js): 25 simple hand-drawn SVG scenes on a 200x200 canvas (house, fish, flower, apple, balloons, smiling sun, cat, rabbit, bear, duck, ladybug, butterfly, snail, car, sailboat, tree, ice cream, cupcake, rocket, umbrella, kite, snowman, turtle, mushroom, owl). Subjects sit around the centre (about 36 to 164) because non-square grids show a centred crop. It must be loaded before `js/puzzle.js` (listed in `deps` of the `puzzle` registry entry in [`js/activities.js`](../../js/activities.js)). Licence/source: Not currently documented (drawn in the repository).
 - Background: CSS gradient (`#f6f0fb` to `#e3f1ea`); outline frame: CSS dashed border (`#b9b3e0`) on a translucent white fill.
 - No raster images, fonts or audio. The menu icon is inline SVG in `js/activities.js`.
 

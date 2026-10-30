@@ -11,7 +11,7 @@
 | Interaction type | Touch/drag in the sky (follow), tap the animal |
 | Status | Implemented; enabled in the menu by default (no `defaultOff`) |
 
-Source: [`js/latawiec.js`](../../js/latawiec.js), CSS prefix `lw-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js), script tag in [`index.html`](../../index.html). Introduced by issue #99 / PR [#162](https://github.com/BielinskiLukasz/child-page/pull/162).
+Source: [`js/latawiec.js`](../../js/latawiec.js), CSS prefix `lw-` in [`css/style.css`](../../css/style.css), registry entry in [`js/activities.js`](../../js/activities.js) (lazy-loaded via `src`/`deps` on its registry entry in js/activities.js). Introduced by issue #99 / PR [#162](https://github.com/BielinskiLukasz/child-page/pull/162).
 
 ## 2. Business purpose
 

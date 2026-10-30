@@ -281,5 +281,16 @@
     setMsg.textContent = 'Czas wyzerowany.';
   });
 
-  window.Playtime = { start: start, stop: stop, isExpired: isExpired, renderLater: renderLater };
+  // Parent settings backup (js/settings-io.js): the limit in minutes, or null for no limit. Time used is never touched.
+  function getLimit() { refresh(); return state.limit; }
+  function setLimit(v) {
+    if (v !== null && !(typeof v === 'number' && isFinite(v) && v > 0 && v <= 1440)) { return false; }
+    refresh();
+    state.limit = v;
+    save();
+    paint();
+    return true;
+  }
+
+  window.Playtime = { start: start, stop: stop, isExpired: isExpired, renderLater: renderLater, getLimit: getLimit, setLimit: setLimit };
 })();

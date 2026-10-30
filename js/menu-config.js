@@ -74,8 +74,25 @@
   }
   function reset() { save(defaults()); }
 
+  // Import: build a full config from an untrusted list. Unknown ids and duplicates are dropped, invalid flags fall back
+  // to the defaults, missing activities are appended with their defaults. Returns null if nothing would stay enabled.
+  function fromImport(raw) {
+    if (!Array.isArray(raw)) { return null; }
+    var out = [], seen = {};
+    raw.forEach(function (e) {
+      var a = e && typeof e.id === 'string' && !seen[e.id] && list.filter(function (x) { return x.id === e.id; })[0];
+      if (!a) { return; }
+      seen[a.id] = true;
+      out.push({ id: a.id, on: typeof e.on === 'boolean' ? e.on : !a.defaultOff, fav: e.fav === true });
+    });
+    list.forEach(function (a) { if (!seen[a.id]) { out.push({ id: a.id, on: !a.defaultOff, fav: false }); } });
+    return out.some(function (e) { return e.on; }) ? out : null;
+  }
+  function replace(cfg) { save(cfg); }
+
   window.MenuConfig = { get: get, isEnabled: isEnabled, enabledActivities: enabledActivities,
-    favouriteActivities: favouriteActivities, setFavourite: setFavourite, setEnabled: setEnabled, move: move, reset: reset };
+    favouriteActivities: favouriteActivities, setFavourite: setFavourite, setEnabled: setEnabled, move: move, reset: reset,
+    fromImport: fromImport, replace: replace };
 
   // ---- Settings UI ----
   var box = document.getElementById('act-list');

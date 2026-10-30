@@ -101,7 +101,7 @@ Pushing to `main` runs `.github/workflows/pages.yml`, which publishes to GitHub 
 Mandatory manual tests: Chrome desktop, Chrome Android, Safari iPhone/iPad. Edge and Firefox should work. Zoom is intentionally disabled to avoid accidental pinch-zoom.
 
 ## Privacy
-No backend, cookies, ads, third-party requests or tracking; no network request is made for analytics. The only things stored, locally on the device (localStorage), are the parent-configured daily playtime limit, the playtime used today (with its date), which activities are shown in the menu, in what order and which are favourites, and the anonymous usage statistics described below; none of it leaves the device. No audio.
+No backend, cookies, ads, third-party requests or tracking; no network request is made for analytics or for the settings backup. The only things stored, locally on the device (localStorage), are the parent-configured daily playtime limit, the playtime used today (with its date), which activities are shown in the menu, in what order and which are favourites, and the anonymous usage statistics described below; none of it leaves the device. No audio.
 
 ## Usage statistics
 `js/analytics.js` (`window.Analytics`) is the single module through which every activity reports usage; nothing is shown to the child. It keeps only **daily aggregates** for the last 90 days plus running all-time totals (localStorage key `swa.stats`), never per-event history, names, age, location, text or any device fingerprint. The per-session id is random and kept in memory only.
@@ -137,6 +137,8 @@ A gear icon on the main menu opens a parent gate (a simple sum) and then Setting
 
 ## Menu activities
 In Settings (behind the same gate) a parent can enable or disable each activity and reorder them with up/down buttons; "Przywróć domyślne" restores all of them in the original order. At least one activity always stays enabled, and disabled activities cannot be opened by any route (a stored or typed `#hash` shows the menu).
+
+**Settings backup.** Under "Kopia ustawień" a parent can save the menu configuration (order, enabled flags, favourites) and the daily limit as a small JSON file ("Zapisz ustawienia") or copy it as text ("Skopiuj ustawienia"), and load it again with "Wczytaj ustawienia" (choose a file or paste the text; pasting works where iOS Safari restricts downloads). The file holds only `format`, `version`, the ordered `activities` list (`id`, `on`, `fav`) and `limit`; no statistics, time used, personal or device data. Import checks the input first (max 100 KB): unknown activities are dropped, missing ones are appended with their defaults, invalid values are ignored, and non-JSON, wrong-format or all-disabled input changes nothing and shows a Polish error. Valid input asks "Zastąpić obecne ustawienia?" before replacing anything, and the menu updates at once. Everything happens on the device, with no network request, and is not reported to usage statistics.
 
 **Favourites.** Each Settings row also has a star toggle (filled ★ = favourite, outlined ☆ = not). Enabled favourites appear in an "Ulubione" section above the other tiles, in their saved list order, and are not repeated below; with no enabled favourites no heading is shown. A disabled activity is hidden even if starred and returns to the section when re-enabled. Only a parent can change favourites (the child has no control); they are stored locally with the menu configuration and "Przywróć domyślne" clears them. Starring is not reported to usage statistics.
 

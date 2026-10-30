@@ -71,6 +71,10 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .panel .act-star { font-size: 1.4rem; }
 .panel .act-move:disabled { opacity: .35; cursor: default; }
 .panel .act-star.on { background: #ffe9a8; color: #b57a00; }
+.bak-box { display: flex; flex-direction: column; gap: .6rem; }
+.panel .bak-box textarea { font: inherit; font-size: 1rem; padding: .6rem; border: 2px solid #c9c1e6; border-radius: 14px; min-height: 96px; resize: vertical; }
+.panel .backup button, .panel .bak-box button { min-height: 56px; }
+.overlay textarea:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 3px; }
 .act-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
 .act-confirm p { flex-basis: 100%; margin: 0; }
 .act-confirm button { flex: 1; }

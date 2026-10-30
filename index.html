@@ -68,6 +68,26 @@
           <button id="act-confirm-no" type="button">Nie</button>
         </div>
       </section>
+      <section class="acts backup" aria-labelledby="bak-title">
+        <h3 id="bak-title">Kopia ustawień</h3>
+        <p class="stats-note">Menu, ulubione i limit czasu. Plik zostaje tylko na tym urządzeniu; nic nie jest wysyłane.</p>
+        <button id="bak-export" type="button">Zapisz ustawienia</button>
+        <button id="bak-copy" type="button">Skopiuj ustawienia</button>
+        <button id="bak-import" type="button" aria-expanded="false" aria-controls="bak-box">Wczytaj ustawienia</button>
+        <div id="bak-box" class="bak-box" hidden>
+          <button id="bak-file-btn" type="button">Wybierz plik</button>
+          <input id="bak-file" type="file" accept=".json,application/json,text/plain" hidden>
+          <label for="bak-text">Albo wklej tekst ustawień</label>
+          <textarea id="bak-text" rows="4" autocomplete="off" spellcheck="false"></textarea>
+          <button id="bak-apply" type="button">Wczytaj z tekstu</button>
+        </div>
+        <div id="bak-confirm" class="act-confirm" role="group" aria-label="Potwierdzenie" hidden>
+          <p>Zastąpić obecne ustawienia?</p>
+          <button id="bak-confirm-yes" type="button">Tak</button>
+          <button id="bak-confirm-no" type="button">Anuluj</button>
+        </div>
+        <p id="bak-msg" class="msg" role="status"></p>
+      </section>
       <button id="stats-open" type="button" class="stats-open">Statystyki</button>
     </div>
     <div id="stats-pane" class="panel stats has-back" hidden>
@@ -100,6 +120,7 @@
   <script src="js/menu-config.js"></script>
   <script src="js/playtime.js"></script>
   <script src="js/stats-ui.js"></script>
+  <script src="js/settings-io.js"></script>
   <script src="js/motyle.js"></script>
   <script src="js/malowanie.js"></script>
   <script src="js/akwarium.js"></script>

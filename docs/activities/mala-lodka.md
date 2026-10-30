@@ -128,7 +128,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/lodka.js`](../../js/lodka.js), assigned to the `lodka` registry entry; loaded before `js/app.js`. No shared helper is used.
+- **Entry point:** `mount(container)` in [`js/lodka.js`](../../js/lodka.js), assigned to the `lodka` registry entry; lazy-loaded via `src`/`deps` on its registry entry in js/activities.js. No shared helper is used.
 - **Rendering:** DOM + inline SVG; the boat, ducks and rings are positioned with inline `transform`; wave bands are `<div>`s with repeating SVG background images whose `background-position-x` is updated each frame.
 - **State:** closures. Boat: `f` (loop fraction), `v`, `ramp`, `brake`, `target`, `skip`, `moored`. Ducks: `nod`; animals: `wave`; rings: `t`, `age` (pool of 6).
 - **Animation:** one rAF loop `frame` with a capped dt, paused while hidden and restarted on `visibilitychange`.

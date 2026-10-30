@@ -132,7 +132,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/buzki.js`](../../js/buzki.js), registered by replacing the `mount` of the `buzki` registry entry; returns a cleanup function. The script is loaded before `app.js`.
+- **Entry point:** `mount(container)` in [`js/buzki.js`](../../js/buzki.js), registered by replacing the `mount` of the `buzki` registry entry; returns a cleanup function. The script is lazy-loaded via `src`/`deps` on its registry entry in js/activities.js.
 - **State:** closure variables `cur` (expression index), `from` (parameters at the start of a change), `changeT`, `fx` (running effect `{type, t, d}`), `idleBlink`, `idleTimer`.
 - **Rendering:** fixed DOM: `.bz-field` containing `.bz-face` and `.bz-cat`, each with one inline SVG and transparent buttons on top. `paint()` writes `rx`/`ry` of the eye ellipses, cheek opacity and the mouth path `d` on both heads each frame.
 - **Animation:** one `requestAnimationFrame` loop (`frame`, `dt` capped at 50 ms). When nothing animates the loop stops and `armIdle` sets a 5 s `setTimeout` to wake it for the next idle blink. The loop and timer are cancelled while the tab is hidden and resumed on `visibilitychange`.

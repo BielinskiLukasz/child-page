@@ -151,7 +151,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 - **Randomization:** `Rand.shuffle` from [`js/random.js`](../../js/random.js) and `Animals.LIST`/`Animals.head`.
 - **Persistence:** none.
 - **Cleanup:** cancels the animation frame, removes the `resize`, `orientationchange` and `visibilitychange` listeners and removes the board from the DOM.
-- **Dependencies:** `window.Animals`, `window.Rand` (both loaded before the activity scripts).
+- **Dependencies:** `window.Animals`, `window.Rand` (listed in `deps` of its registry entry in js/activities.js).
 
 ## 15. Responsive layout and coordinate system
 

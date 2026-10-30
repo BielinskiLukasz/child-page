@@ -126,7 +126,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/podwodna.js`](../../js/podwodna.js), assigned to the `podwodna` registry entry; loaded before `js/app.js`. No shared helper is used.
+- **Entry point:** `mount(container)` in [`js/podwodna.js`](../../js/podwodna.js), assigned to the `podwodna` registry entry; lazy-loaded via `src`/`deps` on its registry entry in js/activities.js. No shared helper is used.
 - **Rendering:** DOM + inline SVG; the submarine, fish and bubbles are moved with inline `transform`; there are 10 pooled bubble buttons.
 - **State:** closures: `f` (loop fraction), `v`, `yk` (0 = cruising, 1 = resting on the sand), `ramp`, `glide` (`{f0, v0, f1, pc1, fwd, cur, y0, y1, t, T}`), `waveT`, per-fish `ph`/`circ`/`th0`, per-bubble `t`/`pop`.
 - **Animation:** one rAF loop `frame` with a capped dt; `glide` is a cubic Hermite in `f` (`fNew`) combined with an eased `yk`; fish ping-pong with phase `ph` in [0, 2); paused while hidden and restarted on `visibilitychange`.

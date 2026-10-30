@@ -130,7 +130,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** an IIFE in [`js/policz-razem.js`](../../js/policz-razem.js) that replaces `mount` of the registry entry whose `id` is `policz-razem`; the script tag is in `index.html` before `js/app.js`.
+- **Entry point:** an IIFE in [`js/policz-razem.js`](../../js/policz-razem.js) that replaces `mount` of the registry entry whose `id` is `policz-razem`; the script is lazy-loaded via `src`/`deps` on that entry.
 - **Rendering:** DOM plus SVG. One `.pr` root with a `.pr-board` (backdrop SVG and `.pr-layer`). Per round, `build()` recreates the layer: one counting-row SVG (10 outline circles, 10 dot circles, two stacked numeral `<text>` elements for the crossfade) and up to 10 `<button class="pr-btn">` elements each holding an SVG.
 - **State machine:** variable `phase` is `play`, `glow`, `wait`, `out` or `in`. Counters: `count`, `shown`, `prevShown`, per object `{counted, t}`, per dot `{t, on}`.
 - **Animation:** a single `requestAnimationFrame` loop (`frame`) with capped `dt`. It stops when idle (`busy` false), pauses while `document.hidden` and is restarted by `wake()` on touch or on `visibilitychange`.

@@ -108,7 +108,7 @@ No external assets. Flowers and the butterfly are inline SVG built at runtime (`
 | Automatic flight target | Every 10-15 s of rest | The other 4 flowers | Uniform; the idle delay is also random |
 | Flight curve side | Each flight | 2 | Alternates, not random |
 
-The first flower the butterfly sits on is always flower 1. Choices are in memory only, so after a page reload the same set can come again. The helper is called as the global `Rand` (no `window.` and no fallback), so [`js/random.js`](../../js/random.js) must be loaded first, which `index.html` ensures.
+The first flower the butterfly sits on is always flower 1. Choices are in memory only, so after a page reload the same set can come again. The helper is called as the global `Rand` (no `window.` and no fallback), so [`js/random.js`](../../js/random.js) must be loaded first, which the `deps` of the `motyle` registry entry ensure.
 
 ## 11. Progression and difficulty
 

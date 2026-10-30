@@ -137,7 +137,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 ## 14. Technical implementation
 
-- **Entry point:** `mount(container)` in [`js/akwarium.js`](../../js/akwarium.js), assigned to the registry entry with id `akwarium`; loaded in `index.html` before `js/app.js`.
+- **Entry point:** `mount(container)` in [`js/akwarium.js`](../../js/akwarium.js), assigned to the registry entry with id `akwarium`; lazy-loaded via `src`/`deps` on that entry (`js/random.js` is declared in `deps`).
 - **Rendering:** one `<canvas class="aquarium">`; background, plants, food, fish and bubbles are redrawn each frame in `draw()`. No DOM nodes are created per particle.
 - **State:** closure variables `fish`, `food`, `bubbles`, `W`, `H`, `time`; no persistence.
 - **Loop:** a single `requestAnimationFrame` loop (`frame`) with `dt` clamped to 0.05 s; on `visibilitychange` to hidden the loop is cancelled and restarted with `last = 0` on return, so no jump occurs.

@@ -12,7 +12,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Category | Matching |
 | Interaction type | Drag and drop (touch, mouse, stylus); keyboard alternative (select, then choose outline) |
 | Status | Implemented; enabled in the menu by default |
-| Source | [`js/ksztalty.js`](../../js/ksztalty.js), styles with prefix `ks-` in [`css/style.css`](../../css/style.css), script tag in [`index.html`](../../index.html) |
+| Source | [`js/ksztalty.js`](../../js/ksztalty.js), styles with prefix `ks-` in [`css/style.css`](../../css/style.css), lazy-loaded via `src`/`deps` on its registry entry in [`js/activities.js`](../../js/activities.js) |
 
 Not to be confused with [Rysuj Kształty](rysuj-ksztalty.md), a separate tracing activity.
 

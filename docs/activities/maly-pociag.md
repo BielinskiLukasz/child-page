@@ -12,7 +12,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Category | Cause and effect; open-ended play; observation |
 | Interaction type | Tap (touch, mouse, or Enter/Space on the focusable elements) |
 | Status | Implemented; enabled in the menu by default (no `defaultOff`) |
-| Source | [`js/pociag.js`](../../js/pociag.js), styles with prefix `tp-` in [`css/style.css`](../../css/style.css), script tag in [`index.html`](../../index.html) |
+| Source | [`js/pociag.js`](../../js/pociag.js), styles with prefix `tp-` in [`css/style.css`](../../css/style.css), lazy-loaded via `src`/`deps` on its registry entry in [`js/activities.js`](../../js/activities.js) |
 
 ## 2. Business purpose
 

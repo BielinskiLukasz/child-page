@@ -1,15 +1,15 @@
-# Spokojny Świat Artura
+# Spokojny Świat Dziecka
 
-A calm, silent Polish-language web app for three-year-old Artur. A main menu with large picture tiles opens gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
+A calm, silent Polish-language web app for three-year-old child. A main menu with large picture tiles opens gentle, touch-driven activities, each with a Back button. **Intended for supervised use by a young child.**
 
 **Version 1.0.0** (see the [changelog](CHANGELOG.md)).
 
-**Try it live: [Spokojny Świat Artura](https://bielinskilukasz.github.io/child-page/)**
+**Try it live: [Spokojny Świat Dziecka](https://bielinskilukasz.github.io/child-page/)**
 
 ## Activities
 Full documentation for every activity is in [docs/activities/](docs/activities/README.md); each item below links to its page.
 
-1. [**Akwarium Artura**](docs/activities/akwarium-artura.md) – Drop food into a calm aquarium for the fish and make them blow soft bubbles.
+1. [**Akwarium Dziecka**](docs/activities/akwarium-Dziecka.md) – Drop food into a calm aquarium for the fish and make them blow soft bubbles.
 2. [**Magiczny Ogród**](docs/activities/magiczny-ogrod.md) – Touch a meadow to grow flowers and mushrooms under changing weather and light.
 3. [**Nocne Niebo**](docs/activities/nocne-niebo.md) – Connect glowing stars into pictures such as a car, a bear or a heart.
 4. [**Dzień i Noc**](docs/activities/dzien-i-noc.md) – Touch the sun or the moon to bring night or day, with clouds, birds and a passing plane.

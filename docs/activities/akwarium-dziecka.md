@@ -1,10 +1,10 @@
-# Akwarium Artura
+# Akwarium Dziecka
 
 ## 1. Overview
 
 | Property | Value |
 |---|---|
-| Display name | Akwarium Artura |
+| Display name | Akwarium Dziecka |
 | Activity ID | `akwarium` (`js/activities.js`) |
 | Description | A calm canvas aquarium. Touching the water drops fish food that the fish swim over to eat; touching a fish makes it blow a few soft bubbles. |
 | Category | Open-ended play, observation, cause and effect |

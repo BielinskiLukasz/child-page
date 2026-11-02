@@ -221,6 +221,9 @@
     { id: 'koparka-jezdna', name: 'Koparka na Budowie',
       src: 'js/koparka-jezdna.js',
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><rect x="2" y="48" width="60" height="14" fill="#cfa97b"/><rect x="8" y="40" width="30" height="8" rx="4" fill="#5b5675"/><rect x="10" y="30" width="18" height="11" rx="3" fill="#f4c24e"/><path d="M24 32L40 20L48 38" fill="none" stroke="#e6a23c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M44 36l8 2-3 6-8-2z" fill="#8d89a3"/><path d="M52 48q4-9 8 0z" fill="#e6c98a"/>', '#cfeaf8') },
+    { id: 'betoniarka', name: 'Betoniarka',
+      src: 'js/betoniarka.js',
+      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><rect x="4" y="50" width="56" height="8" rx="4" fill="#5b5675"/><rect x="6" y="36" width="16" height="14" rx="3" fill="#f4c24e"/><ellipse cx="38" cy="34" rx="16" ry="12" fill="#f1eef9" stroke="#8d89a3" stroke-width="3" transform="rotate(-18 38 34)"/><path d="M26 34Q38 26 50 34" fill="none" stroke="#e6c98a" stroke-width="5"/><circle cx="16" cy="52" r="5" fill="#3d3a4f"/><circle cx="44" cy="52" r="5" fill="#3d3a4f"/>', '#cfeaf8') },
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

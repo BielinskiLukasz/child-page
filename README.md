@@ -63,7 +63,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 52. [**Koparka**](docs/activities/koparka.md) – Steer an excavator with a finger to scoop sand and tip it into a dump truck.
 53. [**Zbuduj Rakietę**](docs/activities/zbuduj-rakiete.md) – Build a rocket from parts, launch it and watch it land on the Moon.
 54. [**Plac Budowy**](docs/activities/plac-budowy.md) – Operate the building-site machines to build a small house stage by stage.
-55. [**Zakupy**](docs/activities/zakupy.md) – Put products in a basket and scan them at the shop counter.
+55. [**Zakupy**](docs/activities/zakupy.md) – Put products in a basket, optionally weigh fruit and vegetables on a scale, and scan them at the shop counter.
 56. [**Lot na Smoku**](docs/activities/smok.md) – Steer a friendly dragon with a rider over a scrolling land and make it breathe a little fire.
 57. [**Mieszanie Kolorów**](docs/activities/mieszanie-kolorow.md) – Drag red, yellow and blue paint blobs into a pot and watch a new colour appear.
 58. [**Latarka**](docs/activities/latarka.md) – Move a torch beam through a dark room to find hidden animals and toys.

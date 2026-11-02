@@ -197,7 +197,7 @@ None currently planned.
 
 ## 20. Related activities and reusable components
 
-- Similar: [Rysuj Kształty](rysuj-ksztalty.md) (tracing), [Bańki Mydlane](banki-mydlane.md) (touch-created soft visuals), [Akwarium Artura](akwarium-artura.md) (canvas with one rAF loop).
+- Similar: [Rysuj Kształty](rysuj-ksztalty.md) (tracing), [Bańki Mydlane](banki-mydlane.md) (touch-created soft visuals), [Akwarium Dziecka](akwarium-dziecka.md) (canvas with one rAF loop).
 - Does not use [`js/random.js`](../../js/random.js) or [`js/animals.js`](../../js/animals.js).
 
 ## 21. Change history

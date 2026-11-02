@@ -9,7 +9,7 @@ A calm, silent Polish-language web app for three-year-old child. A main menu wit
 ## Activities
 Full documentation for every activity is in [docs/activities/](docs/activities/README.md); each item below links to its page.
 
-1. [**Akwarium Dziecka**](docs/activities/akwarium-Dziecka.md) – Drop food into a calm aquarium for the fish and make them blow soft bubbles.
+1. [**Akwarium Dziecka**](docs/activities/akwarium-dziecka.md) – Drop food into a calm aquarium for the fish and make them blow soft bubbles.
 2. [**Magiczny Ogród**](docs/activities/magiczny-ogrod.md) – Touch a meadow to grow flowers and mushrooms under changing weather and light.
 3. [**Nocne Niebo**](docs/activities/nocne-niebo.md) – Connect glowing stars into pictures such as a car, a bear or a heart.
 4. [**Dzień i Noc**](docs/activities/dzien-i-noc.md) – Touch the sun or the moon to bring night or day, with clouds, birds and a passing plane.
@@ -77,6 +77,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 66. [**Mój Dzień**](docs/activities/moj-dzien.md) – Touch morning, meal, play and night tiles to see an animal's day.
 67. [**Naklejki**](docs/activities/naklejki.md) – Place stickers anywhere on a scene to make a picture.
 68. [**Rozmiar**](docs/activities/rozmiar.md) – Nest five items from the smallest to the biggest.
+69. [**Koparka na Budowie**](docs/activities/koparka-na-budowie.md) – Drive an excavator around a building site and dig holes and sand piles.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 
@@ -137,6 +138,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Mój Dzień | each scene start (`interaction`, variant = tile) | each set of four scenes seen (`complete()`) |
 | Naklejki | interaction variant = sticker, per placement | (b) no, the activity is open-ended |
 | Rozmiar | interaction variants (item size) plus `complete()` per stack | (a) yes, per stack, but the activity stays open-ended |
+| Koparka na Budowie | interaction variants (`drive`, `dig`, `hole`) plus `complete()` per three holes | (a) yes, per three holes, but the activity stays open-ended |
 
 All other activities use only the automatic tracking (c) and are open-ended. When an activity starts calling `Analytics`, add or update its row in this table and in the analytics status of [docs/activities/README.md](docs/activities/README.md).
 

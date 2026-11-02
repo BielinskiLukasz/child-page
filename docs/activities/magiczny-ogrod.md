@@ -14,7 +14,7 @@
 
 ## 2. Business purpose
 
-A small "plant and watch it grow" scene where each touch produces a pleasant, slowly unfolding result and the whole garden can be wiped with one touch, so the child can start again at any time without anything being "lost". It complements the quieter observation scenes ([Dzień i Noc](dzien-i-noc.md), [Akwarium Artura](akwarium-artura.md)) by letting the child place objects where they want. Since issue #109 the weather and time of day vary per launch, so the same garden does not look identical every visit.
+A small "plant and watch it grow" scene where each touch produces a pleasant, slowly unfolding result and the whole garden can be wiped with one touch, so the child can start again at any time without anything being "lost". It complements the quieter observation scenes ([Dzień i Noc](dzien-i-noc.md), [Akwarium Dziecka](akwarium-dziecka.md)) by letting the child place objects where they want. Since issue #109 the weather and time of day vary per launch, so the same garden does not look identical every visit.
 
 ## 3. Activity flow
 
@@ -204,7 +204,7 @@ None currently planned (random night stars and more natural rain from issue [#16
 
 ## 20. Related activities and reusable components
 
-- [Deszczyk i Tęcza](deszczyk-i-tecza.md) (rain look), [Dzień i Noc](dzien-i-noc.md) (stars), [Ogród Motyli](ogrod-motyli.md) (garden theme), [Akwarium Artura](akwarium-artura.md).
+- [Deszczyk i Tęcza](deszczyk-i-tecza.md) (rain look), [Dzień i Noc](dzien-i-noc.md) (stars), [Ogród Motyli](ogrod-motyli.md) (garden theme), [Akwarium Dziecka](akwarium-dziecka.md).
 - Shared helper: [`js/random.js`](../../js/random.js) (`Rand.pickOne`). It does not use `js/animals.js`.
 
 ## 21. Change history

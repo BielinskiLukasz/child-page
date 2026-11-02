@@ -61,7 +61,7 @@ Documentation status: **Complete** = all 21 sections written from the current so
 
 | # | Activity | ID | Description | Status |
 |---|---|---|---|---|
-| 1 | [Akwarium Artura](akwarium-artura.md) | `akwarium` | A calm canvas aquarium where touching the water drops food that 2-8 uniquely shaped and coloured fish swim to eat, and touching a fish makes it blow bubbles. | Complete |
+| 1 | [Akwarium Dziecka](akwarium-dziecka.md) | `akwarium` | A calm canvas aquarium where touching the water drops food that 2-8 uniquely shaped and coloured fish swim to eat, and touching a fish makes it blow bubbles. | Complete |
 | 2 | [Magiczny Ogród](magiczny-ogrod.md) | `ogrod` | A meadow with random weather and time of day where touching the lawn grows a flower or mushroom and touching the drifting cloud gently clears the garden. | Complete |
 | 3 | [Nocne Niebo](nocne-niebo.md) | `niebo` | Glowing stars in a night sky that the child taps to connect into one of 10 shapes, shown in random order with a gentle glow and a Dalej button when complete. | Complete |
 | 4 | [Dzień i Noc](dzien-i-noc.md) | `dzien-i-noc` | A calm sky where touching the sun or moon slowly switches between day and night, with drifting clouds, a daytime bird flock and an occasional night satellite or plane. | Complete |

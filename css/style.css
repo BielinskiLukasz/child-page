@@ -1267,3 +1267,8 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   display: grid; place-items: center; }
 .stage .ej-dig svg { width: 36px; height: 36px; display: block; }
 .ej-hit:focus-visible, .ej-dig:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+
+/* Walec (wc-) */
+.wc { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #eaf6fb 70%); }
+.stage .wc-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }

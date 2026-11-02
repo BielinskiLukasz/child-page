@@ -221,6 +221,9 @@
     { id: 'koparka-jezdna', name: 'Koparka na Budowie',
       src: 'js/koparka-jezdna.js',
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><rect x="2" y="48" width="60" height="14" fill="#cfa97b"/><rect x="8" y="40" width="30" height="8" rx="4" fill="#5b5675"/><rect x="10" y="30" width="18" height="11" rx="3" fill="#f4c24e"/><path d="M24 32L40 20L48 38" fill="none" stroke="#e6a23c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M44 36l8 2-3 6-8-2z" fill="#8d89a3"/><path d="M52 48q4-9 8 0z" fill="#e6c98a"/>', '#cfeaf8') },
+    { id: 'walec', name: 'Walec',
+      src: 'js/walec.js',
+      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><rect x="2" y="46" width="60" height="16" fill="#bfe3a8"/><path d="M2 46q8-6 14 0t14 0" fill="#c9a57a"/><rect x="2" y="46" width="30" height="8" fill="#5f5a73"/><rect x="26" y="30" width="22" height="14" rx="4" fill="#f4c24e"/><rect x="34" y="22" width="5" height="10" rx="2" fill="#7a748f"/><circle cx="21" cy="40" r="9" fill="#8d89a3"/><circle cx="21" cy="40" r="3" fill="#5b5675"/><circle cx="44" cy="42" r="7" fill="#6b6585"/>', '#cfeaf8') },
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

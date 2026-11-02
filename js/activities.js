@@ -218,6 +218,9 @@
     { id: 'mojdzien', name: 'Mój Dzień',
       src: 'js/mojdzien.js', deps: ['js/random.js', 'js/animals.js'],
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#d8ecfb"/><rect x="8" y="8" width="22" height="22" rx="6" fill="#ffe9a8"/><circle cx="19" cy="19" r="5" fill="#ffb938"/><rect x="34" y="8" width="22" height="22" rx="6" fill="#f7c9d6"/><path d="M38 20h14q0 8-5 8h-4q-5 0-5-8z" fill="#e8605a"/><rect x="8" y="34" width="22" height="22" rx="6" fill="#c9e8c0"/><circle cx="19" cy="45" r="7" fill="#4fa3e0"/><rect x="34" y="34" width="22" height="22" rx="6" fill="#b9b3e0"/><path d="M47 38a8 8 0 1 0 5 12a6.5 6.5 0 0 1-5-12z" fill="#ffe9a8"/>', '#d8ecfb') },
+    { id: 'koparka-jezdna', name: 'Koparka na Budowie',
+      src: 'js/koparka-jezdna.js',
+      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><rect x="2" y="48" width="60" height="14" fill="#cfa97b"/><rect x="8" y="40" width="30" height="8" rx="4" fill="#5b5675"/><rect x="10" y="30" width="18" height="11" rx="3" fill="#f4c24e"/><path d="M24 32L40 20L48 38" fill="none" stroke="#e6a23c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M44 36l8 2-3 6-8-2z" fill="#8d89a3"/><path d="M52 48q4-9 8 0z" fill="#e6c98a"/>', '#cfeaf8') },
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

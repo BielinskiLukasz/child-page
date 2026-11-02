@@ -51,6 +51,7 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Mój Dzień** | each scene start (`track('interaction')`, variant = tile) | each set of four scenes seen (`complete()`) |
 | **Naklejki** | each placement (`track('interaction')`, variant = sticker) | none, open-ended |
 | **Rozmiar** | each nest (`track('interaction')`, variant = item size) | each completed stack (`complete()`) |
+| **Koparka na Budowie** | each drive touch and dig (`track('interaction', { variant })`, variant = `drive`, `dig` or `hole`) | each three holes dug (`complete()`), open-ended |
 
 Every other activity reports nothing itself and is open-ended. Exit-before-completion and highest level are defined only for the four levelled activities. The data is shown and exported (JSON) only in the parent-gated Settings under **Statystyki**, where it can also be reset. The "Analytics and metrics" section of each activity document states what is recorded for that activity.
 
@@ -60,7 +61,7 @@ Documentation status: **Complete** = all 21 sections written from the current so
 
 | # | Activity | ID | Description | Status |
 |---|---|---|---|---|
-| 1 | [Akwarium Artura](akwarium-artura.md) | `akwarium` | A calm canvas aquarium where touching the water drops food that 2-8 uniquely shaped and coloured fish swim to eat, and touching a fish makes it blow bubbles. | Complete |
+| 1 | [Akwarium Dziecka](akwarium-dziecka.md) | `akwarium` | A calm canvas aquarium where touching the water drops food that 2-8 uniquely shaped and coloured fish swim to eat, and touching a fish makes it blow bubbles. | Complete |
 | 2 | [Magiczny Ogród](magiczny-ogrod.md) | `ogrod` | A meadow with random weather and time of day where touching the lawn grows a flower or mushroom and touching the drifting cloud gently clears the garden. | Complete |
 | 3 | [Nocne Niebo](nocne-niebo.md) | `niebo` | Glowing stars in a night sky that the child taps to connect into one of 10 shapes, shown in random order with a gentle glow and a Dalej button when complete. | Complete |
 | 4 | [Dzień i Noc](dzien-i-noc.md) | `dzien-i-noc` | A calm sky where touching the sun or moon slowly switches between day and night, with drifting clouds, a daytime bird flock and an occasional night satellite or plane. | Complete |
@@ -128,6 +129,7 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 66 | [Mój Dzień](moj-dzien.md) | `mojdzien` | Four tiles (morning, meal, play, night) each open a short scene of an animal's day. | Complete |
 | 67 | [Naklejki](naklejki.md) | `naklejki` | Twelve stickers are dragged and placed freely on a scene, with no target and no goal. | Complete |
 | 68 | [Rozmiar](rozmiar.md) | `rozmiar` | Five items of different sizes are dragged into one another to form a nested stack. | Complete |
+| 69 | [Koparka na Budowie](koparka-na-budowie.md) | `koparka-jezdna` | An excavator is driven with a finger across a two-screen building site and digs holes at cones and sand piles; three holes grow flowers and the spots then move. | Complete |
 
 ## Planned activities
 

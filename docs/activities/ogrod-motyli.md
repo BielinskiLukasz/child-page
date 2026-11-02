@@ -190,7 +190,7 @@ None currently planned.
 
 ## 20. Related activities and reusable components
 
-- Similar calm scenes: [Magiczny Ogród](magiczny-ogrod.md), [Akwarium Artura](akwarium-artura.md), [Latawiec](latawiec.md) (smooth spring flight).
+- Similar calm scenes: [Magiczny Ogród](magiczny-ogrod.md), [Akwarium Dziecka](akwarium-dziecka.md), [Latawiec](latawiec.md) (smooth spring flight).
 - Shared helper: [`js/random.js`](../../js/random.js) (`Rand.pickOne`). It does not use `js/animals.js`.
 
 ## 21. Change history

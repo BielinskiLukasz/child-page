@@ -22,7 +22,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 ## 2. Business purpose
 
-- A hold-and-release mechanic; no other activity uses it ([Akwarium Artura](akwarium-artura.md) and [Łódź Podwodna](lodz-podwodna.md) are touch-to-watch scenes); issue [#219](https://github.com/BielinskiLukasz/child-page/issues/219).
+- A hold-and-release mechanic; no other activity uses it ([Akwarium Dziecka](akwarium-dziecka.md) and [Łódź Podwodna](lodz-podwodna.md) are touch-to-watch scenes); issue [#219](https://github.com/BielinskiLukasz/child-page/issues/219).
 
 ## 3. Activity flow
 
@@ -130,7 +130,7 @@ None.
 
 ## 20. Related activities and reusable components
 
-[Akwarium Artura](akwarium-artura.md), [Łódź Podwodna](lodz-podwodna.md); `window.Animals`.
+[Akwarium Dziecka](akwarium-dziecka.md), [Łódź Podwodna](lodz-podwodna.md); `window.Animals`.
 
 ## 21. Change history
 

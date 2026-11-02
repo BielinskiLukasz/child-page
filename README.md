@@ -78,6 +78,7 @@ Full documentation for every activity is in [docs/activities/](docs/activities/R
 67. [**Naklejki**](docs/activities/naklejki.md) – Place stickers anywhere on a scene to make a picture.
 68. [**Rozmiar**](docs/activities/rozmiar.md) – Nest five items from the smallest to the biggest.
 69. [**Koparka na Budowie**](docs/activities/koparka-na-budowie.md) – Drive an excavator around a building site and dig holes and sand piles.
+70. [**Dźwig**](docs/activities/dzwig.md) – Lift bricks with a tower crane hook and stack them into a little house.
 
 All activities are silent and calm, with no scores or failure, and work with touch, mouse or stylus. The Back button in the top-left corner returns to the menu. Parents can hide or reorder activities in Settings; see [Menu activities](#menu-activities).
 
@@ -139,6 +140,7 @@ Every activity gets starts, active time, replays, quick exits and touches automa
 | Naklejki | interaction variant = sticker, per placement | (b) no, the activity is open-ended |
 | Rozmiar | interaction variants (item size) plus `complete()` per stack | (a) yes, per stack, but the activity stays open-ended |
 | Koparka na Budowie | interaction variants (`drive`, `dig`, `hole`) plus `complete()` per three holes | (a) yes, per three holes, but the activity stays open-ended |
+| Dźwig | interaction variants (`hook`, `place`) plus `complete()` per finished house | (a) yes, per house, but the activity stays open-ended |
 
 All other activities use only the automatic tracking (c) and are open-ended. When an activity starts calling `Analytics`, add or update its row in this table and in the analytics status of [docs/activities/README.md](docs/activities/README.md).
 

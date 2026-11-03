@@ -1278,3 +1278,17 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   display: grid; place-items: center; }
 .stage .ej-dig svg { width: 36px; height: 36px; display: block; }
 .ej-hit:focus-visible, .ej-dig:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+
+/* Betoniarka (bk-) */
+.bk { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #f3ead8 75%); }
+.bk:focus { outline: none; }
+.stage .bk-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.bk-bucket, .bk-mould, .bk-lever { position: absolute; left: 0; top: 0; z-index: 2; padding: 0; border: 0; background: transparent; cursor: pointer; will-change: transform; }
+.bk-bucket { border-radius: 20px; cursor: grab; touch-action: none; }
+.bk-bucket.bk-lift { cursor: grabbing; filter: drop-shadow(0 8px 6px rgba(90, 60, 40, .35)); z-index: 4; }
+.bk-mould { border-radius: 16px; }
+.bk-mould.bk-sel { outline: 4px solid #fff; outline-offset: 2px; box-shadow: 0 0 14px 6px rgba(255, 226, 122, .9); }
+.bk-lever { z-index: 3; min-width: 56px; min-height: 56px; border-radius: 50%; background: #fff1bd; box-shadow: 0 3px 10px rgba(91, 86, 117, .35); touch-action: none; }
+.stage .bk-svg-i { width: 100%; height: 100%; display: block; }
+.bk-bucket:focus-visible, .bk-mould:focus-visible, .bk-lever:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }

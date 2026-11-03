@@ -52,6 +52,9 @@ On `main` the application has an on-device usage-metrics module, `js/analytics.j
 | **Naklejki** | each placement (`track('interaction')`, variant = sticker) | none, open-ended |
 | **Rozmiar** | each nest (`track('interaction')`, variant = item size) | each completed stack (`complete()`) |
 | **Koparka na Budowie** | each drive touch and dig (`track('interaction', { variant })`, variant = `drive`, `dig` or `hole`) | each three holes dug (`complete()`), open-ended |
+| **Betoniarka** | each ingredient tipped and each pour (`track('interaction', { variant })`, variant = `sand`, `water`, `stones` or `pour`) | each three filled moulds (`complete()`), open-ended |
+| **Dźwig** | each brick hooked and each brick placed (`track('interaction', { variant })`, variant = `hook` or `place`) | each finished house of six bricks (`complete()`), open-ended |
+| **Walec** | each drive touch and each segment flattening step (`track('interaction', { variant })`, variant = `drive` or `flatten`) | each fully flattened road (`complete()`), open-ended |
 | **Wywrotka** | each pedal press, stone load attempt and tip (`track('interaction', { variant })`, variant = `drive`, `load` or `tip`) | each three loads tipped (`complete()`), open-ended |
 
 Every other activity reports nothing itself and is open-ended. Exit-before-completion and highest level are defined only for the four levelled activities. The data is shown and exported (JSON) only in the parent-gated Settings under **Statystyki**, where it can also be reset. The "Analytics and metrics" section of each activity document states what is recorded for that activity.
@@ -131,7 +134,10 @@ Documentation status: **Complete** = all 21 sections written from the current so
 | 67 | [Naklejki](naklejki.md) | `naklejki` | Twelve stickers are dragged and placed freely on a scene, with no target and no goal. | Complete |
 | 68 | [Rozmiar](rozmiar.md) | `rozmiar` | Five items of different sizes are dragged into one another to form a nested stack. | Complete |
 | 69 | [Koparka na Budowie](koparka-na-budowie.md) | `koparka-jezdna` | An excavator is driven with a finger across a two-screen building site and digs holes at cones and sand piles; three holes grow flowers and the spots then move. | Complete |
-| 70 | [Wywrotka](wywrotka.md) | `wywrotka` | A dump truck is driven with a pedal round a looping road; stones are loaded at one spot and tipped into a heap at another, and three loads make a little hill with a flag. | Complete |
+| 70 | [Betoniarka](betoniarka.md) | `betoniarka` | A cement mixer is filled from sand, water and stones buckets; the drum turns and the mix is poured into a house, star or heart mould. | Complete |
+| 71 | [Dźwig](dzwig.md) | `dzwig` | A tower crane hook is moved with a finger, picks up bricks by touching them and stacks six into a 3-2-1 little house that gets a roof. | Complete |
+| 72 | [Walec](walec.md) | `walec` | A road roller is driven with a finger along a bumpy road of 12 segments; each pass flattens a segment in two steps, and a flat road lets a car or a bunny on a bike drive by before it turns bumpy again. | Complete |
+| 73 | [Wywrotka](wywrotka.md) | `wywrotka` | A dump truck is driven with a pedal round a looping road; stones are loaded at one spot and tipped into a heap at another, and three loads make a little hill with a flag. | Complete |
 
 ## Planned activities
 

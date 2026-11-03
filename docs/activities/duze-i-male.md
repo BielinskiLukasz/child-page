@@ -22,7 +22,7 @@ Introduces the concept of size (big and small) with a single, easily seen rule: 
 2. A big house and a small house (in two different colours) stand side by side on the ground; four animals (two big, two small, of two animal types) wait in a row at the bottom in random order.
 3. The child drags an animal. While dragging it follows the pointer and cannot leave the visible screen.
 4. Released over its matching house, the animal glides to the door; released elsewhere (or over the other house) it glides back to its waiting place.
-5. At the door the animal shrinks and fades into the house (0.5 s), then its picture appears in one of the house's two windows (0.5 s) and looks out with a gentle bob (2 cycles of 1.2 s, at most 6 degrees / 4 px), then rests. A screen reader announces that the animal is in the house.
+5. At the door the animal shrinks and fades into the house (0.5 s), then its picture appears in one of the house's two windows (0.5 s) and looks out with a gentle bob (2 cycles of 1.2 s, at most 5 degrees / 3 px), then rests. A screen reader announces that the animal is in the house.
 6. Placed animals are disabled (no longer draggable) and stay out of the tab order; both animals of a pair stay visible, one per window, until the round ends.
 7. When all four are in their windows, both houses glow (2 s); after 4 s the scene fades out (0.7 s), a new round with other animals is set up and fades in (0.7 s).
 8. The cycle continues indefinitely; the houses keep the same colours for the whole visit.
@@ -129,7 +129,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 ## 14. Technical implementation
 
 - **Entry point:** `mount(container)` in [`js/duze-i-male.js`](../../js/duze-i-male.js), replacing `mount` of the `duze-i-male` registry entry; returns `cleanup`.
-- **Rendering:** DOM: `div.dm > div.dm-glow + div.dm-field`; the field holds 2 `button.dm-house` and 4 `button.dm-animal`, each with an inline SVG. Elements are moved with `transform: translate()`.
+- **Rendering:** DOM: `div.dm > div.dm-glow + div.dm-field + div.dm-live`; the field holds 2 `button.dm-house`, 4 `button.dm-animal` (inline SVG) and 4 `div.dm-win` (one per animal, each with a `div.dm-pic` holding the same animal SVG, `aria-hidden`, hidden until the animal enters). Elements are moved with `transform: translate()`.
 - **State:** per animal `{ big, k, type, x, y, hx/hy (home), tx/ty (target in house), sz, house, mode ('idle' | 'drag' | 'glide'), placed, glow }`; globals `round`, `pool`, `order`, `phase` (`play`, `out`, `in`), `doneT`, `doneGlow`, `fade`.
 - **Events:** `pointerdown/move/up/cancel`, `lostpointercapture` per animal; `click` on animals (keyboard) and houses; `resize`, `orientationchange`, `visibilitychange`.
 - **Animation:** one `frame()` loop (dt capped at 50 ms), smoothstep glides, which stops when idle and is restarted by `start()`; paused while the tab is hidden.
@@ -166,7 +166,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 No automated tests exist ([README.md](README.md#shared-platform-behaviour)). PR [#75](https://github.com/BielinskiLukasz/child-page/pull/75) reports `node --check` only and lists browser tests as pending; PR [#144](https://github.com/BielinskiLukasz/child-page/pull/144) reports `node --check`, a pool-size/unique-id check (8 animals, 6 colour sets) and that the new SVGs parse as XML, with no visual check. Manual checklist (not yet performed):
 
-- [ ] Normal: drag a big animal to the big house; it settles inside and glows.
+- [ ] Normal: drag a big animal to the big house; it glides to the door, enters and looks out of a window, and the house glows once the round is complete.
 - [ ] Drag a small animal to the small house; same result.
 - [ ] Incorrect interaction: drop a big animal on the small house, and an animal on empty ground; it floats back each time.
 - [ ] Completion: place all four; both houses glow, and after about 4 s a new round with different animals fades in.

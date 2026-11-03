@@ -39,6 +39,10 @@
     { wall: '#f4c6dc', roof: '#d99ab8', door: '#fff0f7', glow: '#f7bcd6' },
     { wall: '#d9cbf2', roof: '#b09ae0', door: '#f6f0ff', glow: '#d6c6ff' }
   ];
+  // Two windows per house (house viewBox units): the left one shows the first animal of a pair, the right one the second.
+  var WIN = [{ x: 13, y: 48, w: 25, h: 28 }, { x: 62, y: 48, w: 25, h: 28 }];
+  // Enter sequence per animal (ms): shrink/fade into the door, then appear in the window, then 2 look-out bobs of 1.2 s.
+  var ENTER_MS = 500, APPEAR_MS = 500, BOB_MS = 1200, BOB_N = 2;
   var GLOW_S = 2000, NEXT_S = 4000, FADE_MS = 700;
 
   function animalSvg(t) { return '<svg ' + ATTR + '>' + TYPES[t].art + '</svg>'; }
@@ -46,7 +50,11 @@
     return '<svg ' + ATTR + '><rect x="10" y="42" width="80" height="50" rx="8" fill="' + wall + '"/>' +
       '<path d="M3 46 L50 8 L97 46 Z" fill="' + roof + '" stroke="' + roof + '" stroke-width="6" stroke-linejoin="round"/>' +
       '<rect x="40" y="58" width="20" height="34" rx="9" fill="' + door + '"/>' +
-      '<circle cx="50" cy="29" r="6" fill="#fff" fill-opacity=".7"/></svg>';
+      '<circle cx="50" cy="29" r="6" fill="#fff" fill-opacity=".7"/>' +
+      '<rect x="' + (WIN[0].x - 2) + '" y="' + (WIN[0].y - 2) + '" width="' + (WIN[0].w + 4) + '" height="' + (WIN[0].h + 4) + '" rx="8" fill="' + roof + '"/>' +
+      '<rect x="' + (WIN[1].x - 2) + '" y="' + (WIN[1].y - 2) + '" width="' + (WIN[1].w + 4) + '" height="' + (WIN[1].h + 4) + '" rx="8" fill="' + roof + '"/>' +
+      '<rect x="' + WIN[0].x + '" y="' + WIN[0].y + '" width="' + WIN[0].w + '" height="' + WIN[0].h + '" rx="6" fill="#dff0ff"/>' +
+      '<rect x="' + WIN[1].x + '" y="' + WIN[1].y + '" width="' + WIN[1].w + '" height="' + WIN[1].h + '" rx="6" fill="#dff0ff"/></svg>';
   }
   function smooth(t) { t = t < 0 ? 0 : t > 1 ? 1 : t; return t * t * (3 - 2 * t); }
   function reduced() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
@@ -55,9 +63,9 @@
     container.style.display = 'block';
     var board = document.createElement('div');
     board.className = 'dm';
-    board.innerHTML = '<div class="dm-glow"></div><div class="dm-field"></div>';
+    board.innerHTML = '<div class="dm-glow"></div><div class="dm-field"></div><div class="dm-live" role="status" aria-live="polite"></div>';
     container.appendChild(board);
-    var field = board.querySelector('.dm-field'), glowEl = board.querySelector('.dm-glow');
+    var field = board.querySelector('.dm-field'), glowEl = board.querySelector('.dm-glow'), liveEl = board.querySelector('.dm-live');
 
     var fw = 0, fh = 0, B = 96, Sm = 48, selected = null, round = 0;
     var raf = 0, last = 0, doneT = -1, doneGlow = 0, fade = 1, fadeDir = 0, phase = 'play';
@@ -81,9 +89,15 @@
       var el = document.createElement('button');
       el.type = 'button'; el.className = 'dm-animal';
       el.setAttribute('aria-pressed', 'false');
+      var win = document.createElement('div');
+      win.className = 'dm-win'; win.setAttribute('aria-hidden', 'true'); win.style.display = 'none';
+      var pic = document.createElement('div');
+      pic.className = 'dm-pic'; win.appendChild(pic);
+      field.appendChild(win);
       field.appendChild(el);
       var it = { el: el, big: k < 2, k: k, type: 0, x: 0, y: 0, hx: 0, hy: 0, tx: 0, ty: 0, sz: 0, house: null,
-        mode: 'idle', pid: null, dx: 0, dy: 0, placed: false, glow: 0, fx: 0, fy: 0, gt: 0, gd: 1, gx: 0, gy: 0 };
+        et: 0, ea: 1, sc: 1, wa: 0, bobY: 0, bobR: 0, win: null, pic: null, mode: 'idle', pid: null, dx: 0, dy: 0, placed: false, glow: 0, fx: 0, fy: 0, gt: 0, gd: 1, gx: 0, gy: 0 };
+      it.win = win; it.pic = pic;
       items.push(it);
       el.addEventListener('pointerdown', function (e) { down(it, e); });
       el.addEventListener('pointermove', function (e) { move(it, e); });
@@ -100,6 +114,8 @@
         it.el.innerHTML = animalSvg(it.type);
         it.el.setAttribute('aria-label', (it.big ? 'Duży ' : 'Mały ') + TYPES[it.type].label + ' (Enter lub spacja, potem wybierz domek)');
         it.placed = false; it.mode = 'idle'; it.glow = 0;
+        it.et = 0; it.ea = 1; it.sc = 1; it.wa = 0; it.bobY = 0; it.bobR = 0;
+        it.pic.innerHTML = animalSvg(it.type); it.win.style.display = 'none';
         if (it.pid !== null) { try { it.el.releasePointerCapture(it.pid); } catch (e) { /* released */ } it.pid = null; }
       });
       shuffleRest();
@@ -132,8 +148,15 @@
         it.hx = x + it.sz / 2; it.hy = restBottom - it.sz / 2;
         x += it.sz + g;
         it.house = houses[it.big ? 0 : 1];
-        var off = Math.min(it.sz * 0.5, it.house.w * 0.28) * (it.k % 2 ? 1 : -1);
-        it.tx = it.house.cx + off; it.ty = it.house.base - it.sz / 2 - it.house.w * 0.03;
+        it.tx = it.house.cx; it.ty = it.house.base - it.sz / 2 - it.house.w * 0.03;
+        var wd = WIN[it.k % 2], hw = it.house.w / 100, ww = wd.w * hw, wh = wd.h * hw;
+        it.win.style.left = (it.house.cx - it.house.w / 2 + wd.x * hw) + 'px';
+        it.win.style.top = (it.house.base - it.house.w + wd.y * hw) + 'px';
+        it.win.style.width = ww + 'px'; it.win.style.height = wh + 'px';
+        it.win.style.borderRadius = (6 * hw) + 'px';
+        it.pic.style.width = (ww * 1.1) + 'px'; it.pic.style.height = (ww * 1.1) + 'px';
+        it.pic.style.left = (-ww * 0.05) + 'px'; it.pic.style.top = (wh - ww * 1.1 + 2 * hw) + 'px';
+        it.slide = wh * 0.7;
         it.el.style.width = it.sz + 'px'; it.el.style.height = it.sz + 'px';
         if (it.mode === 'drag') { cancelDrag(it); }
         if (it.mode === 'glide') { glideTo(it, it.placed ? it.tx : it.hx, it.placed ? it.ty : it.hy, true); }
@@ -142,11 +165,16 @@
         place(it);
       });
     }
-    function place(it) { it.el.style.transform = 'translate(' + (it.x - it.sz / 2) + 'px,' + (it.y - it.sz / 2) + 'px)'; }
+    function place(it) {
+      it.el.style.transform = 'translate(' + (it.x - it.sz / 2) + 'px,' + (it.y - it.sz / 2) + 'px)' + (it.sc < 1 ? ' scale(' + it.sc + ')' : '');
+    }
     function paint(it) {
       var g = it.glow + doneGlow * 0.5;
       it.el.style.filter = g > 0.01 ? 'drop-shadow(0 0 ' + (6 + 14 * g) + 'px ' + TYPES[it.type].glow + ')' : '';
-      it.el.style.opacity = String(fade);
+      it.el.style.opacity = String(fade * it.ea);
+      it.win.style.display = it.wa > 0.001 ? 'block' : 'none';
+      it.win.style.opacity = String(fade * it.wa);
+      it.pic.style.transform = 'translateY(' + ((1 - it.wa) * it.slide + it.bobY) + 'px) rotate(' + it.bobR + 'deg)';
     }
     function paintHouses() {
       houses.forEach(function (h) {
@@ -163,7 +191,10 @@
       start();
     }
     function sendHome(it) { it.placed = false; glideTo(it, it.hx, it.hy); }
-    function snap(it) { it.placed = true; select(null); glideTo(it, it.tx, it.ty); }
+    function snap(it) {
+      it.placed = true; it.et = 0; select(null); glideTo(it, it.tx, it.ty);
+      liveEl.textContent = (it.big ? 'Duży ' : 'Mały ') + TYPES[it.type].label + ' jest w domku.';
+    }
 
     function cancelDrag(it) {
       if (it.pid !== null) { try { it.el.releasePointerCapture(it.pid); } catch (e) { /* already released */ } }
@@ -235,6 +266,21 @@
           if (it.gt >= it.gd) { it.mode = 'idle'; it.x = it.gx; it.y = it.gy; place(it); it.el.style.zIndex = ''; }
           else { busy = true; }
         }
+        if (it.placed && it.mode === 'idle') {
+          var rm = reduced(), endT = ENTER_MS + APPEAR_MS + (rm ? 0 : BOB_MS * BOB_N);
+          it.et += dt;
+          if (rm && it.et < ENTER_MS + APPEAR_MS) { it.et = ENTER_MS + APPEAR_MS; }
+          var ke = smooth(it.et / ENTER_MS);
+          it.ea = 1 - ke; it.sc = 1 - 0.7 * ke;
+          it.wa = smooth((it.et - ENTER_MS) / APPEAR_MS);
+          var bt = it.et - ENTER_MS - APPEAR_MS;
+          if (!rm && bt > 0 && bt < BOB_MS * BOB_N) {
+            var bs = Math.sin(2 * Math.PI * bt / BOB_MS);
+            it.bobR = 5 * bs; it.bobY = -3 * Math.abs(bs);
+          } else { it.bobR = 0; it.bobY = 0; }
+          place(it);
+          if (it.et < endT) { busy = true; }
+        }
         var tg = it.placed && it.mode === 'idle' ? 1 : 0;
         if (Math.abs(it.glow - tg) > 0.005) { it.glow += (tg - it.glow) * Math.min(1, dt / 250); busy = true; }
         else { it.glow = tg; }
@@ -242,7 +288,7 @@
         it.el.disabled = it.placed;
       });
       // Round finished: soft glow ~2 s, new round after ~4 s (time only advances while the tab is visible).
-      if (phase === 'play' && doneT < 0 && items.every(function (it) { return it.placed && it.mode === 'idle'; })) { doneT = 0; }
+      if (phase === 'play' && doneT < 0 && items.every(function (it) { return it.placed && it.mode === 'idle' && it.et >= ENTER_MS + APPEAR_MS; })) { doneT = 0; }
       if (doneT >= 0 && phase === 'play') {
         doneT += dt; busy = true;
         if (doneT >= NEXT_S) { phase = 'out'; fadeDir = -1; }

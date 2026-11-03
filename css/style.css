@@ -417,6 +417,10 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .stage .dm-animal { min-width: 48px; min-height: 48px; cursor: grab; touch-action: none; z-index: 1; }
 .stage .dm-animal:disabled { cursor: default; }
 .stage .dm-house svg, .stage .dm-animal svg { width: 100%; height: 100%; display: block; overflow: visible; pointer-events: none; }
+.stage .dm-win { position: absolute; left: 0; top: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+.dm-pic { position: absolute; transform-origin: 50% 100%; }
+.stage .dm-pic svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.dm-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .dm-house:focus-visible, .dm-animal:focus-visible, .dm-selected { outline: 4px solid #8f7fd1; outline-offset: 4px; border-radius: 24px; }
 /* Kolorowe Kubeczki */
 .kc { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
@@ -974,12 +978,12 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .zk-scanner { position: absolute; height: 28px; border-radius: 14px; background: #5b5675; box-shadow: 0 3px 0 #3d3a4f; }
 .zk-laser { position: absolute; left: 10px; right: 10px; top: 12px; height: 4px; border-radius: 2px; background: #e8605a; opacity: .35; }
 .zk-scanner.zk-flash { box-shadow: 0 0 22px 8px rgba(63, 209, 107, .8); }
-.zk-prod, .zk-item, .zk-basket, .zk-reg { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: transparent; touch-action: none; cursor: grab; }
+.zk-prod, .zk-item, .zk-pi, .zk-basket, .zk-reg, .zk-scale { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: transparent; touch-action: none; cursor: grab; }
 .zk-prod { border-radius: 16px; display: block; }
 .zk-un { position: absolute; display: block; pointer-events: none; }
 .zk-ghost { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; z-index: 4; }
 .zk-item { border-radius: 16px; display: flex; align-items: center; justify-content: center; }
-.stage .zk-prod svg, .zk-prod svg, .stage .zk-ghost svg, .zk-ghost svg, .stage .zk-item svg, .zk-item svg { width: 92%; height: 92%; display: block; pointer-events: none; }
+.stage .zk-prod svg, .zk-prod svg, .stage .zk-ghost svg, .zk-ghost svg, .stage .zk-item svg, .zk-item svg, .stage .zk-pi svg, .zk-pi svg { width: 92%; height: 92%; display: block; pointer-events: none; }
 .zk-item.zk-done { cursor: default; }
 .zk-lift { cursor: grabbing; filter: drop-shadow(0 8px 6px rgba(80, 60, 30, .35)); }
 .zk-basket { border-radius: 16px; }
@@ -993,8 +997,15 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .zk-reg { border-radius: 14px; cursor: pointer; touch-action: manipulation; }
 .stage .zk-reg svg, .zk-reg svg { width: 100%; height: 100%; display: block; pointer-events: none; }
 .zk-basket.zk-over { outline: 5px solid #fff; outline-offset: 2px; box-shadow: 0 0 18px 8px rgba(255, 226, 122, .9); }
-.zk-prod:focus-visible, .zk-item:focus-visible, .zk-basket:focus-visible, .zk-reg:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+.zk-prod:focus-visible, .zk-item:focus-visible, .zk-pi:focus-visible, .zk-scale:focus-visible, .zk-basket:focus-visible, .zk-reg:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
 .zk-basket:disabled, .zk-reg:disabled { opacity: .55; cursor: default; }
+/* zk-scale: store scale (dial body button, plate, produce units on the plate) */
+.zk-scale { border-radius: 12px; cursor: default; touch-action: manipulation; display: block; }
+.stage .zk-scale svg, .zk-scale svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.zk-scale.zk-over { outline: 5px solid #fff; outline-offset: 2px; box-shadow: 0 0 18px 8px rgba(255, 226, 122, .9); }
+.zk-scale:disabled { opacity: .55; }
+.zk-pi { border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+.zk-plate { position: absolute; left: 0; top: 0; height: 10px; box-sizing: border-box; border-radius: 6px; background: #d4cdee; box-shadow: 0 3px 0 #8d86b3; pointer-events: none; z-index: 1; }
 .zk-owner { position: absolute; left: 0; top: 0; pointer-events: none; }
 .stage .zk-owner svg, .zk-owner svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .zk-receipt { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; display: grid; grid-auto-flow: column; box-sizing: border-box; padding: 10px 6px; background: #fffdf5; border: 2px solid #d8cfb6; border-bottom: 6px dotted #d8cfb6; border-radius: 6px 6px 0 0; z-index: 3; color: #3d3a4f; }
@@ -1268,6 +1279,24 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .stage .ej-dig svg { width: 36px; height: 36px; display: block; }
 .ej-hit:focus-visible, .ej-dig:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
 
+/* Betoniarka (bk-) */
+.bk { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #f3ead8 75%); }
+.bk:focus { outline: none; }
+.stage .bk-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.bk-bucket, .bk-mould, .bk-lever { position: absolute; left: 0; top: 0; z-index: 2; padding: 0; border: 0; background: transparent; cursor: pointer; will-change: transform; }
+.bk-bucket { border-radius: 20px; cursor: grab; touch-action: none; }
+.bk-bucket.bk-lift { cursor: grabbing; filter: drop-shadow(0 8px 6px rgba(90, 60, 40, .35)); z-index: 4; }
+.bk-mould { border-radius: 16px; }
+.bk-mould.bk-sel { outline: 4px solid #fff; outline-offset: 2px; box-shadow: 0 0 14px 6px rgba(255, 226, 122, .9); }
+.bk-lever { z-index: 3; min-width: 56px; min-height: 56px; border-radius: 50%; background: #fff1bd; box-shadow: 0 3px 10px rgba(91, 86, 117, .35); touch-action: none; }
+.stage .bk-svg-i { width: 100%; height: 100%; display: block; }
+.bk-bucket:focus-visible, .bk-mould:focus-visible, .bk-lever:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+/* Dźwig (dg-) */
+.dg-root { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #f3ead8 80%); cursor: grab; }
+.dg-root:focus { outline: none; }
+.stage .dg-scene { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 /* Walec (wc-) */
 .wc { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
   background: linear-gradient(#cfe8f8, #eaf6fb 70%); }

@@ -8,7 +8,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 |---|---|
 | Display name | Zakupy |
 | Activity ID | `zakupy` (registry entry in [`js/activities.js`](../../js/activities.js)) |
-| Description | A role-play shop: the child takes products (several units of each on the shelves, 22 kinds in total) into a big basket, brings it to the counter and drags each item across a barcode scanner; a numeral counts the scanned items and a receipt lists each product with a count. |
+| Description | A role-play shop: the child takes products (several units of each on the shelves, 22 kinds in total) into a big basket, brings it to the counter and drags each item across a barcode scanner; a numeral counts the scanned items and a receipt lists each product with a count. Fruit and vegetables can optionally be weighed first on a store scale whose pointer swings by weight. |
 | Category | Role play; dragging; counting |
 | Interaction type | Drag (and tap / press) with a keyboard alternative |
 | Status | Implemented; enabled in the menu by default (appended last, no `defaultOff`) |
@@ -23,10 +23,11 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 1. A shop with six shelf slots (each shows 2-4 units of one product), a big basket, a register button and a shop owner (random animal) is shown; a shopping list of pictures (1-5, kinds that are on the shelves) and the numeral `0` are at the top.
 2. The child drags a product onto the basket: one unit leaves the shelf and goes into the basket (its picture, at least 44 px wide, shows in the pile). A product can be taken any number of times; a slot whose last unit was taken stays empty for 2 s and is then restocked with 2-4 fresh units.
-3. Dragging the basket into the shop area, tapping it or pressing the register button brings the basket to the counter. Basket items come first; list products that were not picked are added until the counter has as many items as the list.
-4. Each counter item is dragged across the scanner (or activated with Enter/Space). The scanner flashes a green line and the numeral rises by 1; the item lands in the bag row.
-5. When everything is scanned a receipt (a picture and a count numeral such as `x3` per distinct product) slides out of the scanner and the owner smiles. About 4 s after that the counter fades out and a new list starts with a different random set of products on the shelves.
-6. Exit: Back button or browser Back.
+3. Optional: dragging a fruit or vegetable onto the store scale puts it on the plate; the plate dips and the dial pointer swings to a heavier or lighter position. A unit on the plate can be dragged into the basket or taken off; the existing flow (shelf to basket) is unchanged and the scale never has to be used.
+4. Dragging the basket into the shop area, tapping it or pressing the register button brings the basket to the counter. Basket items come first; list products that were not picked are added until the counter has as many items as the list.
+5. Each counter item is dragged across the scanner (or activated with Enter/Space). The scanner flashes a green line and the numeral rises by 1; the item lands in the bag row.
+6. When everything is scanned a receipt (a picture and a count numeral such as `x3` per distinct product) slides out of the scanner and the owner smiles. About 4 s after that the counter fades out and a new list starts with a different random set of products on the shelves.
+7. Exit: Back button or browser Back.
 
 ## 4. Rules and behavior
 
@@ -35,6 +36,9 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 | Rounds | List length is round 1 = 1 item, round 2 = 2 ... round 5 = 5, then it starts again from 1; the count restarts on every launch. |
 | List | Distinct products drawn at random; a new list never equals the previous one. |
 | Shelves | Six slots, each a random kind from a pool of 22 (fruit, vegetables, bread, milk, cheese, eggs, juice, fish, sweets, a toy duck ...); each round a different set than the previous one. Each slot shows 2-4 units; taking one removes one unit; an emptied slot is restocked after 2 s with a new batch of the same kind. |
+| Scale | A plate (152 px) and a round dial with ticks and a pointer, no text. In the bottom band between register and owner when there is room, otherwise in a row above the band on the right. 11 produce kinds are weighable (light: strawberry, grapes, carrot; medium: apple, orange, tomato, pear, banana, cucumber; heavy: broccoli, watermelon); the other 11 kinds glide back to their shelf in 0.4 s. |
+| Weighing | A unit dropped on the scale leaves the shelf (usual 2 s restock when the slot is empty) and stays on the plate (at most 5, a further one glides back). The plate dips 4-8 px and the pointer swings (damped spring, about 0.8 s) to -100 degrees (rest) plus 30 per weight class, summed over the units and capped at +100 degrees (the dial end), so light / medium / heavy give 30 / 60 / 90 degrees. Removing a unit returns the pointer to rest in about 0.8 s. |
+| Plate units | Dragged into the basket: a normal basket item. A tap, or a drag released elsewhere, takes it off and it returns to its shelf slot (0.4 s). Units still on the plate at checkout go into the basket automatically. Weighing does not change the list, round length, scanning or the receipt. |
 | Basket | At most 15 items (the same kind any number of times); a further product just glides back and stays on the shelf. The pile shows 8-12 items at once (rows overlap at most about a quarter); further items are stacked on top and a count numeral appears above 8 items. |
 | Counter items | Basket items plus missing list products up to the list length. The counter shows 5 items at a time; for a bigger basket the next wave appears after the previous one is scanned. Any product is accepted; the same product several times counts normally. |
 | Scanning | Crossing or dropping an item on the scanner zone scans it once; a fast drag is walked in ~8 px steps so the scanner is never skipped. An unscanned item released elsewhere glides back to the belt in 0.4 s. |
@@ -59,16 +63,17 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 ## 6. Accessibility and usability
 
 - **Input:** pointer drags; shelf slots are at least 64 px (the dragged unit at least 64 px), counter items, basket and register at least 56 px.
-- **Keyboard:** arrows move focus between the visible products (and basket, register) or counter items; Enter or Space puts a product in the basket, presses the register or scans an item; visible 4 px focus ring.
+- **Keyboard:** arrows move focus between the visible products, the scale, the units on the plate, the basket and the register, or the counter items; Enter or Space puts a product in the basket, presses the register or scans an item; Enter or Space on the scale ('Waga') puts the last focused fruit or vegetable (else the first one on the shelves) on the plate, and on a plate unit takes it off; visible 4 px focus ring.
 - **Labels (Polish):** Polish product names (for example "Jabłko", "Chleb", "Mleko", "Jajka", "Ryba"), "Koszyk", "Kasa" with instructions; the pictures are decorative.
-- **Non-colour cues:** the basket gets a glowing outline when a product is over it; scanned items are dimmed and move to the bag row.
+- **Non-colour cues:** the pointer angle (not colour) carries the weight; the basket and the scale get a glowing outline when a product is over them; scanned items are dimmed and move to the bag row.
 - **Layout:** shelves 3 x 2 or 6 x 1, whichever gives larger products; the basket is 1.6 x its former width and its pile reserves room above the bottom band; works from 320 x 568 to 1920 x 1080 in both orientations (nothing clipped, Back button not covered).
 - **Reduced motion:** all movement is driven from JavaScript (one rAF loop), so every state is reached.
-- **Text:** numerals only (counter, basket count above 8 items, `xN` on the receipt).
+- **Text:** numerals only (the scale dial has ticks only; counter, basket count above 8 items, `xN` on the receipt).
 
 ## 7. Risks and limitations
 
 - Look and feel on real devices has not been checked (sections 17-18).
+- Up to five plate units overlap (24 px step) so a unit's visible part is narrower than 56 px; the topmost one wins taps, keyboard is the precise alternative.
 - An item scanned by a fast drag that ends away from the scanner still counts as scanned.
 
 ## 8. Configuration
@@ -93,7 +98,7 @@ A round is complete when every counter item has been scanned; feedback is the re
 
 ## 13. Analytics and metrics
 
-This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`). `js/app.js` records the activity start and end and the module counts touches; `js/zakupy.js` additionally calls `Analytics.track('interaction', { variant })` with `variant` the product id (22 kinds, for example `apple`, `bread`, `eggs`) for each product put in the basket and each scan, and `Analytics.complete()` when a list is fully scanned. The activity stays open-ended (a new list starts by itself). All calls are wrapped so that nothing changes if `window.Analytics` is missing. See [README.md](README.md#analytics-status).
+This activity reports to the shared on-device module `js/analytics.js` (`window.Analytics`). `js/app.js` records the activity start and end and the module counts touches; `js/zakupy.js` additionally calls `Analytics.track('interaction', { variant })` with `variant` the product id (22 kinds, for example `apple`, `bread`, `eggs`) for each product put in the basket and each scan, `variant: 'weigh'` for each unit put on the scale, and `Analytics.complete()` when a list is fully scanned (unchanged: weighing does not affect completion). The activity stays open-ended (a new list starts by itself). All calls are wrapped so that nothing changes if `window.Analytics` is missing. See [README.md](README.md#analytics-status).
 
 ## 14. Technical implementation
 

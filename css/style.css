@@ -978,12 +978,12 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .zk-scanner { position: absolute; height: 28px; border-radius: 14px; background: #5b5675; box-shadow: 0 3px 0 #3d3a4f; }
 .zk-laser { position: absolute; left: 10px; right: 10px; top: 12px; height: 4px; border-radius: 2px; background: #e8605a; opacity: .35; }
 .zk-scanner.zk-flash { box-shadow: 0 0 22px 8px rgba(63, 209, 107, .8); }
-.zk-prod, .zk-item, .zk-basket, .zk-reg { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: transparent; touch-action: none; cursor: grab; }
+.zk-prod, .zk-item, .zk-pi, .zk-basket, .zk-reg, .zk-scale { position: absolute; left: 0; top: 0; padding: 0; border: 0; background: transparent; touch-action: none; cursor: grab; }
 .zk-prod { border-radius: 16px; display: block; }
 .zk-un { position: absolute; display: block; pointer-events: none; }
 .zk-ghost { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; z-index: 4; }
 .zk-item { border-radius: 16px; display: flex; align-items: center; justify-content: center; }
-.stage .zk-prod svg, .zk-prod svg, .stage .zk-ghost svg, .zk-ghost svg, .stage .zk-item svg, .zk-item svg { width: 92%; height: 92%; display: block; pointer-events: none; }
+.stage .zk-prod svg, .zk-prod svg, .stage .zk-ghost svg, .zk-ghost svg, .stage .zk-item svg, .zk-item svg, .stage .zk-pi svg, .zk-pi svg { width: 92%; height: 92%; display: block; pointer-events: none; }
 .zk-item.zk-done { cursor: default; }
 .zk-lift { cursor: grabbing; filter: drop-shadow(0 8px 6px rgba(80, 60, 30, .35)); }
 .zk-basket { border-radius: 16px; }
@@ -997,8 +997,15 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .zk-reg { border-radius: 14px; cursor: pointer; touch-action: manipulation; }
 .stage .zk-reg svg, .zk-reg svg { width: 100%; height: 100%; display: block; pointer-events: none; }
 .zk-basket.zk-over { outline: 5px solid #fff; outline-offset: 2px; box-shadow: 0 0 18px 8px rgba(255, 226, 122, .9); }
-.zk-prod:focus-visible, .zk-item:focus-visible, .zk-basket:focus-visible, .zk-reg:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+.zk-prod:focus-visible, .zk-item:focus-visible, .zk-pi:focus-visible, .zk-scale:focus-visible, .zk-basket:focus-visible, .zk-reg:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
 .zk-basket:disabled, .zk-reg:disabled { opacity: .55; cursor: default; }
+/* zk-scale: store scale (dial body button, plate, produce units on the plate) */
+.zk-scale { border-radius: 12px; cursor: default; touch-action: manipulation; display: block; }
+.stage .zk-scale svg, .zk-scale svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.zk-scale.zk-over { outline: 5px solid #fff; outline-offset: 2px; box-shadow: 0 0 18px 8px rgba(255, 226, 122, .9); }
+.zk-scale:disabled { opacity: .55; }
+.zk-pi { border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+.zk-plate { position: absolute; left: 0; top: 0; height: 10px; box-sizing: border-box; border-radius: 6px; background: #d4cdee; box-shadow: 0 3px 0 #8d86b3; pointer-events: none; z-index: 1; }
 .zk-owner { position: absolute; left: 0; top: 0; pointer-events: none; }
 .stage .zk-owner svg, .zk-owner svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .zk-receipt { position: absolute; left: 0; top: 0; visibility: hidden; pointer-events: none; display: grid; grid-auto-flow: column; box-sizing: border-box; padding: 10px 6px; background: #fffdf5; border: 2px solid #d8cfb6; border-bottom: 6px dotted #d8cfb6; border-radius: 6px 6px 0 0; z-index: 3; color: #3d3a4f; }

@@ -230,6 +230,9 @@
     { id: 'walec', name: 'Walec',
       src: 'js/walec.js',
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><rect x="2" y="46" width="60" height="16" fill="#bfe3a8"/><path d="M2 46q8-6 14 0t14 0" fill="#c9a57a"/><rect x="2" y="46" width="30" height="8" fill="#5f5a73"/><rect x="26" y="30" width="22" height="14" rx="4" fill="#f4c24e"/><rect x="34" y="22" width="5" height="10" rx="2" fill="#7a748f"/><circle cx="21" cy="40" r="9" fill="#8d89a3"/><circle cx="21" cy="40" r="3" fill="#5b5675"/><circle cx="44" cy="42" r="7" fill="#6b6585"/>', '#cfeaf8') },
+    { id: 'wywrotka', name: 'Wywrotka',
+      src: 'js/wywrotka.js',
+      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><rect x="2" y="48" width="60" height="14" fill="#cfa97b"/><path d="M8 40L12 22H38L40 40Z" fill="#e6a23c" stroke="#c9922a" stroke-width="2" stroke-linejoin="round" transform="rotate(-12 8 40)"/><circle cx="16" cy="27" r="3.5" fill="#9a95ad"/><circle cx="24" cy="25" r="3" fill="#c4a574"/><rect x="8" y="40" width="48" height="6" rx="2" fill="#5b5675"/><path d="M40 40V30Q40 28 43 28H49L55 36V40Z" fill="#f4c24e" stroke="#c9922a" stroke-width="2" stroke-linejoin="round"/><circle cx="18" cy="48" r="5.5" fill="#3d3a4f"/><circle cx="46" cy="48" r="5.5" fill="#3d3a4f"/>', '#cfeaf8') },
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;

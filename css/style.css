@@ -1301,3 +1301,16 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .wc { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
   background: linear-gradient(#cfe8f8, #eaf6fb 70%); }
 .stage .wc-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+/* Wywrotka (wt-) */
+.wt { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #eaf6fb 70%); }
+.stage .wt-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+.wt-hit { position: absolute; left: 0; top: 0; z-index: 2; cursor: pointer; border-radius: 50%; will-change: transform; }
+.wt-pedal, .wt-tip { position: absolute; bottom: 14px; z-index: 3; width: 64px; height: 64px; min-width: 56px; min-height: 56px; padding: 0;
+  border: 0; border-radius: 50%; background: #fff1bd; box-shadow: 0 3px 10px rgba(91, 86, 117, .35); cursor: pointer;
+  display: grid; place-items: center; touch-action: none; }
+.wt-pedal { right: 14px; }
+.wt-tip { left: 14px; }
+.wt-tip.wt-off { opacity: .4; }
+.stage .wt-pedal svg, .stage .wt-tip svg { width: 36px; height: 36px; display: block; }
+.wt-hit:focus-visible, .wt-pedal:focus-visible, .wt-tip:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }

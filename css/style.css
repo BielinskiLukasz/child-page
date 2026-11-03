@@ -1292,3 +1292,8 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
 .bk-lever { z-index: 3; min-width: 56px; min-height: 56px; border-radius: 50%; background: #fff1bd; box-shadow: 0 3px 10px rgba(91, 86, 117, .35); touch-action: none; }
 .stage .bk-svg-i { width: 100%; height: 100%; display: block; }
 .bk-bucket:focus-visible, .bk-mould:focus-visible, .bk-lever:focus-visible { outline: 4px solid #8f7fd1; outline-offset: 2px; }
+/* Dźwig (dg-) */
+.dg-root { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #f3ead8 80%); cursor: grab; }
+.dg-root:focus { outline: none; }
+.stage .dg-scene { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; }

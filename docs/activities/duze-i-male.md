@@ -21,11 +21,12 @@ Introduces the concept of size (big and small) with a single, easily seen rule: 
 1. The child opens the activity (`#duze-i-male`); `setRound()` and `layout()` run immediately.
 2. A big house and a small house (in two different colours) stand side by side on the ground; four animals (two big, two small, of two animal types) wait in a row at the bottom in random order.
 3. The child drags an animal. While dragging it follows the pointer and cannot leave the visible screen.
-4. Released over its matching house, the animal glides into the house area and glows softly; released elsewhere (or over the other house) it glides back to its waiting place.
-5. Placed animals stay in the house, are disabled (no longer draggable), and glow.
-6. When all four are placed and idle, both houses glow (2 s); after 4 s the scene fades out (0.7 s), a new round with other animals is set up and fades in (0.7 s).
-7. The cycle continues indefinitely; the houses keep the same colours for the whole visit.
-8. The child leaves with the Back button (see [README.md](README.md#shared-platform-behaviour)).
+4. Released over its matching house, the animal glides to the door; released elsewhere (or over the other house) it glides back to its waiting place.
+5. At the door the animal shrinks and fades into the house (0.5 s), then its picture appears in one of the house's two windows (0.5 s) and looks out with a gentle bob (2 cycles of 1.2 s, at most 5 degrees / 3 px), then rests. A screen reader announces that the animal is in the house.
+6. Placed animals are disabled (no longer draggable) and stay out of the tab order; both animals of a pair stay visible, one per window, until the round ends.
+7. When all four are in their windows, both houses glow (2 s); after 4 s the scene fades out (0.7 s), a new round with other animals is set up and fades in (0.7 s).
+8. The cycle continues indefinitely; the houses keep the same colours for the whole visit.
+9. The child leaves with the Back button (see [README.md](README.md#shared-platform-behaviour)).
 
 ## 4. Rules and behavior
 
@@ -34,6 +35,8 @@ Introduces the concept of size (big and small) with a single, easily seen rule: 
 | Items per round | 4 animals: 2 big (size `B`) and 2 small (size `B / 2`); two animal types, each shown once big and once small |
 | Correct target | Big animal -> big house, small animal -> small house (`it.house`) |
 | Drop detection | Animal centre inside the house's box plus a 10% padding of the house width; if inside both, the nearer house centre wins |
+| Window | Each house has two windows (house viewBox units `WIN`): the first animal of a pair uses the left one, the second the right one; window animal is the same type, big in the big house and small in the small house, clipped to the window |
+| Enter sequence | `ENTER_MS = 500` shrink/fade at the door, `APPEAR_MS = 500` slide up into the window, then `BOB_N = 2` bobs of `BOB_MS = 1200` ms (rotate up to 5 degrees, lift up to 3 px); with reduced motion the animal is in its window right after the 300 ms glide, without bobbing |
 | Wrong drop | Animal glides back to its resting spot |
 | Glide duration | `min(1800, 800 + distance)` ms; 300 ms with reduced motion; 200 ms for re-layout glides |
 | Glow | `GLOW_S = 2000` ms of house glow; `NEXT_S = 4000` ms until the next round; fade `FADE_MS = 700` ms each way |
@@ -42,7 +45,7 @@ Introduces the concept of size (big and small) with a single, easily seen rule: 
 
 - Keyboard: Enter or Space on an animal (a `click` with `detail === 0`) selects it (`aria-pressed`, outline); activating a house then places it (correct house) or sends it home (wrong house).
 - Placed animals are `disabled` and removed from the tab order (`tabIndex = -1`).
-- The two animals of one pair sit left and right inside the house (offset `min(0.5 * size, 0.28 * house width)`).
+- The two animals of one pair appear in the left and right window of the house; the end state is set by the rAF loop (inline styles), never only by a CSS keyframe. A polite live region (`.dm-live`) announces e.g. "Duży miś jest w domku.".
 
 ## 5. Educational and developmental benefits
 
@@ -126,7 +129,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 ## 14. Technical implementation
 
 - **Entry point:** `mount(container)` in [`js/duze-i-male.js`](../../js/duze-i-male.js), replacing `mount` of the `duze-i-male` registry entry; returns `cleanup`.
-- **Rendering:** DOM: `div.dm > div.dm-glow + div.dm-field`; the field holds 2 `button.dm-house` and 4 `button.dm-animal`, each with an inline SVG. Elements are moved with `transform: translate()`.
+- **Rendering:** DOM: `div.dm > div.dm-glow + div.dm-field + div.dm-live`; the field holds 2 `button.dm-house`, 4 `button.dm-animal` (inline SVG) and 4 `div.dm-win` (one per animal, each with a `div.dm-pic` holding the same animal SVG, `aria-hidden`, hidden until the animal enters). Elements are moved with `transform: translate()`.
 - **State:** per animal `{ big, k, type, x, y, hx/hy (home), tx/ty (target in house), sz, house, mode ('idle' | 'drag' | 'glide'), placed, glow }`; globals `round`, `pool`, `order`, `phase` (`play`, `out`, `in`), `doneT`, `doneGlow`, `fade`.
 - **Events:** `pointerdown/move/up/cancel`, `lostpointercapture` per animal; `click` on animals (keyboard) and houses; `resize`, `orientationchange`, `visibilitychange`.
 - **Animation:** one `frame()` loop (dt capped at 50 ms), smoothstep glides, which stops when idle and is restarted by `start()`; paused while the tab is hidden.
@@ -163,7 +166,7 @@ This activity reports to the shared on-device module `js/analytics.js` (`window.
 
 No automated tests exist ([README.md](README.md#shared-platform-behaviour)). PR [#75](https://github.com/BielinskiLukasz/child-page/pull/75) reports `node --check` only and lists browser tests as pending; PR [#144](https://github.com/BielinskiLukasz/child-page/pull/144) reports `node --check`, a pool-size/unique-id check (8 animals, 6 colour sets) and that the new SVGs parse as XML, with no visual check. Manual checklist (not yet performed):
 
-- [ ] Normal: drag a big animal to the big house; it settles inside and glows.
+- [ ] Normal: drag a big animal to the big house; it glides to the door, enters and looks out of a window, and the house glows once the round is complete.
 - [ ] Drag a small animal to the small house; same result.
 - [ ] Incorrect interaction: drop a big animal on the small house, and an animal on empty ground; it floats back each time.
 - [ ] Completion: place all four; both houses glow, and after about 4 s a new round with different animals fades in.

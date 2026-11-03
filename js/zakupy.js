@@ -12,8 +12,13 @@
 // Keyboard: arrows move focus between the visible products/basket/checkout or counter items; Enter/Space puts a product in the basket,
 // presses checkout or scans a counter item. One capped-dt rAF loop (final states set from JS, never only in CSS keyframes), pauses while
 // hidden, stops when idle.
-// Usage metrics: track('interaction', {variant: product id}) per product put in the basket and per scan, complete() when a round is
-// fully scanned; the activity stays open-ended (a new list starts by itself).
+// Optional store scale (shop screen only): a produce unit (11 of the 22 kinds, each light/medium/heavy) dropped on the plate stays there (up to 5),
+// the plate dips 4-8 px and the dial pointer swings (damped spring, ~0.8 s) to an angle proportional to the summed weight (capped at the dial end);
+// non-produce glides back. A unit on the plate goes into the basket when dragged there, is taken off by a tap or by dragging it elsewhere (it
+// returns to its shelf) and is moved into the basket automatically at checkout. The dial has ticks and a pointer only, no text.
+// Keyboard: Enter/Space on the scale weighs the last focused produce product (else the first produce on the shelves); Enter/Space on a plate unit takes it off.
+// Usage metrics: track('interaction', {variant: product id}) per product put in the basket and per scan, track('interaction', {variant: 'weigh'})
+// per unit put on the scale, complete() when a round is fully scanned; the activity stays open-ended (a new list starts by itself).
 (function () {
   var SCAN_FLASH_S = 0.45, BACK_S = 0.4, TO_S = 0.6, BAG_S = 0.45, RECEIPT_S = 0.9, DONE_S = 4.0, FADE_S = 0.5, KEY_SCAN_S = 0.5;
   var MAX_ROUND = 5, MAX_BASKET = 15, SHELF_N = 6, RESTOCK_S = 2, IN_S = 0.2, WAVE_FADE_S = 0.3, TOP_MIN = 48, TOP_MAX = 64;
@@ -54,6 +59,23 @@
     '<path d="M28 32l3 28M50 32v30M72 32l-3 28" stroke="#b9803f" stroke-width="3" stroke-linecap="round"/></svg>';
   var REGISTER_SVG = '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="30" width="48" height="26" rx="5" fill="#8f7fd1"/><rect x="14" y="10" width="36" height="20" rx="4" fill="#dff1fb" stroke="#6f62b0" stroke-width="3"/>' +
     '<path d="M22 20h20" stroke="#6f62b0" stroke-width="3" stroke-linecap="round"/><rect x="14" y="38" width="10" height="6" rx="2" fill="#dcd5f5"/><rect x="27" y="38" width="10" height="6" rx="2" fill="#dcd5f5"/><rect x="40" y="38" width="10" height="6" rx="2" fill="#dcd5f5"/><rect x="14" y="47" width="36" height="5" rx="2" fill="#6f62b0"/></svg>';
+  // Produce on the scale: weight class 1 = light, 2 = medium, 3 = heavy (11 of the 22 kinds); everything else is not weighable.
+  var WEIGHT = { strawberry: 1, grapes: 1, carrot: 1, apple: 2, orange: 2, tomato: 2, pear: 2, banana: 2, cucumber: 2, broccoli: 3, melon: 3 };
+  var UNIT_DEG = 30, REST_DEG = -100, MAX_DEG = 200, PLATE_MAX = 5, PL_POOL = 8, PIS = 56, PSTEP = 24;
+  var SC_W = 160, SC_H = 104, SC_PLATE_W = 152, SC_PLATE_Y = 50, SC_BODY_Y = 60, SC_BODY_H = 44, DIP_MIN = 4, DIP_MAX = 8, SPRING_K = 64, SPRING_C = 9.6;
+  var SCALE_SVG = (function () {
+    var t = '', k, a, c, sn, x1, y1, x2, y2;
+    for (k = 0; k <= 8; k++) {
+      a = (REST_DEG + k * MAX_DEG / 8) * Math.PI / 180; sn = Math.sin(a); c = Math.cos(a);
+      x1 = 80 + sn * 14.5; y1 = 22 - c * 14.5; x2 = 80 + sn * 17.5; y2 = 22 - c * 17.5;
+      t += 'M' + x1.toFixed(1) + ' ' + y1.toFixed(1) + 'L' + x2.toFixed(1) + ' ' + y2.toFixed(1);
+    }
+    return '<svg viewBox="0 0 ' + SC_W + ' ' + SC_BODY_H + '" aria-hidden="true"><rect x="4" y="2" width="152" height="40" rx="12" fill="#8f7fd1"/>' +
+      '<rect x="4" y="34" width="152" height="8" rx="4" fill="#6f62b0"/><circle cx="80" cy="22" r="19" fill="#fff" stroke="#5b5675" stroke-width="3"/>' +
+      '<path d="' + t + '" stroke="#5b5675" stroke-width="1.6" stroke-linecap="round" fill="none"/>' +
+      '<g class="zk-ptr" transform="rotate(' + REST_DEG + ' 80 22)"><path d="M80 22V8" stroke="#e8443a" stroke-width="3" stroke-linecap="round"/></g>' +
+      '<circle cx="80" cy="22" r="3" fill="#5b5675"/></svg>';
+  })();
   var lastKinds = '';
 
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
@@ -127,12 +149,30 @@
       })();
     }
 
+    // store scale: body button with the dial, the plate (a plain div) and a pool of plate units (buttons)
+    var plateEl = document.createElement('div');
+    plateEl.className = 'zk-plate'; root.appendChild(plateEl);
+    var scaleBtn = document.createElement('button');
+    scaleBtn.type = 'button'; scaleBtn.className = 'zk-scale'; scaleBtn.innerHTML = SCALE_SVG;
+    scaleBtn.setAttribute('aria-label', 'Waga. Naciśnij Enter, aby położyć na wadze wybrany owoc lub warzywo.');
+    root.appendChild(scaleBtn);
+    var pointerEl = scaleBtn.querySelector('.zk-ptr');
+    var pl = [];
+    for (i = 0; i < PL_POOL; i++) {
+      (function () {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'zk-pi'; b.style.width = b.style.height = PIS + 'px'; root.appendChild(b);
+        pl.push({ kind: null, from: null, node: b, hx: 0, hy: 0, x: 0, y: 0, x0: 0, y0: 0, t: 0, mode: 'off', alpha: 0, seq: 0 });
+      })();
+    }
+
     var W = 320, H = 568, topH = TOP_MAX, botH = 100, psz = 80, gsz = 64, isz = 64, bsz = 76, regSz = 60, osz = 80, ls = 36;
     var bkW = 116, bkH = 81, pUw = 40, pTh = 31, pStep = 34, pStepY = 27, pCols = 3, pV = 12, pileUp = 0, recW = 80, recH = 100, recRow = 24;
-    var midT = 0, midB = 0, scY = 0, scX0 = 0, scX1 = 0, beltY = 0, bagY = 0, floorT = 0;
+    var midT = 0, midB = 0, shelfB = 0, rowH = 0, scBand = false, scCx = 0, scTop = 0, scY = 0, scX0 = 0, scX1 = 0, beltY = 0, bagY = 0, floorT = 0;
     var round = 0, list = [], basket = [], queue = [], tally = {}, tallyOrder = [], phase = 'shop', phaseT = 0, count = 0, flash = 0, owner = null, smile = false, recT = -1;
     var bk = { x: 0, y: 0, hx: 0, hy: 0, x0: 0, y0: 0, t: 0, mode: 'home', moved: false };
     var sceneAlpha = 0, shelfAlpha = 1;
+    var ptA = REST_DEG, ptV = 0, dip = 0, plSeq = 0, lastProd = null;
     var alive = true, raf = 0, last = 0, drag = null;
 
     // ---- geometry -------------------------------------------------------------------------------------------
@@ -147,12 +187,15 @@
       pUw = Math.max(44, Math.round(bkW * 0.4)); pTh = Math.round(pUw * 50 / 64); pStep = Math.round(pUw * 0.85); pStepY = Math.round(pTh * 0.85);
       pCols = Math.max(2, Math.floor((bkW * 0.96 - pUw) / pStep) + 1); pV = Math.min(12, pCols * 4);
       pileUp = Math.max(0, pTh + (Math.ceil(pV / pCols) - 1) * pStepY - bkH * 0.93 - 8) + 4;
-      botH = Math.max(bkH, osz) + 16;
-      midT = topH; midB = H - botH;
+      // the scale sits in the bottom band between register and owner when there is room, otherwise in a row above the band (right side)
+      var regRight = 8 + bkW + 10 + regSz, ownLeft = W - osz - 14;
+      scBand = ownLeft - regRight - 12 >= SC_W;
+      botH = Math.max(bkH, osz, scBand ? SC_H : 0) + 16; rowH = scBand ? 0 : SC_H + 4;
+      midT = topH; midB = H - botH; shelfB = midB - rowH;
       floorT = midB;
       floor.style.top = floorT + 'px';
       // shelf grid: 3 x 2 or 6 x 1, whichever gives bigger products (at least 64 px)
-      var aw = W - 16, ah = midB - midT - 12 - pileUp, best = null, cols;
+      var aw = W - 16, ah = shelfB - midT - 12 - Math.max(0, pileUp - rowH), best = null, cols;
       [3, 6].forEach(function (c) {
         var rows = Math.ceil(6 / c), s = Math.min(aw / c, ah / rows, 104);
         if (!best || s > best.s + 1) { best = { c: c, rows: rows, s: s }; }
@@ -188,6 +231,10 @@
       if (bk.mode === 'home' || bk.mode === 'back') { bk.mode = 'home'; bk.x = bk.hx; bk.y = bk.hy; }
       basketBtn.style.width = bkW + 'px'; basketBtn.style.height = bkH + 'px';
       renderThumbs();
+      if (scBand) { scCx = (regRight + ownLeft) / 2; scTop = bk.hy - SC_H / 2; } else { scCx = W - SC_W / 2 - 8; scTop = shelfB + 2; }
+      scaleBtn.style.width = SC_W + 'px'; scaleBtn.style.height = SC_BODY_H + 'px';
+      plateEl.style.width = SC_PLATE_W + 'px';
+      placePlate();
       regBtn.style.width = regBtn.style.height = regSz + 'px';
       ownerEl.style.width = ownerEl.style.height = osz + 'px';
       sizeReceipt();
@@ -203,6 +250,19 @@
       });
     }
     function overBasket(x, y) { return Math.abs(x - bk.hx) < bkW * 0.6 && y > bk.hy - bkH * 0.5 - 28 && y < bk.hy + bkH * 0.6; }
+    function overScale(x, y) { return Math.abs(x - scCx) < SC_W / 2 + 8 && y > scTop - 8 && y < scTop + SC_H + 8; }
+    function onPlate(it) { return it.mode === 'in' || it.mode === 'home' || it.mode === 'back'; }
+    function plateCount() { return pl.filter(function (it) { return onPlate(it) || it.mode === 'drag'; }).length; }
+    function plateWeight() { return pl.reduce(function (s, it) { return s + (onPlate(it) ? WEIGHT[it.kind.id] : 0); }, 0); }
+    // slots along the plate, in the order the units were put on it (later ones on top)
+    function placePlate() {
+      var on = pl.filter(onPlate).sort(function (a, b) { return a.seq - b.seq; });
+      on.forEach(function (it, k) {
+        it.hx = scCx + (k - (on.length - 1) / 2) * PSTEP; it.hy = scTop + SC_PLATE_Y + 6 - PIS / 2;
+        it.node.style.zIndex = String(5 + k);
+        if (it.mode === 'home') { it.x = it.hx; it.y = it.hy; }
+      });
+    }
     function overScanner(x, y) { return x >= scX0 - 8 && x <= scX1 + 8 && Math.abs(y - scY) <= 26; }
     function shopping() { return phase === 'shop'; }
     function counterPhase() { return phase === 'scan'; }
@@ -273,6 +333,8 @@
         p.node.setAttribute('aria-label', p.kind.label + '. Przeciągnij do koszyka lub naciśnij Enter, aby włożyć do koszyka.');
         p.ghost.innerHTML = iconSvg(p.kind);
       });
+      pl.forEach(function (it) { it.mode = 'off'; it.alpha = 0; it.node.disabled = true; });
+      ptA = REST_DEG; ptV = 0; dip = 0; lastProd = null;
       recT = -1; flash = 0;
       shelfAlpha = 0; sceneAlpha = 0; bk.mode = 'home'; bk.x = bk.hx; bk.y = bk.hy;
       phase = 'fadein'; phaseT = 0;
@@ -290,6 +352,10 @@
     }
     function checkout() {
       if (!shopping()) { return; }
+      if (drag && drag.pitem) { drag = null; }
+      pl.forEach(function (it) {   // units still on the plate go into the basket, none are lost
+        if (onPlate(it) || it.mode === 'drag') { basket.push(it.kind.id); report(function (A) { A.track('interaction', { variant: it.kind.id }); }); it.mode = 'off'; it.alpha = 0; it.node.disabled = true; }
+      });
       var kinds = counterKinds(basket, list.map(function (p) { return p.id; }));
       setBatch(kinds.slice(0, MAX_ROUND), basket.length);
       queue = kinds.slice(MAX_ROUND);
@@ -327,7 +393,22 @@
         p.ghost.style.transform = 'translate(' + (p.x - gsz / 2).toFixed(1) + 'px,' + (p.y - gsz / 2 - (p.mode === 'drag' ? 8 : 0)).toFixed(1) + 'px) scale(' + (1 - 0.4 * gi).toFixed(3) + ')';
         p.ghost.classList.toggle('zk-lift', p.mode === 'drag');
       });
-      var over = !!(drag && drag.prod && shopping() && overBasket(drag.prod.x, drag.prod.y));
+      var over = !!(drag && (drag.prod || drag.pitem) && shopping() && overBasket((drag.prod || drag.pitem).x, (drag.prod || drag.pitem).y));
+      scaleBtn.classList.toggle('zk-over', !!(drag && drag.prod && shopping() && WEIGHT[drag.prod.kind.id] && overScale(drag.prod.x, drag.prod.y)));
+      scaleBtn.style.opacity = plateEl.style.opacity = sa.toFixed(3);
+      scaleBtn.style.visibility = plateEl.style.visibility = sa <= 0.001 ? 'hidden' : 'visible';
+      scaleBtn.style.transform = 'translate(' + (scCx - SC_W / 2).toFixed(1) + 'px,' + (scTop + SC_BODY_Y).toFixed(1) + 'px)';
+      plateEl.style.transform = 'translate(' + (scCx - SC_PLATE_W / 2).toFixed(1) + 'px,' + (scTop + SC_PLATE_Y + dip).toFixed(1) + 'px)';
+      scaleBtn.disabled = !shopping() || sa < 0.5;
+      pointerEl.setAttribute('transform', 'rotate(' + ptA.toFixed(2) + ' 80 22)');
+      pl.forEach(function (it) {
+        var on = it.mode !== 'off', a = on ? it.alpha * sa : 0;
+        it.node.style.opacity = a.toFixed(3);
+        it.node.style.visibility = a > 0.001 ? 'visible' : 'hidden';
+        it.node.style.transform = 'translate(' + (it.x - PIS / 2).toFixed(1) + 'px,' + (it.y - PIS / 2 + (it.mode === 'home' || it.mode === 'in' ? dip : 0) - (it.mode === 'drag' ? 8 : 0)).toFixed(1) + 'px)';
+        it.node.classList.toggle('zk-lift', it.mode === 'drag');
+        it.node.disabled = !on || it.mode !== 'home' || !shopping() || sa < 0.5;
+      });
       basketBtn.classList.toggle('zk-over', over);
       basketBtn.style.transform = 'translate(' + (bk.x - bkW / 2).toFixed(1) + 'px,' + (bk.y - bkH / 2).toFixed(1) + 'px)';
       basketBtn.classList.toggle('zk-lift', bk.mode === 'drag');
@@ -405,6 +486,7 @@
         bk.x = bk.x0 + (bk.hx - bk.x0) * eb; bk.y = bk.y0 + (bk.hy - bk.y0) * eb;
         if (bk.t >= BACK_S) { bk.mode = 'home'; bk.x = bk.hx; bk.y = bk.hy; }
       }
+      stepScale(dt);
       cn.forEach(function (c) {
         if (phase === 'scan' && c.mode === 'home' && c.alpha < 1) { c.alpha = Math.min(1, c.alpha + dt / WAVE_FADE_S); }
         if (c.mode === 'back') {
@@ -423,10 +505,40 @@
         }
       });
     }
+    function stepScale(dt) {
+      var on = plateCount() - pl.filter(function (it) { return it.mode === 'drag'; }).length, target = REST_DEG + Math.min(MAX_DEG, UNIT_DEG * plateWeight());
+      var dipT = on > 0 ? DIP_MIN + (DIP_MAX - DIP_MIN) * (target - REST_DEG) / MAX_DEG : 0, n = Math.max(1, Math.ceil(dt * 120)), h = dt / n, k;
+      for (k = 0; k < n; k++) {   // damped spring: settles in about 0.8 s with a small swing past the target
+        ptV += (SPRING_K * (target - ptA) - SPRING_C * ptV) * h; ptA += ptV * h;
+        if (ptA < REST_DEG) { ptA = REST_DEG; ptV = 0; } else if (ptA > REST_DEG + MAX_DEG) { ptA = REST_DEG + MAX_DEG; ptV = 0; }
+      }
+      if (Math.abs(target - ptA) < 0.05 && Math.abs(ptV) < 0.3) { ptA = target; ptV = 0; }
+      dip += (dipT - dip) * (1 - Math.exp(-dt * 16));
+      if (Math.abs(dipT - dip) < 0.05) { dip = dipT; }
+      pl.forEach(function (it) {
+        if (it.mode === 'in' || it.mode === 'back') {
+          it.t += dt; var e = ease(it.t / (it.mode === 'in' ? IN_S : BACK_S));
+          it.x = it.x0 + (it.hx - it.x0) * e; it.y = it.y0 + (it.hy - it.y0) * e;
+          if (it.t >= (it.mode === 'in' ? IN_S : BACK_S)) { it.mode = 'home'; it.x = it.hx; it.y = it.hy; }
+        } else if (it.mode === 'out') {
+          it.t += dt; var o = ease(it.t / BACK_S), p = it.from;
+          it.x = it.x0 + (p.hx - it.x0) * o; it.y = it.y0 + (p.hy - it.y0) * o; it.alpha = 1 - 0.6 * o;
+          if (it.t >= BACK_S) {   // the unit is back on its shelf
+            it.mode = 'off'; it.alpha = 0;
+            if (p.kind === it.kind) { p.stock = Math.min(4, p.stock + 1); p.restock = 0; p.shown = ''; }
+          }
+        } else if (it.mode === 'tobasket') {
+          it.t += dt; var g = ease(it.t / IN_S);
+          it.x = it.x0 + (bk.hx - it.x0) * g; it.y = it.y0 + (bk.hy - bkH * 0.15 - it.y0) * g; it.alpha = 1 - 0.6 * g;
+          if (it.t >= IN_S) { it.mode = 'off'; it.alpha = 0; }
+        }
+      });
+    }
     function busy() {
       if (phase !== 'shop' && phase !== 'scan') { return true; }
       if (flash > 0) { return true; }
       if (bk.mode === 'back') { return true; }
+      if (ptA !== REST_DEG + Math.min(MAX_DEG, UNIT_DEG * plateWeight()) || ptV !== 0 || pl.some(function (it) { return it.mode !== 'off' && it.mode !== 'home' && it.mode !== 'drag'; })) { return true; }
       return prods.some(function (p) { return p.mode === 'back' || p.mode === 'in' || p.restock > 0; }) ||
         cn.some(function (c) { return c.mode === 'back' || c.mode === 'tobag' || c.mode === 'cross' || (c.mode === 'home' && c.alpha < 1); });
     }
@@ -452,8 +564,33 @@
       basket.push(p.kind.id); p.stock--; if (p.stock === 0) { p.restock = RESTOCK_S; }
       renderThumbs(); send(p, 'in');
     }
+    // Puts one produce unit on the plate (the unit leaves the shelf, restocked by the usual 2 s rule); anything else glides back.
+    function putOnPlate(p, fromX, fromY) {
+      var it = null, k;
+      if (p.stock <= 0 || !WEIGHT[p.kind.id] || plateCount() >= PLATE_MAX) { send(p, 'back'); return false; }
+      for (k = 0; k < pl.length && !it; k++) { if (pl[k].mode === 'off') { it = pl[k]; } }
+      if (!it) { send(p, 'back'); return false; }
+      report(function (A) { A.track('interaction', { variant: 'weigh' }); });
+      p.stock--; if (p.stock === 0) { p.restock = RESTOCK_S; }
+      p.mode = 'home'; p.x = p.hx; p.y = p.hy; p.shown = '';
+      it.kind = p.kind; it.from = p; it.seq = ++plSeq; it.node.innerHTML = iconSvg(p.kind);
+      it.node.setAttribute('aria-label', p.kind.label + ' na wadze. Naciśnij Enter, aby zdjąć z wagi.');
+      it.mode = 'in'; it.t = 0; it.alpha = 1; it.x0 = it.x = fromX; it.y0 = it.y = fromY;
+      placePlate(); return true;
+    }
+    function takeOff(it) { it.mode = 'out'; it.t = 0; it.x0 = it.x; it.y0 = it.y; it.alpha = 1; placePlate(); }
+    function plateToBasket(it) {
+      basket.push(it.kind.id); report(function (A) { A.track('interaction', { variant: it.kind.id }); });
+      renderThumbs(); it.mode = 'tobasket'; it.t = 0; it.x0 = it.x; it.y0 = it.y; placePlate();
+    }
+    function weighByKey() {
+      var p = lastProd && WEIGHT[lastProd.kind.id] && lastProd.stock > 0 ? lastProd : null, k;
+      for (k = 0; k < prods.length && !p; k++) { if (WEIGHT[prods[k].kind.id] && prods[k].stock > 0 && prods[k].mode === 'home') { p = prods[k]; } }
+      if (p) { putOnPlate(p, p.hx, p.hy); }
+    }
     prods.forEach(function (p) {
       var b = p.node;
+      b.addEventListener('focus', function () { lastProd = p; });
       b.addEventListener('pointerdown', function (e) {
         if (drag || !shopping() || p.stock <= 0 || (p.mode !== 'home' && p.mode !== 'back')) { return; }
         drag = { id: e.pointerId, prod: p };
@@ -468,7 +605,7 @@
         if (!drag || drag.prod !== p || e.pointerId !== drag.id) { return; }
         drag = null;
         try { b.releasePointerCapture(e.pointerId); } catch (x) { /* already released */ }
-        if (overBasket(p.x, p.y)) { putInBasket(p); } else { send(p, 'back'); }
+        if (overBasket(p.x, p.y)) { putInBasket(p); } else if (overScale(p.x, p.y)) { putOnPlate(p, p.x, p.y); } else { send(p, 'back'); }
         render(); start();
       });
       b.addEventListener('pointercancel', function (e) {
@@ -480,6 +617,39 @@
         p.x = p.hx; p.y = p.hy; putInBasket(p); render(); start();
       });
     });
+    pl.forEach(function (it) {
+      var b = it.node;
+      b.addEventListener('pointerdown', function (e) {
+        if (drag || !shopping() || it.mode !== 'home') { return; }
+        var q = localPt(e);
+        drag = { id: e.pointerId, pitem: it, sx: q[0], sy: q[1], moved: false };
+        it.mode = 'drag'; try { b.setPointerCapture(e.pointerId); } catch (x) { /* unsupported */ }
+        it.x = q[0]; it.y = q[1]; placePlate(); render(); start(); e.preventDefault();
+      });
+      b.addEventListener('pointermove', function (e) {
+        if (!drag || drag.pitem !== it || e.pointerId !== drag.id) { return; }
+        var q = localPt(e);
+        if (Math.abs(q[0] - drag.sx) + Math.abs(q[1] - drag.sy) >= 8) { drag.moved = true; }
+        it.x = q[0]; it.y = q[1]; render();
+      });
+      function release(e, cancel) {
+        if (!drag || drag.pitem !== it || e.pointerId !== drag.id) { return; }
+        var moved = drag.moved; drag = null;
+        try { b.releasePointerCapture(e.pointerId); } catch (x) { /* already released */ }
+        if (cancel || (moved && overScale(it.x, it.y))) { it.mode = 'back'; it.t = 0; it.x0 = it.x; it.y0 = it.y; placePlate(); }
+        else if (overBasket(it.x, it.y) && basket.length < MAX_BASKET) { plateToBasket(it); }
+        else if (overBasket(it.x, it.y)) { it.mode = 'back'; it.t = 0; it.x0 = it.x; it.y0 = it.y; placePlate(); }
+        else { takeOff(it); }
+        render(); start();
+      }
+      b.addEventListener('pointerup', function (e) { release(e, false); });
+      b.addEventListener('pointercancel', function (e) { release(e, true); });
+      b.addEventListener('click', function (e) {
+        if (e.detail !== 0 || !shopping() || it.mode !== 'home') { return; }
+        takeOff(it); scaleBtn.focus(); render(); start();
+      });
+    });
+    scaleBtn.addEventListener('click', function (e) { if (e.detail === 0 && shopping()) { weighByKey(); render(); start(); } });
     // basket: a tap checks out, a drag into the shop area checks out, anything else glides back
     basketBtn.addEventListener('pointerdown', function (e) {
       if (drag || !shopping()) { return; }
@@ -544,7 +714,7 @@
     function onKey(e) {
       var dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
       if (!dir) { return; }
-      var nodes = (shopping() ? prods.map(function (p) { return p.node; }).concat([basketBtn, regBtn]) :
+      var nodes = (shopping() ? prods.map(function (p) { return p.node; }).concat([scaleBtn], pl.filter(function (it) { return it.mode === 'home'; }).sort(function (a, b) { return a.seq - b.seq; }).map(function (it) { return it.node; }), [basketBtn, regBtn]) :
         cn.map(function (c) { return c.node; })).filter(function (n) { return !n.disabled && n.style.visibility !== 'hidden'; });
       if (!nodes.length) { return; }
       var k = nodes.indexOf(document.activeElement);

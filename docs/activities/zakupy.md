@@ -78,7 +78,7 @@ Platform-wide behaviour (no sound, reduced motion, menu configuration, playtime 
 
 ## 8. Configuration
 
-No external configuration. Constants at the top of [`js/zakupy.js`](../../js/zakupy.js): `SCAN_FLASH_S` (0.45), `BACK_S` (0.4), `TO_S` (0.6), `RECEIPT_S` (0.9), `DONE_S` (4), `MAX_ROUND` (5, counter wave size), `MAX_BASKET` (15), `SHELF_N` (6), `RESTOCK_S` (2), plus the `PRODUCTS` list (22 kinds). Changing them needs a code edit.
+No external configuration. Constants at the top of [`js/zakupy.js`](../../js/zakupy.js): `SCAN_FLASH_S` (0.45), `BACK_S` (0.4), `TO_S` (0.6), `RECEIPT_S` (0.9), `DONE_S` (4), `MAX_ROUND` (5, counter wave size), `MAX_BASKET` (15), `SHELF_N` (6), `RESTOCK_S` (2), the scale constants `UNIT_DEG` (30), `REST_DEG` (-100), `MAX_DEG` (200, the span from rest to the dial end) and `PLATE_MAX` (5), plus the `PRODUCTS` list (22 kinds). Changing them needs a code edit.
 
 ## 9. Assets
 
@@ -160,3 +160,4 @@ None currently planned.
 
 - Issue [#185](https://github.com/BielinskiLukasz/child-page/issues/185): initial activity.
 - Issue [#209](https://github.com/BielinskiLukasz/child-page/issues/209): bigger basket (15 items), shelf units with restocking, 22 product kinds, bigger receipt with counts.
+- Issue [#263](https://github.com/BielinskiLukasz/child-page/issues/263): optional store scale for weighing fruit and vegetables (PR [#266](https://github.com/BielinskiLukasz/child-page/pull/266)).

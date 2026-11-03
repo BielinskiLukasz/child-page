@@ -1297,3 +1297,7 @@ body { overflow-x: hidden; overflow-x: clip; /* clip: no scroll container; hidde
   background: linear-gradient(#cfe8f8, #f3ead8 80%); cursor: grab; }
 .dg-root:focus { outline: none; }
 .stage .dg-scene { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+/* Walec (wc-) */
+.wc { position: fixed; inset: 0; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+  background: linear-gradient(#cfe8f8, #eaf6fb 70%); }
+.stage .wc-svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }

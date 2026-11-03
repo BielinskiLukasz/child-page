@@ -227,6 +227,9 @@
     { id: 'dzwig', name: 'Dźwig',
       src: 'js/dzwig.js',
       icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><rect x="2" y="52" width="60" height="10" fill="#e6c98a"/><rect x="10" y="12" width="6" height="40" fill="#f4c24e"/><rect x="6" y="10" width="50" height="6" rx="2" fill="#f4c24e"/><path d="M42 16V34" stroke="#3d3a4f" stroke-width="2"/><rect x="34" y="34" width="16" height="12" rx="3" fill="#e5586b" stroke="#a8384a" stroke-width="2"/><rect x="22" y="44" width="10" height="8" rx="2" fill="#4f8fe0"/><rect x="52" y="44" width="8" height="8" rx="2" fill="#f4c24e"/>', '#cfeaf8') },
+    { id: 'walec', name: 'Walec',
+      src: 'js/walec.js',
+      icon: svg('<rect x="2" y="2" width="60" height="60" rx="12" fill="#cfeaf8"/><rect x="2" y="46" width="60" height="16" fill="#bfe3a8"/><path d="M2 46q8-6 14 0t14 0" fill="#c9a57a"/><rect x="2" y="46" width="30" height="8" fill="#5f5a73"/><rect x="26" y="30" width="22" height="14" rx="4" fill="#f4c24e"/><rect x="34" y="22" width="5" height="10" rx="2" fill="#7a748f"/><circle cx="21" cy="40" r="9" fill="#8d89a3"/><circle cx="21" cy="40" r="3" fill="#5b5675"/><circle cx="44" cy="42" r="7" fill="#6b6585"/>', '#cfeaf8') },
   ];
   list.forEach(function (a) { a.mount = placeholder(a); });
   window.ACTIVITIES = list;
